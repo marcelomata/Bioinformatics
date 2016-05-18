@@ -29,5 +29,9 @@ public class Frame {
 			particles.add(new Particle(roi));
 		}
 	}
+	
+	public List<Particle> getParticles() {
+		return particles;
+	}
 
 }
