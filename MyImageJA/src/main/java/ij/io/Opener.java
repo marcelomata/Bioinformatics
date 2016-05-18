@@ -115,6 +115,7 @@ public class Opener {
 			if (isRGB48)
 				openRGB48(imp);
 			else
+				saveEachSlice(imp);
 				imp.show(getLoadRate(start,imp));
 		} else {
 			switch (fileType) {
@@ -1306,6 +1307,40 @@ public class Opener {
 	/** Returns the state of the openUsingPlugins flag. */
 	public static boolean getOpenUsingPlugins() {
 		return openUsingPlugins;
+	}
+	
+	private void saveEachSlice(ImagePlus imp) {
+		BufferedImage image = null;
+		for (int i = 1; i <= imp.getStackSize(); i++) {
+			try {
+				imp.setSlice(i);
+				imp.updateImage();
+				image = (BufferedImage) imp.getImage();
+//				binary(image);
+				imp.updateImage();
+				ImageIO.write((RenderedImage) image,"BMP", new File("/home/marcelodmo/Downloads/Slices/seg-1_"+imp.getSlice()+".bmp"));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		imp.setSlice(1);
+		imp.updateImage();
+	}
+
+	private void binary(BufferedImage image) {
+		int height = image.getHeight();
+		int width = image.getWidth();
+		int color = 0;
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				color = image.getRGB(j, i);
+				if(color == Color.BLACK.getRGB()) {
+					image.setRGB(j, i, Color.WHITE.getRGB());
+				} else {
+					image.setRGB(j, i, Color.BLACK.getRGB());
+				}
+			}
+		}
 	}
 	
 }

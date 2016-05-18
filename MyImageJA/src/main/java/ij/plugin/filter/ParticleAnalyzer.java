@@ -14,6 +14,9 @@ import ij.plugin.Colors;
 import ij.macro.Interpreter;
 import ij.util.Tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Implements ImageJ's Analyze Particles command.
 	<p>
 	<pre>
@@ -132,6 +135,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 	private ImagePlus redirectImp;
 	private ImageProcessor redirectIP;
 	private PolygonFiller pf;
+	private List<Roi> particles;
 	private Roi saveRoi;
 	private int beginningCount;
 	private Rectangle r;
@@ -201,6 +205,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		nextFontColor = defaultFontColor;
 		nextLineWidth = 1;
 		calledByPlugin = true;
+		particles = new ArrayList<Roi>();
 	}
 	
 	/** Constructs a ParticleAnalyzer using the default min and max circularity values (0 and 1). */
@@ -210,6 +215,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 
 	/** Default constructor */
 	public ParticleAnalyzer() {
+		particles = new ArrayList<Roi>();
 		slice = 1;
 	}
 	
@@ -327,9 +333,9 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		labels[7]="In_situ Show"; states[7]=(options&IN_SITU_SHOW)!=0;
 		gd.addCheckboxGroup(4, 2, labels, states);
 		gd.addHelp(IJ.URL+"/docs/menus/analyze.html#ap");
-		gd.showDialog();
-		if (gd.wasCanceled())
-			return false;
+//		gd.showDialog();
+//		if (gd.wasCanceled())
+//			return false;
 			
 		gd.setSmartRecording(minSize==0.0&&maxSize==Double.POSITIVE_INFINITY);
 		String size = gd.getNextString(); // min-max size
@@ -828,7 +834,8 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		wand.autoOutline(x, y, level1, level2, wandMode);
 		if (wand.npoints==0)
 			{IJ.log("wand error: "+x+" "+y); return;}
-		Roi roi = new PolygonRoi(wand.xpoints, wand.ypoints, wand.npoints, roiType);
+		Roi roi = new PolygonRoi(wand.xpoints, wand.ypoints, wand.npoints, roiType); // Get the contour
+		particles.add(roi);
 		Rectangle r = roi.getBounds();
 		if (r.width>1 && r.height>1) {
 			PolygonRoi proi = (PolygonRoi)roi;
@@ -1119,6 +1126,10 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 	/** Called once when ImageJ quits. */
 	public static void savePreferences(Properties prefs) {
 		prefs.put(OPTIONS, Integer.toString(staticOptions));
+	}
+	
+	public List<Roi> getParticles() {
+		return particles;
 	}
 
 }
