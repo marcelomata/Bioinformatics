@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import ij.ImagePlus;
@@ -14,6 +15,7 @@ public class Frame {
 	
 	public Frame(BufferedImage image) {
 		this.image = image;
+		this.particles = new ArrayList<Particle>();
 		findParticles();
 	}
 	

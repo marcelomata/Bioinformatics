@@ -11,7 +11,7 @@ public class Main {
 	public static void main(String[] args) {
 		File directory = new File("./video1-small part/");
 		List<BufferedImage> movie = new ArrayList<BufferedImage>();
-		for (int i = 1; i <= directory.listFiles().length; i++) {
+		for (int i = 1+2; i <= directory.listFiles().length+2; i++) {
 			try {
 				movie.add(ImageIO.read(new File(directory.getAbsolutePath()+"/seg-1_"+i+".bmp")));
 			} catch (IOException e) {
@@ -19,7 +19,8 @@ public class Main {
 			}
 		}
 		
-		TrackingCells2D video = new TrackingCells2D(movie);
+		TrackingCells2D tracking = new TrackingCells2D(movie);
+		tracking.trackCells();
 		
 		
 		
