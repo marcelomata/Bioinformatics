@@ -9,6 +9,8 @@ import javax.imageio.ImageIO;
 
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.WindowManager;
+import ij.gui.ImageWindow;
 import ij.plugin.filter.ParticleAnalyzer;
 import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageProcessor;
@@ -16,7 +18,7 @@ import ij.process.ImageProcessor;
 public class TestingFrames {
 
 	public static void main(String[] args) {
-		File directory = new File("/home/marcelodmo/Downloads/Slices/");
+		File directory = new File("./slices/");
 		List<BufferedImage> images = new ArrayList<BufferedImage>();
 		for (int i = 1; i <= directory.listFiles().length; i++) {
 			try {
@@ -54,10 +56,11 @@ public class TestingFrames {
 ////			e.printStackTrace();
 //		}
 		
+		ImagePlus imp = new ImagePlus("Teste", image);
+//		WindowManager.setCurrentWindow(new ImageWindow(imp));
 		ParticleAnalyzer pa = new ParticleAnalyzer();
-		PlugInFilterRunner pfr = new PlugInFilterRunner(pa, "Analyze Particles...", "");
+		PlugInFilterRunner pfr = new PlugInFilterRunner(pa, "Analyze Particles...", "", imp);
 		
-//		ImagePlus imp = new ImagePlus("Teste", image);
 //		ImageStack stack = imp.getStack();
 //		ImageProcessor ip = stack.getProcessor(1);
 		
