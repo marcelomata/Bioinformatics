@@ -190,5 +190,17 @@ public class PolygonFiller {
 			IJ.log(i+"	"+ex[index]+"  "+ey1[index]+"  "+ey2[index] );
 		}
 	}
+	
+	public int[] getX() {
+		return x;
+	}
+	
+	public int[] getY() {
+		return y;
+	}
+	
+	public int getN() {
+		return n;
+	}
 
 }

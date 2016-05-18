@@ -9,11 +9,12 @@ import javax.imageio.ImageIO;
 
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.WindowManager;
-import ij.gui.ImageWindow;
+import ij.gui.PolygonRoi;
+import ij.gui.Roi;
+import ij.gui.Wand;
 import ij.plugin.filter.ParticleAnalyzer;
-import ij.plugin.filter.PlugInFilterRunner;
 import ij.process.ImageProcessor;
+import ij.process.PolygonFiller;
 
 public class TestingFrames {
 
@@ -29,41 +30,42 @@ public class TestingFrames {
 		}
 		
 		BufferedImage image = images.get(7);
-//		int height = image.getHeight();
-//		int width = image.getWidth();
-//		int color = 0;
-//		int count = 0;
-//		for (int i = 0; i < height; i++) {
-//			for (int j = 0; j < width; j++) {
-//				//x is column and y is row
-//				//first pass by all columns in the current line
-//				color = image.getRGB(j, i);
-//				if(color == Color.WHITE.getRGB() || color == Color.BLACK.getRGB()) {
-//					count++;
-//				}
-////				else {
-////					image.setRGB(j, i, Color.RED.getRGB());
-////				}
-//			}
-//		}
-//		
-//		System.out.println(count +" "+height*width);
-//		
-////		// The colors of segmented cells are not white
-////		try {
-////			ImageIO.write(image, "BMP", new File(directory.getAbsolutePath()+"/test.bmp"));
-////		} catch (IOException e) {
-////			e.printStackTrace();
-//		}
 		
 		ImagePlus imp = new ImagePlus("Teste", image);
-//		WindowManager.setCurrentWindow(new ImageWindow(imp));
+		ImageStack stack = imp.getStack();
+		ImageProcessor ip = stack.getProcessor(1);
 		ParticleAnalyzer pa = new ParticleAnalyzer();
-		PlugInFilterRunner pfr = new PlugInFilterRunner(pa, "Analyze Particles...", "", imp);
+		pa.setup("", imp);
+		pa.run(ip);
+		List<Roi> particles = pa.getParticles();
+		Roi r = null;
 		
-//		ImageStack stack = imp.getStack();
-//		ImageProcessor ip = stack.getProcessor(1);
+		whiteImage(image);
+		double center[] = null;
+		for (int i = 0; i < particles.size(); i++) {
+			r = particles.get(i);
+			center = r.getContourCentroid();
+			image.setRGB((int)center[0], (int)center[1], Color.BLACK.getRGB());
+		}
 		
+		try {
+			ImageIO.write(image, "BMP", new File("./Tests/test.bmp"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	
+		new ImagePlus("Teste", image).show();
+		
+	}
+	
+	public static void whiteImage(BufferedImage image) {
+		int height = image.getHeight();
+		int width = image.getWidth();
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				image.setRGB(j, i, Color.WHITE.getRGB());
+			}
+		}
 	}
 
 }
