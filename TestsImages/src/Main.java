@@ -9,9 +9,9 @@ import javax.imageio.ImageIO;
 public class Main {
 
 	public static void main(String[] args) {
-		File directory = new File("./video2-small part/");
+		File directory = new File("./video6-small part/");
 		List<BufferedImage> movie = new ArrayList<BufferedImage>();
-		for (int i = 1+26; i <= directory.listFiles().length+26; i++) {
+		for (int i = 1+23; i <= directory.listFiles().length+23; i++) {
 			try {
 				movie.add(ImageIO.read(new File(directory.getAbsolutePath()+"/seg-1_"+i+".bmp")));
 			} catch (IOException e) {

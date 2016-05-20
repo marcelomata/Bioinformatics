@@ -115,7 +115,7 @@ public class Opener {
 			if (isRGB48)
 				openRGB48(imp);
 			else
-//				saveEachSlice(imp);
+				saveEachSlice(imp);
 				imp.show(getLoadRate(start,imp));
 		} else {
 			switch (fileType) {

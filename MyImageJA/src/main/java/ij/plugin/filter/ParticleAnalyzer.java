@@ -835,7 +835,6 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		if (wand.npoints==0)
 			{IJ.log("wand error: "+x+" "+y); return;}
 		Roi roi = new PolygonRoi(wand.xpoints, wand.ypoints, wand.npoints, roiType); // Get the contour
-		particles.add(roi);
 		Rectangle r = roi.getBounds();
 		if (r.width>1 && r.height>1) {
 			PolygonRoi proi = (PolygonRoi)roi;
@@ -879,8 +878,10 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 				roi.setImage(imp);
 			stats.xstart=x; stats.ystart=y;
 			saveResults(stats, roi);
-			if (showChoice!=NOTHING)
+			particles.add(roi);
+			if (showChoice!=NOTHING) {
 				drawParticle(drawIP, roi, stats, mask);
+			}
 		}
 		if (redirectIP!=null)
 			ip.setRoi(r);

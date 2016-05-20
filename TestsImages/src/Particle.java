@@ -21,5 +21,5 @@ public class Particle {
 	public Point3D getParticlePosition() {
 		return particlePosition;
 	}
-	
+
 }
