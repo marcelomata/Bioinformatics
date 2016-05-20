@@ -35,5 +35,9 @@ public class Frame {
 	public List<Particle> getParticles() {
 		return particles;
 	}
+	
+	public BufferedImage getImage() {
+		return image;
+	}
 
 }
