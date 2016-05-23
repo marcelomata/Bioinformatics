@@ -201,12 +201,15 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 			wandMode = Wand.FOUR_CONNECTED;
 			options |= INCLUDE_HOLES;
 		}
+		options = SHOW_OUTLINES; //TODO
+		showResults = true; //TODO
+		showChoice = OUTLINES; //TODO
 		nextFontSize = defaultFontSize;
 		nextFontColor = defaultFontColor;
 		nextLineWidth = 1;
 		calledByPlugin = true;
 		particles = new ArrayList<Roi>();
-	}
+	}	
 	
 	/** Constructs a ParticleAnalyzer using the default min and max circularity values (0 and 1). */
 	public ParticleAnalyzer(int options, int measurements, ResultsTable rt, double minSize, double maxSize) {
@@ -333,7 +336,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		labels[7]="In_situ Show"; states[7]=(options&IN_SITU_SHOW)!=0;
 		gd.addCheckboxGroup(4, 2, labels, states);
 		gd.addHelp(IJ.URL+"/docs/menus/analyze.html#ap");
-//		gd.showDialog();
+//		gd.showDialog();  //TODO
 //		if (gd.wasCanceled())
 //			return false;
 			
@@ -480,6 +483,9 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 			return false;
 		width = ip.getWidth();
 		height = ip.getHeight();
+		options = SHOW_OUTLINES; //TODO
+		showResults = true; //TODO
+		showChoice = OUTLINES; //TODO
 		if (!(showChoice==NOTHING||showChoice==OVERLAY_OUTLINES||showChoice==OVERLAY_MASKS)) {
 			blackBackground = Prefs.blackBackground && inSituShow;
 			if (slice==1)
@@ -581,6 +587,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 				else
 					value = ip.getPixelValue(x, y);
 				if (value>=level1 && value<=level2 && !done) {
+					wand = new Wand(ip);
 					analyzeParticle(x, y, imp, ip);
 					done = level1==0.0&&level2==255.0&&imp.getBitDepth()==8;
 				}
@@ -611,6 +618,8 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		}
 		maxParticleCount = (particleCount > maxParticleCount) ? particleCount : maxParticleCount;
 		totalCount += particleCount;
+		canceled = true; //TODO
+		
 		if (!canceled)
 			showResults();
 		return true;
@@ -841,6 +850,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 			pf.setPolygon(proi.getXCoordinates(), proi.getYCoordinates(), proi.getNCoordinates());
 			ip2.setMask(pf.getMask(r.width, r.height));
 			if (floodFill) ff.particleAnalyzerFill(x, y, level1, level2, ip2.getMask(), r);
+			particles.add(proi);   //TODO
 		}
 		ip2.setRoi(r);
 		ip.setValue(fillColor);
@@ -878,7 +888,6 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 				roi.setImage(imp);
 			stats.xstart=x; stats.ystart=y;
 			saveResults(stats, roi);
-			particles.add(roi);
 			if (showChoice!=NOTHING) {
 				drawParticle(drawIP, roi, stats, mask);
 			}
@@ -1016,7 +1025,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		ip.fill(mask);
 	}
 
-	void showResults() {
+	public void showResults() {
 		int count = rt.getCounter();
 		// if (count==0) return;
 		boolean lastSlice = !processStack||slice==imp.getStackSize();

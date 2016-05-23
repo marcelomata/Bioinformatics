@@ -1,6 +1,8 @@
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +17,11 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import ij.gui.Overlay;
+import ij.gui.PolygonRoi;
+import ij.gui.Roi;
+import ij.measure.ResultsTable;
+import ij.process.ImageProcessor;
 import mcib3d.Jama.Matrix;
 import mcib3d.geom.Point3D;
 
@@ -31,8 +38,8 @@ public class TrackingCells2D {
 		this.video = new ArrayList<Frame>();
 		this.particlesMap = new HashMap<Integer, List<Particle>>();
 		this.pathImages = new ArrayList<BufferedImage>();
-		loadVideo(images);
 		this.currentFrame = 0;
+		loadVideo(images);
 		processCurrentFrame();
 	}
 
@@ -195,7 +202,6 @@ public class TrackingCells2D {
 					image = pathImages.get(j);
 					drawLine(particleLast.getParticlePosition(), particle.getParticlePosition(), image);
 					if (j == i) {
-//						particleLast.getRoi().draw(image.getGraphics());
 						particle.getRoi().draw(image.getGraphics());
 					}
 				}
@@ -216,15 +222,15 @@ public class TrackingCells2D {
 			}
 		}
 	}
-
+	
 	private void initGraphics() {
 		BufferedImage image = null;
 		for (Frame frame : video) {
-			image = new BufferedImage(frame.getImage().getWidth(), frame.getImage().getHeight(), frame.getImage().getType());
-//			image = frame.getImage();
+//			image = new BufferedImage(frame.getImage().getWidth(), frame.getImage().getHeight(), frame.getImage().getType());
+			image = frame.getImage();
 			Graphics2D g2d = image.createGraphics();
 			g2d.setBackground(Color.WHITE);
-			g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
+//			g2d.clearRect(0, 0, image.getWidth(), image.getHeight());
 			pathImages.add(image);
 		}
 	}
@@ -237,5 +243,25 @@ public class TrackingCells2D {
 	    g2d.drawLine((int)point1.getX(), (int)point1.getY(), (int)point2.getX(), (int)point2.getY());
 	}
 
+	public void drawContours() {
+		Set<Integer> ids = particlesMap.keySet();
+		Particle particle = null;
+		initGraphics();
+		List<Particle> particleMotion = null;
+		BufferedImage image = null;
+		for (Integer id : ids) {
+			particleMotion = particlesMap.get(id);
+			for (int i = 1; i < particleMotion.size(); i++) {
+				particle = particleMotion.get(i);
+				for (int j = 1; j < pathImages.size(); j++) {
+					image = pathImages.get(j);
+					if (j == i) {
+						particle.getRoi().draw(image.getGraphics());
+					}
+				}
+			}
+		}
+		saveImages();
+	}
 	
 }

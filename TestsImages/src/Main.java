@@ -21,6 +21,7 @@ public class Main {
 		
 		TrackingCells2D tracking = new TrackingCells2D(movie);
 		tracking.trackCells();
+//		tracking.drawContours();
 		tracking.drawPaths();
 	}
 
