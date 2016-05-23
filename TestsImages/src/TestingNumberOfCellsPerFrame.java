@@ -1,4 +1,3 @@
-import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +14,7 @@ import ij.process.ImageProcessor;
 public class TestingNumberOfCellsPerFrame {
 
 	public static void main(String[] args) {
-		File directory = new File("./video1/");
+		File directory = new File("./examples/video1/");
 		List<BufferedImage> movie = new ArrayList<BufferedImage>();
 		for (int i = 1; i <= directory.listFiles().length; i++) {
 			try {

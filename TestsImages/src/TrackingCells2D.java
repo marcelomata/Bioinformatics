@@ -28,7 +28,8 @@ import mcib3d.geom.Point3D;
 public class TrackingCells2D {
 	
 	private List<Frame> video;
-	private Map<Integer, List<Particle>> particlesMap;
+	private Map<Integer, List<Particle>> particlesMapTracking;
+	private Map<Integer, List<Particle>> particlesOutMap;
 	private int currentFrame;
 	private List<BufferedImage> pathImages;
 	
@@ -36,7 +37,8 @@ public class TrackingCells2D {
 	
 	public TrackingCells2D(List<BufferedImage> images) {
 		this.video = new ArrayList<Frame>();
-		this.particlesMap = new HashMap<Integer, List<Particle>>();
+		this.particlesMapTracking = new HashMap<Integer, List<Particle>>();
+		this.particlesOutMap = new HashMap<Integer, List<Particle>>();
 		this.pathImages = new ArrayList<BufferedImage>();
 		this.currentFrame = 0;
 		loadVideo(images);
@@ -51,7 +53,7 @@ public class TrackingCells2D {
 			for (Particle particle : particles) {
 				particleMotion = new ArrayList<Particle>();
 				particleMotion.add(particle);
-				particlesMap.put(id, particleMotion);
+				particlesMapTracking.put(id, particleMotion);
 				id++;
 			}
 			currentFrame++;
@@ -76,125 +78,107 @@ public class TrackingCells2D {
 		List<Particle> frameParticles = null;
 		int numParticlesLastFrame = lastFrame.getParticles().size();
 		int numParticlesCurrentFrame = 0;
-//		ParticlesMatrix particlesMatrix = null;
 		while(currentFrame < videoSize) {
 			frame = video.get(currentFrame);
 			frameParticles = frame.getParticles();
-//			particlesMatrix = new ParticlesMatrix(getParticleListForFrame(currentFrame-1), frameParticles);
 			numParticlesCurrentFrame = frameParticles.size();
-			if(numParticlesLastFrame < numParticlesCurrentFrame) {
-				matchBiggerNumberParticles(frameParticles, numParticlesCurrentFrame - numParticlesLastFrame);
-				//It occurred either some division or some cell appeared in the frame
-			} if(numParticlesLastFrame > numParticlesCurrentFrame) {
-				//Some cell go out of the frame or some problem of segmentation happened
-				matchSmallerNumberParticles(frameParticles);
-			} else {
-				//It happened either some cell go out and another go in to the frame, some cell go out 
-				//and some division ocurred, some problem in the segmentation and some cell go in to the frame,
-				//or no special event
-//				matchSameNumberParticles(frameParticles);
-				matchBiggerNumberParticles(frameParticles,  numParticlesCurrentFrame - numParticlesLastFrame);
-			}
+			matchParticles(frameParticles, numParticlesCurrentFrame - numParticlesLastFrame);
 			currentFrame++;
 		}
 	}
 
-	private List<Particle> getParticleListForFrame(int i) {
-		Set<Integer> ids = particlesMap.keySet();
-		List<Particle> particleMotion = null;
-		List<Particle> particleSameFrame = new ArrayList<Particle>();
-		for (Integer id : ids) {
-			particleMotion = particlesMap.get(id);
-			particleSameFrame.add(particleMotion.get(currentFrame-1));
-		}
-		return particleSameFrame;
-	}
-
-	private void matchBiggerNumberParticles(List<Particle> frameParticles, int numberMoreParticles) {
-		Set<Integer> ids = particlesMap.keySet();
-		Particle particle = null;
-		List<Particle> particleMotion = null;
-		List<Particle> nClosest = null;
-		for (Integer id : ids) {
-			particleMotion = particlesMap.get(id);
-			particle = particleMotion.get(currentFrame-1);
-			nClosest = findNClosest(particle, frameParticles, numberMoreParticles+1);
-			particleMotion.add(nClosest.get(0));
-		}
-	}
-	
-	private void matchSameNumberParticles(List<Particle> particles) {
-		Set<Integer> ids = particlesMap.keySet();
+	private void matchParticles(List<Particle> frameParticles, int numberMoreParticles) {
+		Set<Integer> ids = particlesMapTracking.keySet();
 		Particle particle = null;
 		List<Particle> particleMotion = null;
 		Particle closest = null;
+		List<Particle> frameParticlesClone = new ArrayList<Particle>(frameParticles);
+		//if same number of cells from frame t to t+1
 		for (Integer id : ids) {
-			particleMotion = particlesMap.get(id);
+			particleMotion = particlesMapTracking.get(id);
 			particle = particleMotion.get(currentFrame-1);
-			closest = findClosest(particle, particles);
+			closest = findClosestFromList(particle, frameParticlesClone);
 			particleMotion.add(closest);
+			particle.addChildren(closest);
+			closest.setParent(particle);
+		}
+		if(frameParticlesClone.size() > 0) { //if the number of cells is bigger in the frame t+1 
+			Integer closestId = null;
+			Particle closestParent = null;
+			Particle closestSibling = null;
+			List<Particle> removedList = null;
+			List<Particle> newList = null;
+			for (int i = 0; i < frameParticlesClone.size(); i++) {
+				particle = frameParticlesClone.get(i);
+				closestId = findClosestFromMapTracking(particle);
+				particleMotion = particlesMapTracking.get(closestId);
+				closestSibling = particleMotion.remove(currentFrame);
+				closestParent = closest.getParent();
+				particle.setParent(closestParent);
+				closestParent.addChildren(particle);
+				removedList = particlesMapTracking.remove(closestId);
+				particlesOutMap.put(closestId, removedList);
+				newList = new ArrayList<Particle>(removedList);
+				newList.add(closestSibling);
+				particlesMapTracking.put(id, newList);
+				id++;
+				newList = new ArrayList<Particle>(removedList);
+				newList.add(particle);
+				particlesMapTracking.put(id, newList);
+				id++;
+			}
 		}
 	}
 
-	private void matchSmallerNumberParticles(List<Particle> frameParticles) {
-		Set<Integer> ids = particlesMap.keySet();
-		Particle particle = null;
-		List<Particle> particleMotion = null;
-		Particle closest = null;
-		for (Integer id : ids) {
-			particleMotion = particlesMap.get(id);
-			particle = particleMotion.get(currentFrame-1);
-			closest = findClosest(particle, frameParticles);
-			particleMotion.add(closest);
-		}
-	}
-
-	private Particle findClosest(Particle particle, List<Particle> particles) {
-		Particle current = particles.get(0);
-		Particle closest = current;
-		double distance = particle.getParticlePosition().distance(current.getParticlePosition());
-		double shortestDistance = distance;
+	private Particle findClosestFromList(Particle particle, List<Particle> particles) {
+		Particle closest = particles.get(0);
+		Particle current = null;
+		double currentDistance = Double.MAX_VALUE;
+		double closestDistance = particle.getParticlePosition().distance(closest.getParticlePosition());
 		for (int i = 1; i < particles.size(); i++) {
 			current = particles.get(i);
-			distance = particle.getParticlePosition().distance(current.getParticlePosition());
-			if(shortestDistance > distance) {
-				shortestDistance = distance;
+			currentDistance = particle.getParticlePosition().distance(current.getParticlePosition());
+			if (currentDistance < closestDistance) {
 				closest = current;
+				closestDistance = currentDistance;
 			}
 		}
 		
+		particles.remove(closest);
 		return closest;
 	}
 	
-	private List<Particle> findNClosest(Particle particle, List<Particle> particles, int n) {
-		Particle current = particles.get(0);
-		List<Edge> nClosestSorted = new ArrayList<Edge>();
-		nClosestSorted.add(new Edge(particle, current));
-		List<Particle> nClosest = new ArrayList<Particle>();
-		for (int i = 1; i < particles.size(); i++) {
-			current = particles.get(i);
-			nClosestSorted.add(new Edge(particle, current));
+	private Integer findClosestFromMapTracking(Particle particle) {
+		Set<Integer> ids = particlesMapTracking.keySet();
+		List<Particle> particleMotion = null;
+		Particle closest = null;
+		Particle current = null;
+		double currentDistance = Double.MAX_VALUE;
+		double closestDistance = currentDistance;
+		Integer closestId = null;
+		for (Integer id : ids) {
+			particleMotion = particlesMapTracking.get(id);
+			current = particleMotion.get(currentFrame-1);
+			currentDistance = particle.getParticlePosition().distance(current.getParticlePosition());
+			if (currentDistance < closestDistance) {
+				closest = current;
+				closestDistance = currentDistance;
+				closestId = id;
+			}
 		}
 		
-		Collections.sort(nClosestSorted);
-		int count = 0;
-		while(count < n) {
-			nClosest.add(nClosestSorted.get(count).getParticle2());
-			count++;
-		}
-		
-		return nClosest;
+		return closestId;
 	}
 
 	public void drawPaths() {
-		Set<Integer> ids = particlesMap.keySet();
+		Set<Integer> ids = particlesMapTracking.keySet();
 		Particle particle = null;
 		Particle particleLast = null;
 		initGraphics();
 		List<Particle> particleMotion = null;
 		BufferedImage image = null;
 		for (Integer id : ids) {
-			particleMotion = particlesMap.get(id);
+			particleMotion = particlesMapTracking.get(id);
 			particleLast = particleMotion.get(0);
 			for (int i = 1; i < particleMotion.size(); i++) {
 				particle = particleMotion.get(i);
@@ -244,13 +228,13 @@ public class TrackingCells2D {
 	}
 
 	public void drawContours() {
-		Set<Integer> ids = particlesMap.keySet();
+		Set<Integer> ids = particlesMapTracking.keySet();
 		Particle particle = null;
 		initGraphics();
 		List<Particle> particleMotion = null;
 		BufferedImage image = null;
 		for (Integer id : ids) {
-			particleMotion = particlesMap.get(id);
+			particleMotion = particlesMapTracking.get(id);
 			for (int i = 1; i < particleMotion.size(); i++) {
 				particle = particleMotion.get(i);
 				for (int j = 1; j < pathImages.size(); j++) {

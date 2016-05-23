@@ -202,7 +202,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 			options |= INCLUDE_HOLES;
 		}
 		options = SHOW_OUTLINES; //TODO
-		showResults = true; //TODO
+//		showResults = true; //TODO
 		showChoice = OUTLINES; //TODO
 		nextFontSize = defaultFontSize;
 		nextFontColor = defaultFontColor;
@@ -484,7 +484,7 @@ public class ParticleAnalyzer implements PlugInFilter, Measurements {
 		width = ip.getWidth();
 		height = ip.getHeight();
 		options = SHOW_OUTLINES; //TODO
-		showResults = true; //TODO
+//		showResults = true; //TODO
 		showChoice = OUTLINES; //TODO
 		if (!(showChoice==NOTHING||showChoice==OVERLAY_OUTLINES||showChoice==OVERLAY_MASKS)) {
 			blackBackground = Prefs.blackBackground && inSituShow;
