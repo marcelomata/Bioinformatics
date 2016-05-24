@@ -1,0 +1,111 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[]{algorithm2e}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+
+
+
+\title{Simple cell tracking algorithm}
+
+\begin{document}
+
+\maketitle	
+
+Modern devices have been used to get data from many biological processes that occur with cells. Much of this data are 3D/4D images. Computer techniques have been important in studies of cells. The understanding of many of these biological processes involves segmentation and tracking of cells. General applications that can process several different cells and processes are required to keep increasing the understanding of this field.
+
+The goal of this simple project is try to understand all of the problems to be solved in these cells studies. This first version works with 2D videos. For the first step, a simple algorithm was developed to process basic situations, where a smaller number of events can happen. We consider here a perfect scenario the case where all cells were correctly segmented in each frame of the video, the number of cells from the frame on the time \(t\) to \(t+1\) is the same and no overlap, no problem with too close cells or high velocity happens. However, some events are allowed, the size changing and \(n\) number of division of cells. So in this case, only one event can change the number of cells from the frame on the time \(t\) to \(t+1\). This first simple version of the algorithm is described below.\\
+
+\begin{algorithm}[H]
+ \KwData{A set \(I\) of 2D images, where each image represents the features of the cells on the time \(t\).}
+ \KwResult{A set \(L\) of lists, where each element \(t\) of each list \(L_i\) have the position of the cell \(i\) on the time \(t\)}
+ $I\gets loadVideo()$ \;
+ $T\gets \text{number of elements in } I$ \;
+ $t\gets 1$ \;
+ $P_t \gets \text{set of particles in the image } I_t$ \;
+ \For{\text{each list i in } \(L\)} 
+ {
+   $\text{ add the element i of } P_t \text{ to } L_i$
+ }
+ \For{t=2 to t=T} 
+ {
+ $P_t \gets \text{set of particles in the image } I_t$ \;
+	 \For{\text{each element i in } \(L\)} 
+	 {
+		  $c \gets \text{ the element of } P_{t} \text{ where the distance is the smallest to element t-1 in } L_{i}$
+		  $\text{ add c in } L_i$
+	 }
+	 \If{any element left in \(P_{t}\) }{
+		 $R \gets \text{list of elements left in } P_{t}$ \;
+		  \For{\text{each element k of } \(R\)} 
+		   {
+		  	 $c \gets \text{ the element t-1 of any list } L_{i} \text{ where the distance is the smallest to element k in } R $
+		  	 $e \gets \text{ the element t of the list } L_i $ \;
+		  	 $\text{ remove the element t from } L_i $ \;
+		  	 $\text{ create 2 new list } L_{i+1} \text{ and } L_{i+2} \text{ in } L$ \;
+		  	 $\text{ add the element e to }  L_{i+1} $ \;
+		  	 $\text{ add the element k of R to } L_{i+2} $ 
+		   }
+	   }
+ }
+ \caption{Simple tracking cells}
+\end{algorithm}
+
+
+ 
+
+
+
+
+
+%--------------------------------------------------------------------------------
+%\section{First example}
+
+%The well known Pythagorean theorem \(x^2 + y^2 = z^2\) was 
+%proved to be invalid for other exponents. 
+%Meaning the next equation has no integer solutions:
+
+%\[ x^n + y^n = z^n \]
+
+
+%--------------------------------------------------------------------------------
+
+%\section{Second example}
+
+%In physics, the mass-energy equivalence is stated by the equation $E=mc^2$, discovered in 1905 by Albert Einstein.
+
+%The mass-energy equivalence is described by the famous equation
+%$$E=mc^2$$
+%discovered in 1905 by Albert Einstein. 
+%In natural units ($c$ = 1), the formula expresses the identity
+%\begin{equation}
+%E=m
+%\end{equation}
+
+%\section{Third example}
+
+%This is a simple math expression \(\sqrt{x^2+1}\) inside text. 
+%And this is also the same: 
+%\begin{math}
+%\sqrt{x^2+1}
+%\end{math}
+%but by using another command.
+
+%This is a simple math expression without numbering
+%\[\sqrt{x^2+1}\] 
+%separated from text.
+
+%This is also the same:
+%\begin{displaymath}
+%\sqrt{x^2+1}
+%\end{displaymath}
+
+%\ldots and this:
+%\begin{equation*}
+%\sqrt{x^2+1}
+%\end{equation*}
+
+
+
+\end{document}
