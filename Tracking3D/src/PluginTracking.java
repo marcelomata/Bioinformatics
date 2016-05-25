@@ -13,5 +13,6 @@ public class PluginTracking implements PlugIn {
 		ImagePlus imp = open.openImage(image.getAbsolutePath());
 		Objects3DPopulation population = new Objects3DPopulation(imp);
 		System.out.println(population.getNbObjects());
+		population.getObject(0).getLabelImage().show();
 	}
 }
