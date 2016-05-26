@@ -1,4 +1,9 @@
 
+
+import trackingPlugin.Associate;
+import trackingPlugin.AssociatedObjectList;
+import trackingPlugin.ObjectAction;
+
 public class AssociationMinDistance extends Associate {
 
 	@Override

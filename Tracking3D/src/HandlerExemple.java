@@ -1,4 +1,9 @@
 
+
+import trackingPlugin.Handler;
+import trackingPlugin.ObjectAction;
+import trackingPlugin.TrackingResult;
+
 public class HandlerExemple extends Handler {
 
 	@Override

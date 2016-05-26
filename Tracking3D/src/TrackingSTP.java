@@ -1,12 +1,19 @@
 
 
+import trackingPlugin.ObjectAction;
+import trackingPlugin.TrackingStrategy;
+
 public class TrackingSTP extends TrackingStrategy {
 	
+	public TrackingSTP(ObjectAction inObjects) {
+		super(inObjects);
+	}
+
 	@Override
 	public void build() {
-		super.addAction(new AssociationMinDistance());
-		super.addAction(new EventSeekerExample());
-		super.addAction(new HandlerExemple());
+		addAction(new AssociationMinDistance());
+		addAction(new EventSeekerExample());
+		addAction(new HandlerExemple());
 	}
 
 }
