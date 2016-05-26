@@ -1,10 +1,11 @@
+package trackingSTP;
 
 
-import trackingPlugin.Associate;
+import trackingPlugin.Association;
 import trackingPlugin.AssociatedObjectList;
 import trackingPlugin.ObjectAction;
 
-public class AssociationMinDistance extends Associate {
+public class AssociationMinDistance extends Association {
 
 	@Override
 	public ObjectAction execute(ObjectAction object) {
