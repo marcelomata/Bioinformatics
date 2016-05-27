@@ -1,9 +1,9 @@
-package trackingSTP;
+package trackingSTP.impl;
 
 
-import trackingPlugin.EventList;
-import trackingPlugin.EventSeeker;
-import trackingPlugin.ObjectAction;
+import trackingInterface.ObjectAction;
+import trackingSTP.EventList;
+import trackingSTP.EventSeeker;
 
 public class EventSeekerExample extends EventSeeker {
 

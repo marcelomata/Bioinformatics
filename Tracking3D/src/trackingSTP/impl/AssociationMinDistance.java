@@ -1,9 +1,8 @@
-package trackingSTP;
+package trackingSTP.impl;
 
 
-import trackingPlugin.Association;
-import trackingPlugin.AssociatedObjectList;
-import trackingPlugin.ObjectAction;
+import trackingInterface.ObjectAction;
+import trackingSTP.Association;
 
 public class AssociationMinDistance extends Association {
 

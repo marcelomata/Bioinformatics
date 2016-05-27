@@ -1,9 +1,8 @@
-package trackingSTP;
+package trackingSTP.impl;
 
 
-import trackingPlugin.Handler;
-import trackingPlugin.ObjectAction;
-import trackingPlugin.TrackingResult;
+import trackingInterface.ObjectAction;
+import trackingSTP.Handler;
 
 public class HandlerExemple extends Handler {
 

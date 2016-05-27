@@ -1,4 +1,4 @@
-package trackingPlugin;
+package trackingInterface;
 
 public interface ObjectAction {
 
