@@ -7,8 +7,8 @@ import ij.plugin.Duplicator;
 import ij.plugin.PlugIn;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.TrackingStrategy;
-import trackingSTP.ObjectAction4D;
-import trackingSTP.TrackingSTP;
+import trackingSTP.impl.ObjectAction4D;
+import trackingSTP.impl.TrackingSTP;
 
 public class PluginTracking implements PlugIn {
 	@Override

@@ -1,4 +1,4 @@
-package trackingSTP;
+package trackingSTP.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +41,12 @@ public class ObjectAction4D implements Object4D {
 		if(currentFrame == 0) {
 			return null;
 		}
-		return population3DPlusT.get(currentFrame);
+		return population3DPlusT.get(currentFrame-1);
 	}
 
 	@Override
 	public Objects3DPopulationAdapter getFrame() {
-		return null;
+		return population3DPlusT.get(currentFrame);
 	}
 	
 	@Override
@@ -57,6 +57,10 @@ public class ObjectAction4D implements Object4D {
 	@Override
 	public int getSize() {
 		return population3DPlusT.size();
+	}
+	
+	public int getCurrentFrame() {
+		return currentFrame;
 	}
 
 }
