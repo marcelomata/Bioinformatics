@@ -1,0 +1,457 @@
+/*
+ * Ahsan Rabbani <ahsan@xargsgrep.com>
+ */
+
+package cell3DRenderer;
+
+import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
+import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
+import static javax.media.opengl.GL.GL_DEPTH_TEST;
+import static javax.media.opengl.GL.GL_LEQUAL;
+import static javax.media.opengl.GL.GL_NICEST;
+import static javax.media.opengl.GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT;
+import static javax.media.opengl.GL2GL3.GL_QUADS;
+import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
+import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
+import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
+
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
+import javax.media.opengl.glu.GLU;
+
+import com.jogamp.newt.event.KeyEvent;
+import com.jogamp.newt.event.KeyListener;
+import com.jogamp.newt.event.MouseEvent;
+import com.jogamp.newt.event.MouseListener;
+import com.jogamp.newt.event.WindowAdapter;
+import com.jogamp.newt.event.WindowEvent;
+import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.util.FPSAnimator;
+import com.jogamp.opengl.util.gl2.GLUT;
+
+import cell3DRenderer.Rotation.Axis;
+import cell3DRenderer.Rotation.Direction;
+import cell3DRenderer.Sphere.Color;
+
+public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, KeyListener, MouseListener {
+	
+	private static final String TITLE = "JOGL 2.0 Rubik's Cube";
+	
+	private static final int CANVAS_WIDTH  = 640;
+	private static final int CANVAS_HEIGHT = 480;
+	private static final int FPS = 60;
+	
+	private static final float ZERO_F = 0.0f;
+	private static final float ONE_F  = 1.0f;
+	private static final float TWO_F  = 2.0f;
+	private static final float CUBIE_GAP_F = 0.1f; // gap between cubies
+	private static final float CUBIE_TRANSLATION_FACTOR = TWO_F + CUBIE_GAP_F;
+	
+	private static final float DEFAULT_CAMERA_ANGLE_X = 45.0f;
+	private static final float DEFAULT_CAMERA_ANGLE_Y = 45.0f;
+	private static final float DEFAULT_ZOOM = -18.0f;
+	
+	private static final int SECTION_ROTATE_STEP_DEGREES = 90;
+	private static final int CAMERA_ROTATE_STEP_DEGREES  = 5;
+	
+	private static final int MIN_ZOOM = -80;
+	private static final int MAX_ZOOM = -10;
+	
+	private GLU glu;
+	private GLUT glut;
+	
+	private float cameraAngleX = DEFAULT_CAMERA_ANGLE_X;
+	private float cameraAngleY = DEFAULT_CAMERA_ANGLE_Y;
+	private float cameraAngleZ = ZERO_F;
+	private float zoom         = DEFAULT_ZOOM;
+	
+	private float[] columnAnglesX;
+	private float[] rowAnglesY;
+	private float[] faceAnglesZ;
+	
+	private int rotatingSectionX = -1;
+	private int rotatingSectionY = -1;
+	private int rotatingSectionZ = -1;
+	private float angularVelocity = 5.0f; // speed and direction of rotating sections
+	
+	private int mouseX = CANVAS_WIDTH/2;
+	private int mouseY = CANVAS_HEIGHT/2;
+	
+//	private RubiksCube rubiksCube;
+	
+//	private RotationAnimatorThread scrambleAnimatorThread;
+//	private RotationAnimatorThread solutionAnimatorThread;
+
+	public Cell3DJOGLRenderer(int size) {
+//		rubiksCube = new RubiksCube(size);
+		this.columnAnglesX = new float[size];
+		this.rowAnglesY = new float[size];
+		this.faceAnglesZ = new float[size];
+	}
+	
+	@Override
+	public void init(GLAutoDrawable drawable) {
+		GL2 gl = drawable.getGL().getGL2();
+		glu = new GLU();
+		glut= new GLUT();
+		gl.glClearColor(ZERO_F, ZERO_F, ZERO_F, ZERO_F);
+		gl.glClearDepth(ONE_F); 
+		gl.glEnable(GL_DEPTH_TEST);
+		gl.glDepthFunc(GL_LEQUAL);
+		gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		gl.glShadeModel(GL_SMOOTH);
+	}
+	
+	@Override
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+		GL2 gl = drawable.getGL().getGL2();
+	      
+		if (height == 0) height = 1;
+		float aspect = (float) width/height;
+		
+		gl.glViewport(0, 0, width, height);
+		gl.glMatrixMode(GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluPerspective(45.0, aspect, 0.1, 100.0);
+			 
+		gl.glMatrixMode(GL_MODELVIEW);
+		gl.glLoadIdentity();
+	}
+
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		updateRotationAngles();
+		drawScene(drawable.getGL().getGL2());
+	}
+	
+	private void drawScene(GL2 gl) {
+		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		gl.glLoadIdentity();
+		
+		// camera transformations
+		gl.glTranslatef(ZERO_F, ZERO_F, zoom);
+		gl.glRotatef(cameraAngleX, ONE_F, ZERO_F, ZERO_F);
+		gl.glRotatef(cameraAngleY, ZERO_F, ONE_F, ZERO_F);
+		gl.glRotatef(cameraAngleZ, ZERO_F, ZERO_F, ONE_F);
+		
+		gl.glColor3f(1.0f, 1.0f, 0.0f);
+		glut.glutSolidSphere(1, 10, 10);
+		
+//		int lastIdx = rubiksCube.getSize()-1;
+//		for (int x=0; x<rubiksCube.getSize(); x++) {
+//			for (int y=0; y<rubiksCube.getSize(); y++) {
+//				for (int z=0; z<rubiksCube.getSize(); z++) {
+//					gl.glPushMatrix();
+//					
+//					gl.glRotatef(columnAnglesX[x], ONE_F, ZERO_F, ZERO_F);
+//					gl.glRotatef(rowAnglesY[y], ZERO_F, ONE_F, ZERO_F);
+//					gl.glRotatef(faceAnglesZ[z], ZERO_F, ZERO_F, ONE_F);
+//					
+//					// bottom-left-front corner of cube is (0,0,0) so we need to center it at the origin
+//					float t = (float) lastIdx/2;
+//					gl.glTranslatef((x-t)*CUBIE_TRANSLATION_FACTOR, (y-t)*CUBIE_TRANSLATION_FACTOR, -(z-t)*CUBIE_TRANSLATION_FACTOR);
+//					
+//					drawCubie(gl, rubiksCube.getVisibleFaces(x, y, z), rubiksCube.getCubie(x, y, z));
+//						
+//					gl.glPopMatrix();
+//				}
+//			}
+//		}
+	}
+	
+	private void drawCubie(GL2 gl, int visibleFaces, Sphere cubie) {
+		gl.glBegin(GL_QUADS);
+		
+		// top face
+		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
+		if ((visibleFaces & Sphere.FACELET_TOP) > 0) glApplyColor(gl, cubie.topColor);
+		gl.glVertex3f(ONE_F, ONE_F, -ONE_F);
+		gl.glVertex3f(-ONE_F, ONE_F, -ONE_F);
+		gl.glVertex3f(-ONE_F, ONE_F, ONE_F);
+		gl.glVertex3f(ONE_F, ONE_F, ONE_F);
+	 
+		// bottom face
+		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
+		if ((visibleFaces & Sphere.FACELET_BOTTOM) > 0) glApplyColor(gl, cubie.bottomColor);
+		gl.glVertex3f(ONE_F, -ONE_F, ONE_F);
+		gl.glVertex3f(-ONE_F, -ONE_F, ONE_F);
+		gl.glVertex3f(-ONE_F, -ONE_F, -ONE_F);
+		gl.glVertex3f(ONE_F, -ONE_F, -ONE_F);
+			 
+		// front face
+		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
+		if ((visibleFaces & Sphere.FACELET_FRONT) > 0) glApplyColor(gl, cubie.frontColor);
+		gl.glVertex3f(ONE_F, ONE_F, ONE_F);
+		gl.glVertex3f(-ONE_F, ONE_F, ONE_F);
+		gl.glVertex3f(-ONE_F, -ONE_F, ONE_F);
+		gl.glVertex3f(ONE_F, -ONE_F, ONE_F);
+			 
+		// rear face
+		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
+		if ((visibleFaces & Sphere.FACELET_REAR) > 0) glApplyColor(gl, cubie.rearColor);
+		gl.glVertex3f(ONE_F, -ONE_F, -ONE_F);
+		gl.glVertex3f(-ONE_F, -ONE_F, -ONE_F);
+		gl.glVertex3f(-ONE_F, ONE_F, -ONE_F);
+		gl.glVertex3f(ONE_F, ONE_F, -ONE_F);
+			 
+		// left face
+		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
+		if ((visibleFaces & Sphere.FACELET_LEFT) > 0) glApplyColor(gl, cubie.leftColor);
+		gl.glVertex3f(-ONE_F, ONE_F, ONE_F);
+		gl.glVertex3f(-ONE_F, ONE_F, -ONE_F);
+		gl.glVertex3f(-ONE_F, -ONE_F, -ONE_F);
+		gl.glVertex3f(-ONE_F, -ONE_F, ONE_F);
+	 
+		// right face
+		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
+		if ((visibleFaces & Sphere.FACELET_RIGHT) > 0) glApplyColor(gl, cubie.rightColor);
+		gl.glVertex3f(ONE_F, ONE_F, -ONE_F);
+		gl.glVertex3f(ONE_F, ONE_F, ONE_F);
+		gl.glVertex3f(ONE_F, -ONE_F, ONE_F);
+		gl.glVertex3f(ONE_F, -ONE_F, -ONE_F);
+			
+		gl.glEnd();
+	}
+	
+	private void glApplyColor(GL2 gl, Color color) {
+		switch (color) {
+			case WHITE:
+				gl.glColor3f(ONE_F, ONE_F, ONE_F); break;
+			case YELLOW:
+				gl.glColor3f(ONE_F, ONE_F, ZERO_F); break;
+			case GREEN:
+				gl.glColor3f(ZERO_F, ONE_F, ZERO_F); break;
+			case ORANGE:
+				gl.glColor3f(ONE_F, ONE_F/2, ZERO_F); break;
+			case BLUE:
+				gl.glColor3f(ZERO_F, ZERO_F, ONE_F); break;
+			case RED:
+				gl.glColor3f(ONE_F, ZERO_F, ZERO_F); break;
+		}
+	}
+	
+	private boolean isRotating() {
+		return rotatingSectionX + rotatingSectionY + rotatingSectionZ > -3;
+	}
+	
+	private void updateRotationAngles() {
+		Direction direction = (angularVelocity > 0) ? Direction.COUNTER_CLOCKWISE : Direction.CLOCKWISE;
+		
+		if (rotatingSectionX >= 0) {
+			columnAnglesX[rotatingSectionX] += angularVelocity;
+			if (columnAnglesX[rotatingSectionX] % SECTION_ROTATE_STEP_DEGREES == 0) {
+				columnAnglesX[rotatingSectionX] = 0;
+//				rubiksCube.applyRotation(new Rotation(Axis.X, rotatingSectionX, direction));
+				rotatingSectionX = -1;
+			}
+		}
+		else if (rotatingSectionY >= 0) {
+			rowAnglesY[rotatingSectionY] += angularVelocity;
+			if (rowAnglesY[rotatingSectionY] % SECTION_ROTATE_STEP_DEGREES == 0) {
+				rowAnglesY[rotatingSectionY] = 0;
+//				rubiksCube.applyRotation(new Rotation(Axis.Y, rotatingSectionY, direction));
+				rotatingSectionY = -1;
+			}
+		}
+		else if (rotatingSectionZ >= 0) {
+			faceAnglesZ[rotatingSectionZ] += angularVelocity;
+			if (faceAnglesZ[rotatingSectionZ] % SECTION_ROTATE_STEP_DEGREES == 0) {
+				faceAnglesZ[rotatingSectionZ] = 0;
+//				rubiksCube.applyRotation(new Rotation(Axis.Z, rotatingSectionZ, direction));
+				rotatingSectionZ = -1;
+			}
+		}
+	}
+	
+	// section is the index of the column/row/face that is to be rotated.
+	// if reverse is true then rotation will be clockwise
+	private void rotateSection(int section, Axis axis, boolean reverse) {
+		// make sure nothing is currently rotating
+		if (!isRotating()) {
+			if (axis == Axis.X) rotatingSectionX = section;
+			if (axis == Axis.Y) rotatingSectionY = section;
+			if (axis == Axis.Z) rotatingSectionZ = section;
+			angularVelocity = reverse ? -Math.abs(angularVelocity) : Math.abs(angularVelocity);
+		}
+	}
+	
+	private void toggleScrambleCells() {
+//		if (scrambleAnimatorThread == null || !scrambleAnimatorThread.isAlive()) {
+//			scrambleAnimatorThread = new RotationAnimatorThread() {
+//				@Override protected int getSection(int i) { return new Random().nextInt(rubiksCube.getSize()); }
+//				@Override protected Axis getAxis(int i) { return Axis.values()[new Random().nextInt(Axis.values().length)]; }
+//				@Override protected boolean isReverse(int i) { return new Random().nextBoolean(); }
+//				@Override protected boolean isComplete(int i) { return false; }
+//			};
+//			scrambleAnimatorThread.start();
+//		}
+//		else {
+//			scrambleAnimatorThread.terminate();
+//		}
+	}
+	
+	private void toggleSolveCells() {
+//		if (solutionAnimatorThread == null || !solutionAnimatorThread.isAlive()) {
+//			RubiksCubeSolver solver = new LameRubiksCubeSolver(rubiksCube.getCopy());
+//			final List<Rotation> rotations = solver.getSolution();
+//			System.out.println("Found solution with " + rotations.size() + " moves");
+//		
+//			solutionAnimatorThread = new RotationAnimatorThread() {
+//				@Override protected int getSection(int i) { return rotations.get(i).getSection(); }
+//				@Override protected Axis getAxis(int i) { return rotations.get(i).getAxis(); }
+//				@Override protected boolean isReverse(int i) { return rotations.get(i).isClockwise(); }
+//				@Override protected boolean isComplete(int i) { return (i == rotations.size()); }
+//			};
+//			solutionAnimatorThread.start();
+//		}
+//		else {
+//			solutionAnimatorThread.terminate();
+//		}
+	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_UP:
+				cameraAngleX -= CAMERA_ROTATE_STEP_DEGREES;
+				break;
+			case KeyEvent.VK_DOWN:
+				cameraAngleX += CAMERA_ROTATE_STEP_DEGREES;
+				break;
+			case KeyEvent.VK_LEFT:
+				if (e.isShiftDown()) cameraAngleZ += CAMERA_ROTATE_STEP_DEGREES;
+				else cameraAngleY -= CAMERA_ROTATE_STEP_DEGREES;
+				break;
+			case KeyEvent.VK_RIGHT:
+				if (e.isShiftDown()) cameraAngleZ -= CAMERA_ROTATE_STEP_DEGREES;
+				else cameraAngleY += CAMERA_ROTATE_STEP_DEGREES;
+				break;
+//			case KeyEvent.VK_Q:
+//				rotateSection(COLUMN_LEFT, Axis.X, e.isShiftDown()); break;
+//			case KeyEvent.VK_W:
+//				rotateSection(COLUMN_MIDDLE, Axis.X, e.isShiftDown()); break;
+//			case KeyEvent.VK_E:
+//				rotateSection(COLUMN_RIGHT, Axis.X, e.isShiftDown()); break;
+//			case KeyEvent.VK_A:
+//				rotateSection(ROW_BOTTOM, Axis.Y, e.isShiftDown()); break;
+//			case KeyEvent.VK_S:
+//				rotateSection(ROW_MIDDLE, Axis.Y, e.isShiftDown()); break;
+//			case KeyEvent.VK_D:
+//				rotateSection(ROW_TOP, Axis.Y, e.isShiftDown()); break;
+//			case KeyEvent.VK_Z:
+//				rotateSection(FACE_FRONT, Axis.Z, e.isShiftDown()); break;
+//			case KeyEvent.VK_X:
+//				rotateSection(FACE_MIDDLE, Axis.Z, e.isShiftDown()); break;
+//			case KeyEvent.VK_C:
+//				rotateSection(FACE_REAR, Axis.Z, e.isShiftDown()); break;
+			case KeyEvent.VK_J:
+				toggleScrambleCells();
+				break;
+			case KeyEvent.VK_B:
+				toggleSolveCells();
+				break;
+			case KeyEvent.VK_R:
+				cameraAngleX = DEFAULT_CAMERA_ANGLE_X;
+				cameraAngleY = DEFAULT_CAMERA_ANGLE_Y;
+				cameraAngleZ = ZERO_F;
+				zoom = DEFAULT_ZOOM;
+				if (e.isShiftDown()) {
+//					columnAnglesX = new float[rubiksCube.getSize()];
+//					rowAnglesY = new float[rubiksCube.getSize()];
+//					faceAnglesZ = new float[rubiksCube.getSize()];
+//					rubiksCube.resetState();
+				}
+				break;
+		}
+	}
+	
+	@Override
+	public void mouseWheelMoved(MouseEvent e) {
+//		zoom += 2*e.getWheelRotation(); TODO
+		zoom += 2*e.getRotationScale();
+		if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
+		if (zoom < MIN_ZOOM) zoom = MIN_ZOOM;
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		final int buffer = 2;
+		
+		if (e.getX() < mouseX-buffer) cameraAngleY -= CAMERA_ROTATE_STEP_DEGREES;
+		else if (e.getX() > mouseX+buffer) cameraAngleY += CAMERA_ROTATE_STEP_DEGREES;
+		
+		if (e.getY() < mouseY-buffer) cameraAngleX -= CAMERA_ROTATE_STEP_DEGREES;
+		else if (e.getY() > mouseY+buffer) cameraAngleX += CAMERA_ROTATE_STEP_DEGREES;
+		
+		mouseX = e.getX();
+		mouseY = e.getY();
+	}
+	
+	@Override public void dispose(GLAutoDrawable drawable) { }
+	@Override public void keyReleased(KeyEvent e) { }
+	@Override public void mouseClicked(MouseEvent e) { }
+	@Override public void mouseEntered(MouseEvent e) { }
+	@Override public void mouseExited(MouseEvent e) { }
+	@Override public void mousePressed(MouseEvent e) { }
+	@Override public void mouseReleased(MouseEvent e) { }
+	@Override public void mouseMoved(MouseEvent e) { }
+	
+	public static void main(String[] args) {
+		GLProfile glp = GLProfile.getDefault();
+		GLCapabilities caps = new GLCapabilities(glp);
+		GLWindow window = GLWindow.create(caps);
+		 
+		final FPSAnimator animator = new FPSAnimator(window, FPS, true);
+		window.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowDestroyNotify(WindowEvent e) {
+				new Thread() {
+					@Override
+					public void run() {
+						animator.stop();
+						System.exit(0);
+					}
+				}.start();
+			};
+		});
+		 
+		int size = (args.length == 1) ? Integer.parseInt(args[0]) : 3;
+		Cell3DJOGLRenderer cellRenderer = new Cell3DJOGLRenderer(size);
+		window.addGLEventListener(cellRenderer);
+		window.addKeyListener(cellRenderer);
+		window.addMouseListener(cellRenderer);
+		window.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+		window.setTitle(TITLE);
+		window.setVisible(true);
+		animator.start();	
+	}
+	
+	private abstract class RotationAnimatorThread extends Thread {
+		private boolean isTerminated = false;
+		
+		public void terminate() { isTerminated = true; }
+		
+		protected abstract int getSection(int i);
+		protected abstract Axis getAxis(int i);
+		protected abstract boolean isReverse(int i);
+		protected abstract boolean isComplete(int i);
+		
+		@Override
+		public void run() {
+			int i = 0;
+			while (!isTerminated && !isComplete(i)) {
+				while (isRotating()) {
+					try { Thread.sleep(10); }
+					catch (InterruptedException e) { }
+				}
+				rotateSection(getSection(i), getAxis(i), isReverse(i));
+				i++;
+			}
+		}
+	}
+	
+}

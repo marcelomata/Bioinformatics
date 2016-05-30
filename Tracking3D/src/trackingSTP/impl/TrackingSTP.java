@@ -27,11 +27,12 @@ public class TrackingSTP extends TrackingStrategy {
 		current = nextAction();
 		//To first test, only from the frame 6 to frame 12
 		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
-//			if()
-			object3DToAssociate = new Object3DTracking(inObject4D.getLastFrame(), inObject4D.getFrame());
-			current.execute(object3DToAssociate);
-//			current = nextAction();
-			inObject4D.nextFrame();
+			if(inObject4D.getCurrentFrame() >= 6 && inObject4D.getCurrentFrame() <= 12) {
+				object3DToAssociate = new Object3DTracking(inObject4D.getLastFrame(), inObject4D.getFrame());
+				current.execute(object3DToAssociate);
+	//			current = nextAction();
+			}
+		inObject4D.nextFrame();
 		}
 	}
 

@@ -36,14 +36,10 @@ public class AssociationMinDistance extends Association {
 					minTarget = target;
 				}
 			}
-			
+			result.addAssociation(source, minTarget);
 		}
 		
-		//To test from the frame 6 to frame 12
-		
-//		return new AssociatedObjectList();
-		
-		return null;
+		return result;
 	}
 
 
