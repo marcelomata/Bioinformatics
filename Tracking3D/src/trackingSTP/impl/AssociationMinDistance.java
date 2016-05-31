@@ -1,6 +1,9 @@
 package trackingSTP.impl;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.ObjectAction;
@@ -18,25 +21,54 @@ public class AssociationMinDistance extends Association {
 		
 		Object3D source = null;
 		Object3D target = null;
-		Object3D minTarget = null;
+		Object3D min = null;
 		double minDistance = Double.MAX_VALUE;
 		double newDistance = Double.MAX_VALUE;
 		
 		AssociatedObjectList result = new AssociatedObjectList();
 		
-		for (int i = 0; i < object3DT.getNbObjects(); i++) {
-			source = object3DT.getObject(i);
-			minTarget = object3DTPlus1.getObject(0);
-			minDistance = source.getCenterAsPoint().distance(minTarget.getCenterAsPoint());
-			for (int j = 1; j < object3DTPlus1.getNbObjects(); j++) {
-				target = object3DTPlus1.getObject(j);
+		List<Object3D> object3DListSource = object3DT.getObjectsList();
+		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
+		List<Object3D> leftObject3DList = new ArrayList<Object3D>();
+		for (Object3D object3d : object3DListTarget) {
+			leftObject3DList.add(object3d);
+		}
+		
+		for (int i = 0; i < object3DListSource.size(); i++) {
+			source = object3DListSource.get(i);
+			min = leftObject3DList.get(0);
+			minDistance = source.getCenterAsPoint().distance(min.getCenterAsPoint());
+			for (int j = 1; j < leftObject3DList.size(); j++) {
+				target = leftObject3DList.get(j);
 				newDistance = source.getCenterAsPoint().distance(target.getCenterAsPoint());
 				if(newDistance < minDistance) {
 					minDistance = newDistance;
-					minTarget = target;
+					min = target;
 				}
 			}
-			result.addAssociation(source, minTarget);
+			result.addAssociation(source, min);
+			leftObject3DList.remove(min);
+//			boolean b = leftObject3DList.remove(min);
+//			if(!b) 
+//				System.out.println(min.getName()+" - "+b);
+		}
+		
+		minDistance = Double.MAX_VALUE;
+		newDistance = Double.MAX_VALUE;
+		for (int i = 0; i < leftObject3DList.size(); i++) {
+			target = leftObject3DList.get(i);
+			source = object3DListSource.get(0);
+			minDistance = source.getCenterAsPoint().distance(target.getCenterAsPoint());
+			min = source;
+			for (int j = 1; j < object3DListSource.size(); j++) {
+				source = object3DListSource.get(j);
+				newDistance = source.getCenterAsPoint().distance(target.getCenterAsPoint());
+				if(newDistance < minDistance) {
+					minDistance = newDistance;
+					min = source;
+				}
+			}
+			result.addAssociation(min, target);
 		}
 		
 		return result;
