@@ -53,7 +53,7 @@ public class AssociatedObjectList extends EventSeekerObjectAction {
 	}
 
 	@Override
-	public List<Object3D> getRightTargetObjects() {
+	public List<Object3D> getLeftSourceObjects() {
 		return this.leftSourceObjects;
 	}
 

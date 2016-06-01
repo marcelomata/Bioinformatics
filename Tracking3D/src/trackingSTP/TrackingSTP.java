@@ -13,6 +13,7 @@ import trackingSTP.actions.AssociationMinDistance;
 import trackingSTP.actions.EventSeekerExample;
 import trackingSTP.actions.HandlerExemple;
 import trackingSTP.objects.AssociationObjectAction;
+import trackingSTP.objects.Event;
 import trackingSTP.objects.EventHandlerObjectAction;
 import trackingSTP.objects.EventSeekerObjectAction;
 import trackingSTP.objects.ObjectActionSTP4D;
@@ -40,19 +41,21 @@ public class TrackingSTP extends TrackingStrategy {
 		TrackingResultSTP result = null;
 		ObjectActionSTP4D inObject4D = (ObjectActionSTP4D)inObject;
 		inObject4D.nextFrame();
-		current = nextAction();
+		
 		//To first test, only from the frame 6 to frame 12
 		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
 			if(inObject4D.getCurrentFrame() >= 6 && inObject4D.getCurrentFrame() <= 12) {
 				object3DToAssociate = inObject4D.getAssociationLastResult(result);
+				current = nextAction();
 				current.setObject(object3DToAssociate);
 				associatedObjects = (EventSeekerObjectAction) current.execute();
-				printAssociationMap(associatedObjects);
-				System.out.println("\n\n\n");
+//				printAssociationMap(associatedObjects);
+//				System.out.println("\n");
 				
 				current = nextAction();
 				current.setObject(associatedObjects);
 				eventList = (EventHandlerObjectAction) current.execute();
+				printEventList(eventList);
 				
 				current = nextAction();
 				current.setObject(eventList);
@@ -60,6 +63,13 @@ public class TrackingSTP extends TrackingStrategy {
 			}
 			inObject4D.nextFrame();
 		}
+	}
+
+	private void printEventList(EventHandlerObjectAction eventList) {
+		for (Event event : eventList.getEventList()) {
+			System.out.println("Object "+event.getObject().getName()+" event type "+event.getEventType());
+		}
+		System.out.println("\n");
 	}
 
 	private void printAssociationMap(EventSeekerObjectAction associatedObjects) {

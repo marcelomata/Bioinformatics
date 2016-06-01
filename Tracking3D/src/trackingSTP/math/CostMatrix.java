@@ -12,10 +12,10 @@ public class CostMatrix {
 	private List<Object3D> source;
 	private List<Object3D> target;
 	
-	public CostMatrix() {
+	public CostMatrix(int m, int n) {
 		this.source = new ArrayList<Object3D>();
 		this.target = new ArrayList<Object3D>();
-		this.costs = new Matrix(source.size(), target.size());
+		this.costs = new Matrix(m, n);
 	}
 	
 	public void addAssociation(Object3D source, Object3D target) {

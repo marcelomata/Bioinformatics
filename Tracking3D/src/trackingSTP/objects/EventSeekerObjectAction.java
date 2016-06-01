@@ -13,8 +13,8 @@ public abstract class EventSeekerObjectAction implements ObjectAction {
 	
 	public abstract List<Object3D> getLeftTargetObjects();
 	
-	public abstract List<Object3D> getRightTargetObjects();
+	public abstract List<Object3D> getLeftSourceObjects();
 	
 	public abstract CostMatrix getCostMatrix();
-	
+
 }
