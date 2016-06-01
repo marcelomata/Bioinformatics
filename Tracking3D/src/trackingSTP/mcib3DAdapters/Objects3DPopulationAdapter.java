@@ -1,4 +1,4 @@
-package trackingSTP.impl;
+package trackingSTP.mcib3DAdapters;
 
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.ObjectAction;

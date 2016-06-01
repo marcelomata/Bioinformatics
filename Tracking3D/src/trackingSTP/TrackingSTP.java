@@ -1,4 +1,4 @@
-package trackingSTP.impl;
+package trackingSTP;
 
 
 import java.util.List;
@@ -9,6 +9,12 @@ import mcib3d.geom.Object3D;
 import trackingInterface.Object4D;
 import trackingInterface.TrackingAction;
 import trackingInterface.TrackingStrategy;
+import trackingSTP.actions.AssociationMinDistance;
+import trackingSTP.actions.EventSeekerExample;
+import trackingSTP.actions.HandlerExemple;
+import trackingSTP.objects.AssociatedObjectList;
+import trackingSTP.objects.Object3DTracking;
+import trackingSTP.objects.ObjectAction4D;
 
 public class TrackingSTP extends TrackingStrategy {
 	
@@ -39,10 +45,10 @@ public class TrackingSTP extends TrackingStrategy {
 	//			current = nextAction();
 				
 				printAssociationMap(associatedObjects);
+				System.out.println("\n\n\n");
 			}
 			
 			inObject4D.nextFrame();
-			System.out.println("\n\n\n");
 		}
 	}
 

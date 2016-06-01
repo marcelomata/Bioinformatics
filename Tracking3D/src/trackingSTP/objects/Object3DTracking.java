@@ -1,7 +1,7 @@
-package trackingSTP.impl;
-import trackingInterface.ObjectAction;
+package trackingSTP.objects;
+import trackingSTP.mcib3DAdapters.Objects3DPopulationAdapter;
 
-public class Object3DTracking implements ObjectAction {
+public class Object3DTracking extends AssociationObjectAction {
 	
 	private Objects3DPopulationAdapter objectT;
 	private Objects3DPopulationAdapter objectTPlus1;
@@ -11,10 +11,12 @@ public class Object3DTracking implements ObjectAction {
 		this.objectTPlus1 =  objectTPlus1;
 	}
 	
+	@Override
 	public Objects3DPopulationAdapter getObjectT() {
 		return objectT;
 	}
 	
+	@Override
 	public Objects3DPopulationAdapter getObjectTPlus1() {
 		return objectTPlus1;
 	}

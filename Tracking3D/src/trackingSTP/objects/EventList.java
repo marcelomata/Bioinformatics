@@ -1,4 +1,4 @@
-package trackingSTP.impl;
+package trackingSTP.objects;
 
 import trackingInterface.ObjectAction;
 

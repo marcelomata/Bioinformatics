@@ -1,4 +1,4 @@
-package trackingSTP;
+package trackingSTP.actions;
 
 import trackingInterface.TrackingAction;
 

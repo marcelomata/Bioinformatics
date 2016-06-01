@@ -1,4 +1,4 @@
-package trackingSTP.impl;
+package trackingSTP.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.Object4D;
+import trackingSTP.mcib3DAdapters.Objects3DPopulationAdapter;
 
 public class ObjectAction4D implements Object4D {
 	
