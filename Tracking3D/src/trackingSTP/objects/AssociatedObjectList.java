@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import mcib3d.geom.Object3D;
-import trackingInterface.ObjectAction;
 import trackingSTP.math.CostMatrix;
 
-public class AssociatedObjectList implements EventSeekerObjectAction {
+public class AssociatedObjectList extends EventSeekerObjectAction {
 	
 	private Map<Object3D, List<Object3D>> associationsMap;
 	private List<Object3D> leftTargetObjects;
@@ -46,6 +45,21 @@ public class AssociatedObjectList implements EventSeekerObjectAction {
 	
 	public void setCostMatrix(CostMatrix matrix) {
 		this.matrix = matrix;
+	}
+
+	@Override
+	public List<Object3D> getLeftTargetObjects() {
+		return this.leftTargetObjects;
+	}
+
+	@Override
+	public List<Object3D> getRightTargetObjects() {
+		return this.leftSourceObjects;
+	}
+
+	@Override
+	public CostMatrix getCostMatrix() {
+		return this.matrix;
 	}
 	
 }

@@ -1,7 +1,7 @@
 package trackingSTP.objects;
 
-import trackingInterface.ObjectAction;
+public class EventList extends EventHandlerObjectAction {
 
-public class EventList implements ObjectAction {
-
+	
+	
 }

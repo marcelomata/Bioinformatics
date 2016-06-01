@@ -9,15 +9,13 @@ import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.ObjectAction;
 import trackingSTP.math.CostMatrix;
 import trackingSTP.objects.AssociatedObjectList;
-import trackingSTP.objects.AssociationObjectAction;
 
 public class AssociationMinDistance extends Association {
 
 	@Override
-	public ObjectAction execute(ObjectAction object) {
-		AssociationObjectAction objectTracking = (AssociationObjectAction) object;
-		Objects3DPopulation object3DT = objectTracking.getObjectT().getObject3D();
-		Objects3DPopulation object3DTPlus1 = objectTracking.getObjectTPlus1().getObject3D();
+	public ObjectAction execute() {
+		Objects3DPopulation object3DT = objectAction.getObjectT().getObject3D();
+		Objects3DPopulation object3DTPlus1 = objectAction.getObjectTPlus1().getObject3D();
 		
 		System.out.println(object3DT.getNbObjects() + " and " + object3DTPlus1.getNbObjects());
 		
@@ -31,20 +29,20 @@ public class AssociationMinDistance extends Association {
 		
 		List<Object3D> object3DListSource = object3DT.getObjectsList();
 		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
-		List<Object3D> leftObject3DList = new ArrayList<Object3D>();
+		List<Object3D> leftTargetObject3DList = new ArrayList<Object3D>();
 		CostMatrix matrix = new CostMatrix();
 		for (Object3D object3d : object3DListTarget) {
-			leftObject3DList.add(object3d);
+			leftTargetObject3DList.add(object3d);
 		}
 		
 		for (int i = 0; i < object3DListSource.size(); i++) {
 			source = object3DListSource.get(i);
-			min = leftObject3DList.get(0);
+			min = leftTargetObject3DList.get(0);
 			minDistance = source.getCenterAsPoint().distance(min.getCenterAsPoint());
 			matrix.addAssociation(source, target);
 			matrix.setCost(i, 0, newDistance);
-			for (int j = 1; j < leftObject3DList.size(); j++) {
-				target = leftObject3DList.get(j);
+			for (int j = 1; j < leftTargetObject3DList.size(); j++) {
+				target = leftTargetObject3DList.get(j);
 				newDistance = source.getCenterAsPoint().distance(target.getCenterAsPoint());
 				matrix.addAssociation(source, target);
 				matrix.setCost(i, j, newDistance);
@@ -54,10 +52,10 @@ public class AssociationMinDistance extends Association {
 				}
 			}
 			result.addAssociation(source, min);
-			leftObject3DList.remove(min);
+			leftTargetObject3DList.remove(min);
 		}
 		
-		result.addAllLeftObjects(leftObject3DList);
+		result.addAllLeftTargetObjects(leftTargetObject3DList);
 		
 //		minDistance = Double.MAX_VALUE;
 //		newDistance = Double.MAX_VALUE;

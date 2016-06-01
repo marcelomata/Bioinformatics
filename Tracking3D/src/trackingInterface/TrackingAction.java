@@ -2,6 +2,7 @@ package trackingInterface;
 
 public interface TrackingAction {
 	
-	ObjectAction execute(ObjectAction object);
+	void setObject(ObjectAction object);
+	ObjectAction execute();
 	
 }

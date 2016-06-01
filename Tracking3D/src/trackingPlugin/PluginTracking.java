@@ -3,12 +3,10 @@ import java.io.File;
 
 import ij.ImagePlus;
 import ij.io.Opener;
-import ij.plugin.Duplicator;
 import ij.plugin.PlugIn;
-import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.TrackingStrategy;
 import trackingSTP.TrackingSTP;
-import trackingSTP.objects.ObjectAction4D;
+import trackingSTP.objects.ObjectActionSTP4D;
 
 public class PluginTracking implements PlugIn {
 	@Override
@@ -17,7 +15,7 @@ public class PluginTracking implements PlugIn {
 		Opener open = new Opener();
 		ImagePlus imp = open.openImage(image.getAbsolutePath());
 		
-		TrackingStrategy tracking = new TrackingSTP(new ObjectAction4D(imp));
+		TrackingStrategy tracking = new TrackingSTP(new ObjectActionSTP4D(imp));
 		tracking.run();
 		
 //		Objects3DPopulation population = new Objects3DPopulation(imp);

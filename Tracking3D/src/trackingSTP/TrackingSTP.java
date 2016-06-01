@@ -12,9 +12,11 @@ import trackingInterface.TrackingStrategy;
 import trackingSTP.actions.AssociationMinDistance;
 import trackingSTP.actions.EventSeekerExample;
 import trackingSTP.actions.HandlerExemple;
-import trackingSTP.objects.AssociatedObjectList;
-import trackingSTP.objects.Object3DTracking;
-import trackingSTP.objects.ObjectAction4D;
+import trackingSTP.objects.AssociationObjectAction;
+import trackingSTP.objects.EventHandlerObjectAction;
+import trackingSTP.objects.EventSeekerObjectAction;
+import trackingSTP.objects.ObjectActionSTP4D;
+import trackingSTP.objects.TrackingResultSTP;
 
 public class TrackingSTP extends TrackingStrategy {
 	
@@ -32,27 +34,35 @@ public class TrackingSTP extends TrackingStrategy {
 	@Override
 	public void run() {
 		TrackingAction current = null;
-		Object3DTracking object3DToAssociate = null;
-		AssociatedObjectList associatedObjects = null;
-		ObjectAction4D inObject4D = (ObjectAction4D)inObject;
+		AssociationObjectAction object3DToAssociate = null;
+		EventSeekerObjectAction associatedObjects = null;
+		EventHandlerObjectAction eventList = null;
+		TrackingResultSTP result = null;
+		ObjectActionSTP4D inObject4D = (ObjectActionSTP4D)inObject;
 		inObject4D.nextFrame();
 		current = nextAction();
 		//To first test, only from the frame 6 to frame 12
 		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
 			if(inObject4D.getCurrentFrame() >= 6 && inObject4D.getCurrentFrame() <= 12) {
-				object3DToAssociate = new Object3DTracking(inObject4D.getLastFrame(), inObject4D.getFrame());
-				associatedObjects = (AssociatedObjectList) current.execute(object3DToAssociate);
-	//			current = nextAction();
-				
+				object3DToAssociate = inObject4D.getAssociationLastResult(result);
+				current.setObject(object3DToAssociate);
+				associatedObjects = (EventSeekerObjectAction) current.execute();
 				printAssociationMap(associatedObjects);
 				System.out.println("\n\n\n");
+				
+				current = nextAction();
+				current.setObject(associatedObjects);
+				eventList = (EventHandlerObjectAction) current.execute();
+				
+				current = nextAction();
+				current.setObject(eventList);
+				result = (TrackingResultSTP) current.execute();
 			}
-			
 			inObject4D.nextFrame();
 		}
 	}
 
-	private void printAssociationMap(AssociatedObjectList associatedObjects) {
+	private void printAssociationMap(EventSeekerObjectAction associatedObjects) {
 		Map<Object3D, List<Object3D>> associationsMap = associatedObjects.getAssociationsMap();
 		Set<Object3D> keys = associationsMap.keySet();
 		int count = 1;
@@ -64,6 +74,9 @@ public class TrackingSTP extends TrackingStrategy {
 			}
 			System.out.println();
 			count++;
+			if(count > 10) {
+				break;
+			}
 		}
 	}
 
