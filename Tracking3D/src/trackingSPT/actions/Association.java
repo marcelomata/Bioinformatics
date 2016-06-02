@@ -1,8 +1,8 @@
-package trackingSTP.actions;
+package trackingSPT.actions;
 
 import trackingInterface.ObjectAction;
 import trackingInterface.TrackingAction;
-import trackingSTP.objects.AssociationObjectAction;
+import trackingSPT.objects.AssociationObjectAction;
 
 public abstract class Association implements TrackingAction {
 

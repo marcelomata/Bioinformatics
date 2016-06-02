@@ -5,8 +5,8 @@ import ij.ImagePlus;
 import ij.io.Opener;
 import ij.plugin.PlugIn;
 import trackingInterface.TrackingStrategy;
-import trackingSTP.TrackingSTP;
-import trackingSTP.objects.ObjectActionSTP4D;
+import trackingSPT.TrackingSPT;
+import trackingSPT.objects.ObjectActionSPT4D;
 
 public class PluginTracking implements PlugIn {
 	@Override
@@ -15,7 +15,7 @@ public class PluginTracking implements PlugIn {
 		Opener open = new Opener();
 		ImagePlus imp = open.openImage(image.getAbsolutePath());
 		
-		TrackingStrategy tracking = new TrackingSTP(new ObjectActionSTP4D(imp));
+		TrackingStrategy tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
 		tracking.run();
 		
 //		Objects3DPopulation population = new Objects3DPopulation(imp);

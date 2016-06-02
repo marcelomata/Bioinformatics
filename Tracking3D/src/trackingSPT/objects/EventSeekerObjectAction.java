@@ -1,13 +1,12 @@
-package trackingSTP.objects;
+package trackingSPT.objects;
 
 import java.util.List;
 import java.util.Map;
 
 import mcib3d.geom.Object3D;
-import trackingInterface.ObjectAction;
-import trackingSTP.math.CostMatrix;
+import trackingSPT.math.CostMatrix;
 
-public abstract class EventSeekerObjectAction implements ObjectAction {
+public abstract class EventSeekerObjectAction extends ObjectActionSPT {
 
 	public abstract Map<Object3D, List<Object3D>> getAssociationsMap();
 	

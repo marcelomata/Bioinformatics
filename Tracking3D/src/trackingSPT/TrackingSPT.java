@@ -1,4 +1,4 @@
-package trackingSTP;
+package trackingSPT;
 
 
 import java.util.List;
@@ -9,19 +9,19 @@ import mcib3d.geom.Object3D;
 import trackingInterface.Object4D;
 import trackingInterface.TrackingAction;
 import trackingInterface.TrackingStrategy;
-import trackingSTP.actions.AssociationMinDistance;
-import trackingSTP.actions.EventSeekerExample;
-import trackingSTP.actions.HandlerExemple;
-import trackingSTP.objects.AssociationObjectAction;
-import trackingSTP.objects.Event;
-import trackingSTP.objects.EventHandlerObjectAction;
-import trackingSTP.objects.EventSeekerObjectAction;
-import trackingSTP.objects.ObjectActionSTP4D;
-import trackingSTP.objects.TrackingResultSTP;
+import trackingSPT.actions.AssociationMinDistance;
+import trackingSPT.actions.EventSeekerExample;
+import trackingSPT.actions.HandlerExemple;
+import trackingSPT.objects.AssociationObjectAction;
+import trackingSPT.objects.Event;
+import trackingSPT.objects.EventHandlerObjectAction;
+import trackingSPT.objects.EventSeekerObjectAction;
+import trackingSPT.objects.ObjectActionSPT4D;
+import trackingSPT.objects.TrackingResultSPT;
 
-public class TrackingSTP extends TrackingStrategy {
+public class TrackingSPT extends TrackingStrategy {
 	
-	public TrackingSTP(Object4D inObject) {
+	public TrackingSPT(Object4D inObject) {
 		super(inObject);
 	}
 
@@ -38,8 +38,8 @@ public class TrackingSTP extends TrackingStrategy {
 		AssociationObjectAction object3DToAssociate = null;
 		EventSeekerObjectAction associatedObjects = null;
 		EventHandlerObjectAction eventList = null;
-		TrackingResultSTP result = null;
-		ObjectActionSTP4D inObject4D = (ObjectActionSTP4D)inObject;
+		TrackingResultSPT result = new TrackingResultSPT();
+		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D)inObject;
 		inObject4D.nextFrame();
 		
 		//To first test, only from the frame 6 to frame 12
@@ -59,7 +59,7 @@ public class TrackingSTP extends TrackingStrategy {
 				
 				current = nextAction();
 				current.setObject(eventList);
-				result = (TrackingResultSTP) current.execute();
+				result = (TrackingResultSPT) current.execute();
 			}
 			inObject4D.nextFrame();
 		}

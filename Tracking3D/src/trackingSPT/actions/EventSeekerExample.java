@@ -1,14 +1,14 @@
-package trackingSTP.actions;
+package trackingSPT.actions;
 
 
 import java.util.List;
 
 import mcib3d.geom.Object3D;
 import trackingInterface.ObjectAction;
-import trackingSTP.enums.EventType;
-import trackingSTP.enums.ObjectType;
-import trackingSTP.objects.Event;
-import trackingSTP.objects.EventList;
+import trackingSPT.enums.EventType;
+import trackingSPT.enums.ObjectType;
+import trackingSPT.objects.Event;
+import trackingSPT.objects.EventList;
 
 public class EventSeekerExample extends EventSeeker {
 

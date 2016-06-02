@@ -1,10 +1,8 @@
-package trackingSTP.objects;
+package trackingSPT.objects;
 
 import java.util.List;
 
-import trackingInterface.ObjectAction;
-
-public abstract class EventHandlerObjectAction implements ObjectAction {
+public abstract class EventHandlerObjectAction extends ObjectActionSPT {
 	
 	protected EventSeekerObjectAction eventSeekerObj;
 

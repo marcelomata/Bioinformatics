@@ -1,4 +1,4 @@
-package trackingSTP.actions;
+package trackingSPT.actions;
 
 
 import java.util.ArrayList;
@@ -7,8 +7,8 @@ import java.util.List;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.ObjectAction;
-import trackingSTP.math.CostMatrix;
-import trackingSTP.objects.AssociatedObjectList;
+import trackingSPT.math.CostMatrix;
+import trackingSPT.objects.AssociatedObjectList;
 
 public class AssociationMinDistance extends Association {
 

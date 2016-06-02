@@ -1,12 +1,12 @@
-package trackingSTP.mcib3DAdapters;
+package trackingSPT.mcib3DAdapters;
 
 import mcib3d.geom.Object3D;
 
-public class Object3DSTP {
+public class Object3DSPT {
 
 	private Object3D object;
 	
-	public Object3DSTP(Object3D object) {
+	public Object3DSPT(Object3D object) {
 		this.object = object;
 	}
 	

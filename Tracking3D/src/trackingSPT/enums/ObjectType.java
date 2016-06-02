@@ -1,4 +1,4 @@
-package trackingSTP.enums;
+package trackingSPT.enums;
 
 public enum ObjectType {
 	EXCEEDED, MISSED

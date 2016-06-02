@@ -1,5 +1,5 @@
-package trackingSTP.objects;
-import trackingSTP.mcib3DAdapters.Objects3DPopulationAdapter;
+package trackingSPT.objects;
+import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
 
 public class Object3DTracking extends AssociationObjectAction {
 	

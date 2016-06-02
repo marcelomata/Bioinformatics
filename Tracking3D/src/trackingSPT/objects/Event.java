@@ -1,8 +1,8 @@
-package trackingSTP.objects;
+package trackingSPT.objects;
 
 import mcib3d.geom.Object3D;
-import trackingSTP.enums.EventType;
-import trackingSTP.enums.ObjectType;
+import trackingSPT.enums.EventType;
+import trackingSPT.enums.ObjectType;
 
 public class Event {
 

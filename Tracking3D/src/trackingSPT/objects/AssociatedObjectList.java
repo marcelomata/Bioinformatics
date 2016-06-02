@@ -1,4 +1,4 @@
-package trackingSTP.objects;
+package trackingSPT.objects;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import mcib3d.geom.Object3D;
-import trackingSTP.math.CostMatrix;
+import trackingSPT.math.CostMatrix;
 
 public class AssociatedObjectList extends EventSeekerObjectAction {
 	

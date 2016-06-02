@@ -1,4 +1,4 @@
-package trackingSTP.objects;
+package trackingSPT.objects;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +7,9 @@ import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.Object4D;
-import trackingSTP.mcib3DAdapters.Objects3DPopulationAdapter;
+import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
 
-public class ObjectActionSTP4D implements Object4D {
+public class ObjectActionSPT4D implements Object4D {
 	
 	private List<Objects3DPopulationAdapter> population3DPlusT;
 	private int currentFrame;
@@ -18,7 +18,7 @@ public class ObjectActionSTP4D implements Object4D {
 	 * 
 	 * @param imp It has to be a 4D image (3D+t)
 	 */
-	public ObjectActionSTP4D(ImagePlus imp) {
+	public ObjectActionSPT4D(ImagePlus imp) {
 		this.population3DPlusT = new ArrayList<Objects3DPopulationAdapter>();
 		this.currentFrame = 0;
 		loadFrames3D(imp);

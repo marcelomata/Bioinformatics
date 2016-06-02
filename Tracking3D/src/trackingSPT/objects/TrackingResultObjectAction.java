@@ -1,7 +1,7 @@
-package trackingSTP.objects;
+package trackingSPT.objects;
 
 import trackingInterface.ObjectAction;
-import trackingSTP.MotionField;
+import trackingSPT.MotionField;
 
 public abstract class TrackingResultObjectAction implements ObjectAction {
 
@@ -9,6 +9,10 @@ public abstract class TrackingResultObjectAction implements ObjectAction {
 	
 	public TrackingResultObjectAction() {
 		this.motionField = new MotionField();
+	}
+	
+	public MotionField getMotionField() {
+		return motionField;
 	}
 	
 	

@@ -1,8 +1,8 @@
-package trackingSTP.actions;
+package trackingSPT.actions;
 
 import trackingInterface.ObjectAction;
 import trackingInterface.TrackingAction;
-import trackingSTP.objects.EventHandlerObjectAction;
+import trackingSPT.objects.EventHandlerObjectAction;
 
 public abstract class Handler implements TrackingAction {
 

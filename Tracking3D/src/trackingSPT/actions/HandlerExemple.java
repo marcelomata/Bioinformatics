@@ -1,4 +1,4 @@
-package trackingSTP.actions;
+package trackingSPT.actions;
 
 
 import java.util.List;
@@ -6,10 +6,10 @@ import java.util.Map;
 
 import mcib3d.geom.Object3D;
 import trackingInterface.ObjectAction;
-import trackingSTP.enums.EventType;
-import trackingSTP.objects.Event;
-import trackingSTP.objects.EventSeekerObjectAction;
-import trackingSTP.objects.TrackingResultSTP;
+import trackingSPT.enums.EventType;
+import trackingSPT.objects.Event;
+import trackingSPT.objects.EventSeekerObjectAction;
+import trackingSPT.objects.TrackingResultSPT;
 
 public class HandlerExemple extends Handler {
 
@@ -29,7 +29,7 @@ public class HandlerExemple extends Handler {
 			}
 		}
 		
-		return new TrackingResultSTP();
+		return new TrackingResultSPT();
 	}
 
 }
