@@ -4,13 +4,13 @@ import trackingInterface.ObjectAction;
 
 public abstract class ObjectActionSPT implements ObjectAction {
 	
-	protected TrackingResultSPT result;
+	protected TrackingResultObjectAction result;
 	
-	public TrackingResultSPT getResult() {
+	public TrackingResultObjectAction getResult() {
 		return result;
 	}
 	
-	public void setResult(TrackingResultSPT result) {
+	public void setResult(TrackingResultObjectAction result) {
 		this.result = result;
 	}
 

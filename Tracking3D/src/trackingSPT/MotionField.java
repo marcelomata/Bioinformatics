@@ -22,6 +22,10 @@ public class MotionField {
 		return mapObjects.size();
 	}
 	
+	public void addNewObject(TemporalObject object) {
+		
+	}
+	
 	
 
 }

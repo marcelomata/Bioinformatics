@@ -1,32 +1,26 @@
 package trackingInterface;
-import java.util.ArrayList;
-import java.util.List;
 
-public abstract class TrackingStrategy {
+/**
+ * 
+ * This abstract class defines an strategy to tracking
+ *
+ */
+public abstract class TrackingStrategy extends Strategy {
 	
-	private List<TrackingAction> actions;
-	private int currentAction;
 	protected Object4D inObject;
 	
 	public TrackingStrategy(Object4D inObject) {
-		this.actions = new ArrayList<TrackingAction>();
+		super();
 		this.inObject = inObject;
-		this.currentAction = 0;
 		build();
 	}
 	
-	protected abstract void build();
+	public abstract void build();
 	
 	public abstract void run();
 	
-	protected void addAction(TrackingAction action) {
-		actions.add(action);
+	public void addAction(TrackingAction action) {
+		addAction(action);
 	}
 	
-	protected TrackingAction nextAction() {
-		TrackingAction result = actions.get(currentAction);
-		currentAction = (currentAction + 1) % actions.size();
-		return result;
-	}
-
 }

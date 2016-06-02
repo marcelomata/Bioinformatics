@@ -2,6 +2,6 @@ package trackingSPT.enums;
 
 public enum EventType {
 	
-	MERGING, SPLITTING, DISAPPEARED
+	MERGING, SPLITTING, DISAPPEARED, ASSOCIATION
 
 }

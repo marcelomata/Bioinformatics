@@ -8,7 +8,7 @@ import java.util.Map;
 import mcib3d.geom.Object3D;
 import trackingSPT.math.CostMatrix;
 
-public class AssociatedObjectList extends EventSeekerObjectAction {
+public class AssociatedObjectList extends SplittingObjectAction {
 	
 	private Map<Object3D, List<Object3D>> associationsMap;
 	private List<Object3D> leftTargetObjects;
@@ -52,14 +52,14 @@ public class AssociatedObjectList extends EventSeekerObjectAction {
 		return this.leftTargetObjects;
 	}
 
-	@Override
-	public List<Object3D> getLeftSourceObjects() {
-		return this.leftSourceObjects;
-	}
-
-	@Override
-	public CostMatrix getCostMatrix() {
-		return this.matrix;
-	}
+//	@Override
+//	public List<Object3D> getLeftSourceObjects() {
+//		return this.leftSourceObjects;
+//	}
+//
+//	@Override
+//	public CostMatrix getCostMatrix() {
+//		return this.matrix;
+//	}
 	
 }

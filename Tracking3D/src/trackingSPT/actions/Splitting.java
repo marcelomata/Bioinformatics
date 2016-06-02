@@ -4,7 +4,7 @@ import trackingInterface.EventSeekerAction;
 import trackingInterface.ObjectAction;
 import trackingSPT.objects.AssociationObjectAction;
 
-public abstract class Association implements EventSeekerAction {
+public abstract class Splitting implements EventSeekerAction {
 
 	protected AssociationObjectAction objectAction;
 	

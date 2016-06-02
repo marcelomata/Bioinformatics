@@ -6,16 +6,20 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
+import trackingInterface.EventSeekerAction;
 import trackingInterface.ObjectAction;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.objects.AssociatedObjectList;
+import trackingSPT.objects.TemporalObject;
+import trackingSPT.objects.TrackingResultObjectAction;
 
-public class AssociationMinDistance extends Association {
+public class EventSeekerAssociation extends Association {
 
 	@Override
 	public ObjectAction execute() {
 		Objects3DPopulation object3DT = objectAction.getObjectT().getObject3D();
 		Objects3DPopulation object3DTPlus1 = objectAction.getObjectTPlus1().getObject3D();
+		TrackingResultObjectAction trackingResult = objectAction.getResult();
 		
 		System.out.println(object3DT.getNbObjects() + " and " + object3DTPlus1.getNbObjects());
 		
@@ -27,8 +31,15 @@ public class AssociationMinDistance extends Association {
 		for (Object3D object3d : object3DListTarget) {
 			leftTargetObject3DList.add(object3d);
 		}
+		boolean firstFrame = false;
+		if(trackingResult.getMotionField().getMapSize() == 0) {
+			firstFrame = true;
+		}
 		for (Object3D object3d : object3DListSource) {
 			leftSourceObject3DList.add(object3d);
+			if(firstFrame) {
+				trackingResult.getMotionField().addNewObject(new TemporalObject(object3d));
+			}
 		}
 		
 		AssociatedObjectList result = findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix);
@@ -87,6 +98,11 @@ public class AssociationMinDistance extends Association {
 		list1.clear();
 		
 		return result;
+	}
+
+	@Override
+	public void setObject(ObjectAction object) {
+		
 	}
 
 }

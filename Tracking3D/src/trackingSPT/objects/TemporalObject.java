@@ -1,5 +1,6 @@
 package trackingSPT.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import mcib3d.geom.Object3D;
@@ -13,6 +14,8 @@ public class TemporalObject implements ObjectAction {
 	
 	public TemporalObject(Object3D object) {
 		this.object = object;
+		this.parent = null;
+		this.children = new ArrayList<TemporalObject>();
 	}
 	
 	public Object3D getObject() {

@@ -3,9 +3,12 @@ package trackingSPT.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import trackingSPT.enums.EventType;
+
 public class EventList extends EventHandlerObjectAction {
 
 	private List<Event> eventList;
+	private EventType type;
 	
 	public EventList() {
 		this.eventList = new ArrayList<Event>();
@@ -18,13 +21,16 @@ public class EventList extends EventHandlerObjectAction {
 	public List<Event> getEventList() {
 		return eventList;
 	}
-	
-	public void setEventSeekerObjectAction(EventSeekerObjectAction objectAction) {
-		this.eventSeekerObj = objectAction;
+
+	@Override
+	public void setEventSeekerObjectAction(EventSeekerObj objectAction) {
+		
+	}
+
+	@Override
+	public EventSeekerObj getEventSeekerObj() {
+		return null;
 	}
 	
-	public EventSeekerObjectAction getEventSeekerObj() {
-		return eventSeekerObj;
-	}
 	
 }
