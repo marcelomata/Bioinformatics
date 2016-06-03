@@ -5,41 +5,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mcib3d.geom.Object3D;
 import trackingSPT.math.CostMatrix;
 
-public class AssociatedObjectList extends SplittingObjectAction {
+public class AssociatedObjectList extends SplittingMergingObj {
 	
-	private Map<Object3D, List<Object3D>> associationsMap;
-	private List<Object3D> leftTargetObjects;
-	private List<Object3D> leftSourceObjects;
+	private Map<TemporalObject, List<TemporalObject>> associationsMap;
+	private List<TemporalObject> leftTargetObjects;
+	private List<TemporalObject> leftSourceObjects;
 	private CostMatrix matrix;
 	
 	public AssociatedObjectList() {
-		this.associationsMap = new HashMap<Object3D, List<Object3D>>();
-		this.leftTargetObjects = new ArrayList<Object3D>();
-		this.leftSourceObjects = new ArrayList<Object3D>();
+		this.associationsMap = new HashMap<TemporalObject, List<TemporalObject>>();
+		this.leftTargetObjects = new ArrayList<TemporalObject>();
+		this.leftSourceObjects = new ArrayList<TemporalObject>();
 	}
 	
-	public void addAssociation(Object3D source, Object3D target) {
+	public void addAssociation(TemporalObject source, TemporalObject target) {
 		if(this.associationsMap.containsKey(source)) {
 			this.associationsMap.get(source).add(target);
 		} else {
-			List<Object3D> newList = new ArrayList<Object3D>();
+			List<TemporalObject> newList = new ArrayList<TemporalObject>();
 			newList.add(target);
 			this.associationsMap.put(source, newList);
 		}
 	}
 	
-	public Map<Object3D, List<Object3D>> getAssociationsMap() {
+	public Map<TemporalObject, List<TemporalObject>> getAssociationsMap() {
 		return associationsMap;
 	}
 	
-	public void addAllLeftTargetObjects(List<Object3D> leftTargetObjects) {
+	public void addAllLeftTargetObjects(List<TemporalObject> leftTargetObjects) {
 		this.leftTargetObjects.addAll(leftTargetObjects);
 	}
 	
-	public void addAllLeftSourceObjects(List<Object3D> leftSourceObjects) {
+	public void addAllLeftSourceObjects(List<TemporalObject> leftSourceObjects) {
 		this.leftSourceObjects.addAll(leftSourceObjects);
 	}
 	
@@ -48,18 +47,17 @@ public class AssociatedObjectList extends SplittingObjectAction {
 	}
 
 	@Override
-	public List<Object3D> getLeftTargetObjects() {
+	public List<TemporalObject> getLeftTargetObjects() {
 		return this.leftTargetObjects;
 	}
 
-//	@Override
-//	public List<Object3D> getLeftSourceObjects() {
-//		return this.leftSourceObjects;
-//	}
-//
-//	@Override
-//	public CostMatrix getCostMatrix() {
-//		return this.matrix;
-//	}
+	@Override
+	public List<TemporalObject> getLeftSourceObjects() {
+		return this.leftSourceObjects;
+	}
+
+	public CostMatrix getCostMatrix() {
+		return this.matrix;
+	}
 	
 }

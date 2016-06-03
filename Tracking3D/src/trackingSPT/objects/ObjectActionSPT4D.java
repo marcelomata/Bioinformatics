@@ -64,11 +64,11 @@ public class ObjectActionSPT4D implements Object4D {
 		return currentFrame;
 	}
 	
-	public AssociationObjectAction getAssociationObjectAction() {
+	public TemporalPopulation getAssociationObjectAction() {
 		return new Object3DTracking(this.getLastFrame(), this.getFrame());
 	}
 	
-	public AssociationObjectAction getAssociationLastResult(TrackingResultObjectAction trackingResult) {
+	public TemporalPopulation getAssociationLastResult(TrackingResultObjectAction trackingResult) {
 		Object3DTracking objectTracking = new Object3DTracking(this.getLastFrame(), this.getFrame());
 		//set some needed informations from previous results
 		return objectTracking;

@@ -6,14 +6,13 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
-import trackingInterface.EventSeekerAction;
 import trackingInterface.ObjectAction;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.objects.AssociatedObjectList;
 import trackingSPT.objects.TemporalObject;
 import trackingSPT.objects.TrackingResultObjectAction;
 
-public class EventSeekerAssociation extends Association {
+public class AssociationMinDistance extends AssociationSeeker {
 
 	@Override
 	public ObjectAction execute() {
@@ -25,18 +24,18 @@ public class EventSeekerAssociation extends Association {
 		
 		List<Object3D> object3DListSource = object3DT.getObjectsList();
 		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
-		List<Object3D> leftTargetObject3DList = new ArrayList<Object3D>();
-		List<Object3D> leftSourceObject3DList = new ArrayList<Object3D>();
+		List<TemporalObject> leftTargetObject3DList = new ArrayList<TemporalObject>();
+		List<TemporalObject> leftSourceObject3DList = new ArrayList<TemporalObject>();
 		CostMatrix matrix = new CostMatrix(object3DListSource.size(), object3DListTarget.size());
 		for (Object3D object3d : object3DListTarget) {
-			leftTargetObject3DList.add(object3d);
+			leftTargetObject3DList.add(new TemporalObject(object3d));
 		}
 		boolean firstFrame = false;
 		if(trackingResult.getMotionField().getMapSize() == 0) {
 			firstFrame = true;
 		}
 		for (Object3D object3d : object3DListSource) {
-			leftSourceObject3DList.add(object3d);
+			leftSourceObject3DList.add(new TemporalObject(object3d));
 			if(firstFrame) {
 				trackingResult.getMotionField().addNewObject(new TemporalObject(object3d));
 			}
@@ -50,9 +49,9 @@ public class EventSeekerAssociation extends Association {
 		return result;
 	}
 	
-	private AssociatedObjectList findShortestDistance(List<Object3D> source, List<Object3D> target, CostMatrix matrix) {
-		List<Object3D> list1 = target;
-		List<Object3D> list2 = source;
+	private AssociatedObjectList findShortestDistance(List<TemporalObject> source, List<TemporalObject> target, CostMatrix matrix) {
+		List<TemporalObject> list1 = target;
+		List<TemporalObject> list2 = source;
 		boolean sourceFirst = false;
 		if(source.size() < target.size()) {
 			list1 = source;
@@ -63,9 +62,9 @@ public class EventSeekerAssociation extends Association {
 		
 		AssociatedObjectList result = new AssociatedObjectList();
 		
-		Object3D obj1 = null;
-		Object3D obj2 = null;
-		Object3D min = null;
+		TemporalObject obj1 = null;
+		TemporalObject obj2 = null;
+		TemporalObject min = null;
 		double minDistance = Double.MAX_VALUE;
 		double newDistance = Double.MAX_VALUE;
 		
@@ -73,7 +72,7 @@ public class EventSeekerAssociation extends Association {
 			obj1 = list1.get(i);
 			for (int j = 0; j < list2.size(); j++) {
 				obj2 = list2.get(j);
-				newDistance = obj1.getCenterAsPoint().distance(obj2.getCenterAsPoint());
+				newDistance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 				if(sourceFirst) {
 					matrix.addAssociation(obj1, obj2);
 					matrix.setCost(i, j, newDistance);
@@ -98,11 +97,6 @@ public class EventSeekerAssociation extends Association {
 		list1.clear();
 		
 		return result;
-	}
-
-	@Override
-	public void setObject(ObjectAction object) {
-		
 	}
 
 }

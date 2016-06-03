@@ -4,21 +4,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mcib3d.Jama.Matrix;
-import mcib3d.geom.Object3D;
+import trackingSPT.objects.TemporalObject;
 
 public class CostMatrix {
 	
 	private Matrix costs;
-	private List<Object3D> source;
-	private List<Object3D> target;
+	private List<TemporalObject> source;
+	private List<TemporalObject> target;
 	
 	public CostMatrix(int m, int n) {
-		this.source = new ArrayList<Object3D>();
-		this.target = new ArrayList<Object3D>();
+		this.source = new ArrayList<TemporalObject>();
+		this.target = new ArrayList<TemporalObject>();
 		this.costs = new Matrix(m, n);
 	}
 	
-	public void addAssociation(Object3D source, Object3D target) {
+	public void addAssociation(TemporalObject source, TemporalObject target) {
 		this.source.add(source);
 		this.target.add(target);
 	}

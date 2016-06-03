@@ -1,17 +1,23 @@
 package trackingSPT.objects;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import trackingSPT.enums.EventType;
 
 public abstract class EventHandlerObjectAction extends ObjectActionSPT {
 	
-	protected EventSeekerObj eventSeekerObj;
-
-	public abstract List<Event> getEventList();
+	protected List<EventSeekerObj> eventSeekerObjList;
 	
-	public abstract void addEvent(Event event);
+	public EventHandlerObjectAction() {
+		eventSeekerObjList = new ArrayList<EventSeekerObj>();
+	}
 	
-	public abstract void setEventSeekerObjectAction(EventSeekerObj objectAction);
+	public abstract void addAllEvents(List<Event> events, EventType type);
+	public abstract List<Event> getEventList(EventType type);
 	
-	public abstract EventSeekerObj getEventSeekerObj();
+	public void addEventSeekerObj(EventSeekerObj eventObj) {
+		this.eventSeekerObjList.add(eventObj);
+	}
 	
 }

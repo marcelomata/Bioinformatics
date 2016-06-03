@@ -1,36 +1,25 @@
 package trackingSPT.objects;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import trackingSPT.enums.EventType;
 
 public class EventList extends EventHandlerObjectAction {
 
-	private List<Event> eventList;
-	private EventType type;
+	private Map<EventType, List<Event>> eventListMap;
 	
 	public EventList() {
-		this.eventList = new ArrayList<Event>();
+		this.eventListMap = new HashMap<EventType, List<Event>>();
 	}
 	
-	public void addEvent(Event event) {
-		this.eventList.add(event);
+	public void addAllEvents(List<Event> events, EventType type) {
+		this.eventListMap.get(type).addAll(events);
 	}
 	
-	public List<Event> getEventList() {
-		return eventList;
+	public List<Event> getEventList(EventType type) {
+		return eventListMap.get(type);
 	}
-
-	@Override
-	public void setEventSeekerObjectAction(EventSeekerObj objectAction) {
-		
-	}
-
-	@Override
-	public EventSeekerObj getEventSeekerObj() {
-		return null;
-	}
-	
 	
 }

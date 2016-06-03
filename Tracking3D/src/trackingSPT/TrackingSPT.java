@@ -2,11 +2,9 @@ package trackingSPT;
 
 
 import trackingInterface.Action;
-import trackingInterface.EventSeekerStrategyAction;
 import trackingInterface.Object4D;
 import trackingInterface.TrackingStrategy;
-import trackingSPT.actions.HandlerExemple;
-import trackingSPT.objects.AssociationObjectAction;
+import trackingSPT.actions.HandlerSimple;
 import trackingSPT.objects.EventHandlerObjectAction;
 import trackingSPT.objects.EventSeekerObj;
 import trackingSPT.objects.ObjectActionSPT4D;
@@ -21,7 +19,7 @@ public class TrackingSPT extends TrackingStrategy {
 	@Override
 	public void build() {
 		addAction(new EventSeekerStrategyAction());
-		addAction(new HandlerExemple());
+		addAction(new HandlerSimple());
 	}
 
 	@Override

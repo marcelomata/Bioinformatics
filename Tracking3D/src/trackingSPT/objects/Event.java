@@ -1,25 +1,38 @@
 package trackingSPT.objects;
 
-import mcib3d.geom.Object3D;
 import trackingSPT.enums.EventType;
-import trackingSPT.enums.ObjectType;
+import trackingSPT.enums.EventCause;
 
 public class Event {
 
-	private Object3D object;
-	private ObjectType objectType;
+	private TemporalObject objectSource;
+	private TemporalObject objectTarget;
+	private EventCause objectType;
 	private EventType eventType;
 	
-	public Event(Object3D object, ObjectType objectType) {
-		this.object = object;
+	public Event(EventCause objectType) {
 		this.objectType = objectType;
+		this.objectSource = null;
+		this.objectTarget = null;
 	}
 	
-	public Object3D getObject() {
-		return object;
+	public TemporalObject getObjectSource() {
+		return objectSource;
 	}
 	
-	public ObjectType getObjectType() {
+	public void setObjectSource(TemporalObject objectSource) {
+		this.objectSource = objectSource;
+	}
+	
+	public void setObjectTarget(TemporalObject objectTarget) {
+		this.objectTarget = objectTarget;
+	}
+	
+	public TemporalObject getObjectTarget() {
+		return objectTarget;
+	}
+	
+	public EventCause getObjectType() {
 		return objectType;
 	}
 	

@@ -1,7 +1,7 @@
 package trackingSPT.objects;
 import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
 
-public class Object3DTracking extends AssociationObjectAction {
+public class Object3DTracking extends TemporalPopulation {
 	
 	private Objects3DPopulationAdapter objectT;
 	private Objects3DPopulationAdapter objectTPlus1;
