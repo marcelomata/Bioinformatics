@@ -13,7 +13,7 @@ public abstract class EventHandlerObjectAction extends ObjectActionSPT {
 		eventSeekerObjList = new ArrayList<EventSeekerObj>();
 	}
 	
-	public abstract void addAllEvents(List<Event> events, EventType type);
+	public abstract void addEventItem(EventMapItem item);
 	public abstract List<Event> getEventList(EventType type);
 	
 	public void addEventSeekerObj(EventSeekerObj eventObj) {

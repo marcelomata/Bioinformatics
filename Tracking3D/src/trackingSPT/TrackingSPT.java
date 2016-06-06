@@ -18,8 +18,8 @@ public class TrackingSPT extends TrackingStrategy {
 
 	@Override
 	public void build() {
-		addAction(new EventSeekerStrategyAction());
-		addAction(new HandlerSimple());
+		addTrackingAction(new EventSeekerStrategyAction());
+		addTrackingAction(new HandlerSimple());
 	}
 
 	@Override

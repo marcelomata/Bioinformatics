@@ -196,6 +196,7 @@ public class Menus {
 		addPlugInItem(analyzeMenu, "Distribution...", "ij.plugin.Distribution", 0, false);
 		addPlugInItem(analyzeMenu, "Label", "ij.plugin.filter.Filler(\"label\")", 0, false);
 		addPlugInItem(analyzeMenu, "Clear Results", "ij.plugin.filter.Analyzer(\"clear\")", 0, false);
+		addPlugInItem(analyzeMenu, "Track Threshold", "mcib_plugins.Track_Threshold", 0, false);
 		addPlugInItem(analyzeMenu, "Set Measurements...", "ij.plugin.filter.Analyzer(\"set\")", 0, false);
 		analyzeMenu.addSeparator();
 		addPlugInItem(analyzeMenu, "Set Scale...", "ij.plugin.filter.ScaleDialog", 0, false);

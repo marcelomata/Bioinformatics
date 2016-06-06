@@ -6,25 +6,20 @@ import trackingInterface.TrackingAction;
 import trackingSPT.actions.AssociationMinDistance;
 import trackingSPT.actions.MergingSimple;
 import trackingSPT.actions.SplittingSimple;
-import trackingSPT.enums.EventType;
 import trackingSPT.objects.AssociatedObjectList;
-import trackingSPT.objects.EventList;
+import trackingSPT.objects.EventMap;
+import trackingSPT.objects.EventMapItem;
 import trackingSPT.objects.TemporalPopulation;
 
 public class EventSeekerStrategyAction extends Strategy implements TrackingAction {
 	
 	private TemporalPopulation assObjectAction;
-	private EventList eventList;
+	private EventMap eventMap;
 
 	public EventSeekerStrategyAction() {
 		super();
-		clear();
 	}
 	
-	private void clear() {
-		this.eventList = new EventList();
-	}
-
 	public void build() {
 		addEventSeekerAction(new AssociationMinDistance());
 		addEventSeekerAction(new SplittingSimple());
@@ -32,23 +27,25 @@ public class EventSeekerStrategyAction extends Strategy implements TrackingActio
 	}
 	
 	public void run() {
-		eventList.setResult(assObjectAction.getResult());
+		this.eventMap = new EventMap();
+		eventMap.setResult(assObjectAction.getResult());
 		
 		EventSeekerAction current = (EventSeekerAction) nextAction();
 		current.setObject(assObjectAction);
-		AssociatedObjectList associatedList = (AssociatedObjectList) current.execute();
-		this.eventList.addEventSeekerObj(associatedList);
-		this.eventList.addAllEvents(current.getEventList(), EventType.ASSOCIATION);
+		EventMapItem eventItem = (EventMapItem) current.execute();
+		this.eventMap.addEventItem(eventItem);
+		AssociatedObjectList associatedList = ((AssociationMinDistance)current).getAssociations();
+		this.eventMap.addEventSeekerObj(associatedList);
 		
 		current = (EventSeekerAction) nextAction();
 		current.setObject(associatedList);
-		current.execute();
-		this.eventList.addAllEvents(current.getEventList(), EventType.SPLITTING);
+		eventItem = (EventMapItem) current.execute();
+		this.eventMap.addEventItem(eventItem);
 		
 		current = (EventSeekerAction) nextAction();
 		current.setObject(associatedList);
-		current.execute();
-		this.eventList.addAllEvents(current.getEventList(), EventType.MERGING);
+		eventItem = (EventMapItem) current.execute();
+		this.eventMap.addEventItem(eventItem);
 	}
 	
 	public void addEventSeekerAction(EventSeekerAction action) {
@@ -62,7 +59,8 @@ public class EventSeekerStrategyAction extends Strategy implements TrackingActio
 
 	@Override
 	public ObjectAction execute() {
-		return null;
+		this.run();
+		return eventMap;
 	}
 	
 }

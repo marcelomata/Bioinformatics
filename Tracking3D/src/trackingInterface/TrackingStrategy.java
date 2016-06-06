@@ -19,7 +19,7 @@ public abstract class TrackingStrategy extends Strategy {
 	
 	public abstract void run();
 	
-	public void addAction(TrackingAction action) {
+	public void addTrackingAction(TrackingAction action) {
 		addAction(action);
 	}
 	

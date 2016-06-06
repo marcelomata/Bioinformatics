@@ -7,8 +7,12 @@ import java.util.List;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.ObjectAction;
+import trackingSPT.enums.EventCause;
+import trackingSPT.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.objects.AssociatedObjectList;
+import trackingSPT.objects.Event;
+import trackingSPT.objects.EventMapItem;
 import trackingSPT.objects.TemporalObject;
 import trackingSPT.objects.TrackingResultObjectAction;
 
@@ -41,15 +45,16 @@ public class AssociationMinDistance extends AssociationSeeker {
 			}
 		}
 		
-		AssociatedObjectList result = findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix);
-		result.setCostMatrix(matrix);
-		result.addAllLeftTargetObjects(leftTargetObject3DList);
-		result.addAllLeftSourceObjects(leftSourceObject3DList);
+		EventMapItem eventItem = new EventMapItem(EventType.ASSOCIATION);
+		this.associations = findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix, eventItem);
+		this.associations.setCostMatrix(matrix);
+		this.associations.addAllLeftTargetObjects(leftTargetObject3DList);
+		this.associations.addAllLeftSourceObjects(leftSourceObject3DList);
 		
-		return result;
+		return eventItem;
 	}
 	
-	private AssociatedObjectList findShortestDistance(List<TemporalObject> source, List<TemporalObject> target, CostMatrix matrix) {
+	private AssociatedObjectList findShortestDistance(List<TemporalObject> source, List<TemporalObject> target, CostMatrix matrix, EventMapItem eventItem) {
 		List<TemporalObject> list1 = target;
 		List<TemporalObject> list2 = source;
 		boolean sourceFirst = false;
@@ -62,6 +67,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 		
 		AssociatedObjectList result = new AssociatedObjectList();
 		
+		Event event = null;
 		TemporalObject obj1 = null;
 		TemporalObject obj2 = null;
 		TemporalObject min = null;
@@ -85,16 +91,26 @@ public class AssociationMinDistance extends AssociationSeeker {
 					min = obj2;
 				}
 			}
+			
+			event = new Event(EventCause.MINOR_DISTANCE);
+			
 			list2.remove(min);
 			if(sourceFirst) {
 				result.addAssociation(obj1, min);
+				event.setObjectSource(obj1);
+				event.setObjectTarget(min);
+				events.add(event);
 			} else {
 				result.addAssociation(min, obj1);
+				event.setObjectSource(obj1);
+				event.setObjectTarget(min);
+				events.add(event);
 			}
 			min = null;
 			minDistance = Double.MAX_VALUE;
 		}
 		list1.clear();
+		eventItem.addEventList(events);
 		
 		return result;
 	}

@@ -7,12 +7,14 @@ import trackingInterface.ObjectAction;
 import trackingSPT.enums.EventCause;
 import trackingSPT.enums.EventType;
 import trackingSPT.objects.Event;
+import trackingSPT.objects.EventMapItem;
 import trackingSPT.objects.TemporalObject;
 
 public class MergingSimple extends SplittingMergingSeeker {
 
 	@Override
 	public ObjectAction execute() {
+		EventMapItem eventItem = new EventMapItem(EventType.MERGING);
 		List<TemporalObject> leftSourceObjects = this.objectAction.getLeftSourceObjects();
 		Event event = null;
 		//If the number of elements in the frame t+1 is bigger than in the frame t
@@ -25,7 +27,9 @@ public class MergingSimple extends SplittingMergingSeeker {
 			}
 		}
 		
-		return null;
+		eventItem.addEventList(events);
+		
+		return eventItem;
 	}
 
 }
