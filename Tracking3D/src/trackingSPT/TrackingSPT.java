@@ -31,23 +31,22 @@ public class TrackingSPT extends TrackingStrategy {
 		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D)inObject;
 		inObject4D.nextFrame();
 		
-		//To first test, only from the frame 6 to frame 12
 		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
-			if(inObject4D.getCurrentFrame() >= 6 && inObject4D.getCurrentFrame() <= 12) {
-				object3DToAssociate = inObject4D.getAssociationLastResult(result);
-				current = nextAction();
-				current.setObject(object3DToAssociate);
-				eventList = (EventHandlerObjectAction) current.execute();
-//				printAssociationMap(associatedObjects);
-//				System.out.println("\n");
-				
-//				printEventList(eventList);
-				
-				current = nextAction();
-				current.setObject(eventList);
-				result = (TrackingResultSPT) current.execute();
-			}
+			System.out.println("Current Frame -> "+inObject4D.getCurrentFrame());
+			object3DToAssociate = inObject4D.getAssociationLastResult(result);
+			current = nextAction();
+			current.setObject(object3DToAssociate);
+			eventList = (EventHandlerObjectAction) current.execute();
+			
+//			printAssociationMap(associatedObjects);
+//			System.out.println("\n");
+//			printEventList(eventList);
+			
+			current = nextAction();
+			current.setObject(eventList);
+			result = (TrackingResultSPT) current.execute();
 			inObject4D.nextFrame();
+			System.out.println("################################");
 		}
 	}
 

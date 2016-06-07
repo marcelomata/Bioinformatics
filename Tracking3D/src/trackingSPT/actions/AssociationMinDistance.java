@@ -20,6 +20,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 
 	@Override
 	public ObjectAction execute() {
+		this.events = new ArrayList<Event>();
 		Objects3DPopulation object3DT = objectAction.getObjectT().getObject3D();
 		Objects3DPopulation object3DTPlus1 = objectAction.getObjectTPlus1().getObject3D();
 		TrackingResultObjectAction trackingResult = objectAction.getResult();
@@ -62,7 +63,6 @@ public class AssociationMinDistance extends AssociationSeeker {
 			list1 = source;
 			list2 = target;
 			sourceFirst = true;
-			System.out.println("true");
 		}
 		
 		AssociatedObjectList result = new AssociatedObjectList();
@@ -102,8 +102,8 @@ public class AssociationMinDistance extends AssociationSeeker {
 				events.add(event);
 			} else {
 				result.addAssociation(min, obj1);
-				event.setObjectSource(obj1);
-				event.setObjectTarget(min);
+				event.setObjectSource(min);
+				event.setObjectTarget(obj1);
 				events.add(event);
 			}
 			min = null;
