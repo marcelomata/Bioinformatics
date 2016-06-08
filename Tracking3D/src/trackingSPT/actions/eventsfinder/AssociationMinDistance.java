@@ -11,7 +11,7 @@ import trackingSPT.enums.EventCause;
 import trackingSPT.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.objects.TemporalObject;
-import trackingSPT.objects.TrackingResultObjectAction;
+import trackingSPT.objects.TrackingResultSPT;
 import trackingSPT.objects.events.AssociatedObjectList;
 import trackingSPT.objects.events.Event;
 import trackingSPT.objects.events.EventMapItem;
@@ -21,29 +21,20 @@ public class AssociationMinDistance extends AssociationSeeker {
 	@Override
 	public ObjectAction execute() {
 		this.events = new ArrayList<Event>();
-		Objects3DPopulation object3DT = objectAction.getObjectT().getObject3D();
 		Objects3DPopulation object3DTPlus1 = objectAction.getObjectTPlus1().getObject3D();
-		TrackingResultObjectAction trackingResult = objectAction.getResult();
+		TrackingResultSPT result = (TrackingResultSPT) objectAction.getResult();
 		
-		System.out.println(object3DT.getNbObjects() + " and " + object3DTPlus1.getNbObjects());
+		List<TemporalObject> leftSourceObject3DList = result.getListLastObjects();
 		
-		List<Object3D> object3DListSource = object3DT.getObjectsList();
+		System.out.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
+		
 		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
 		List<TemporalObject> leftTargetObject3DList = new ArrayList<TemporalObject>();
-		List<TemporalObject> leftSourceObject3DList = new ArrayList<TemporalObject>();
-		CostMatrix matrix = new CostMatrix(object3DListSource.size(), object3DListTarget.size());
+		CostMatrix matrix = new CostMatrix(leftSourceObject3DList.size(), object3DListTarget.size());
+		
+		
 		for (Object3D object3d : object3DListTarget) {
 			leftTargetObject3DList.add(new TemporalObject(object3d));
-		}
-		boolean firstFrame = false;
-		if(trackingResult.getMotionField().getMapSize() == 0) {
-			firstFrame = true;
-		}
-		for (Object3D object3d : object3DListSource) {
-			leftSourceObject3DList.add(new TemporalObject(object3d));
-			if(firstFrame) {
-				trackingResult.getMotionField().addNewObject(new TemporalObject(object3d));
-			}
 		}
 		
 		EventMapItem eventItem = new EventMapItem(EventType.ASSOCIATION);

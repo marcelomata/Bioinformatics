@@ -11,11 +11,13 @@ public class TemporalObject implements ObjectAction {
 	private Object3D object;
 	private TemporalObject parent;
 	private List<TemporalObject> children;
+	private Integer id;
 	
 	public TemporalObject(Object3D object) {
 		this.object = object;
 		this.parent = null;
 		this.children = new ArrayList<TemporalObject>();
+		this.id = -1;
 	}
 	
 	public Object3D getObject() {
@@ -28,6 +30,14 @@ public class TemporalObject implements ObjectAction {
 	
 	public List<TemporalObject> getChildren() {
 		return children;
+	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public Integer getId() {
+		return id;
 	}
 
 }

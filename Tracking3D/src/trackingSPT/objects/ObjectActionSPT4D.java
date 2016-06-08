@@ -71,7 +71,6 @@ public class ObjectActionSPT4D implements Object4D {
 	public TemporalPopulation getAssociationLastResult(TrackingResultObjectAction trackingResult) {
 		Object3DTracking objectTracking = new Object3DTracking(this.getLastFrame(), this.getFrame());
 		objectTracking.setResult(trackingResult);
-		//set some needed informations from previous results
 		return objectTracking;
 	}
 }
