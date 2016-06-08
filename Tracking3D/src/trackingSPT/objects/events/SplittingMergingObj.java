@@ -1,7 +1,9 @@
-package trackingSPT.objects;
+package trackingSPT.objects.events;
 
 import java.util.List;
 import java.util.Map;
+
+import trackingSPT.objects.TemporalObject;
 
 public abstract class SplittingMergingObj extends EventSeekerObj {
 	

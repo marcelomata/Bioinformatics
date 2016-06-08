@@ -1,4 +1,4 @@
-package trackingSPT.actions;
+package trackingSPT.actions.eventsfinder;
 
 
 import java.util.ArrayList;
@@ -10,9 +10,9 @@ import mcib3d.geom.Object3D;
 import trackingInterface.ObjectAction;
 import trackingSPT.enums.EventCause;
 import trackingSPT.enums.EventType;
-import trackingSPT.objects.Event;
-import trackingSPT.objects.EventMapItem;
 import trackingSPT.objects.TemporalObject;
+import trackingSPT.objects.events.Event;
+import trackingSPT.objects.events.EventMapItem;
 
 public class SplittingSimple extends SplittingMergingSeeker {
 

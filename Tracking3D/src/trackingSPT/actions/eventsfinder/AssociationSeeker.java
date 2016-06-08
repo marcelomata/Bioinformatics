@@ -1,9 +1,8 @@
-package trackingSPT.actions;
+package trackingSPT.actions.eventsfinder;
 
 import trackingInterface.ObjectAction;
-import trackingSPT.EventSeekerAction;
-import trackingSPT.objects.AssociatedObjectList;
 import trackingSPT.objects.TemporalPopulation;
+import trackingSPT.objects.events.AssociatedObjectList;
 
 public abstract class AssociationSeeker extends EventSeekerAction {
 

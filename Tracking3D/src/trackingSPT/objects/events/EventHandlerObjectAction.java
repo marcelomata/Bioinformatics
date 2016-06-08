@@ -1,9 +1,10 @@
-package trackingSPT.objects;
+package trackingSPT.objects.events;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import trackingSPT.enums.EventType;
+import trackingSPT.objects.ObjectActionSPT;
 
 public abstract class EventHandlerObjectAction extends ObjectActionSPT {
 	

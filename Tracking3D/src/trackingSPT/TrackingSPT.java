@@ -5,10 +5,11 @@ import trackingInterface.Action;
 import trackingInterface.Object4D;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.actions.HandlerSimple;
-import trackingSPT.objects.EventHandlerObjectAction;
-import trackingSPT.objects.EventSeekerObj;
+import trackingSPT.actions.eventsfinder.EventSeekerStrategyAction;
 import trackingSPT.objects.ObjectActionSPT4D;
 import trackingSPT.objects.TrackingResultSPT;
+import trackingSPT.objects.events.EventHandlerObjectAction;
+import trackingSPT.objects.events.EventSeekerObj;
 
 public class TrackingSPT extends TrackingStrategy {
 	

@@ -1,6 +1,7 @@
 package trackingSPT.objects;
 
 import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
+import trackingSPT.objects.events.EventSeekerObj;
 
 public abstract class TemporalPopulation extends EventSeekerObj {
 	

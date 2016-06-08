@@ -1,6 +1,7 @@
-package trackingSPT.objects;
+package trackingSPT.objects.events;
 
 import trackingSPT.enums.EventType;
+import trackingSPT.objects.TemporalObject;
 import trackingSPT.enums.EventCause;
 
 public class Event {

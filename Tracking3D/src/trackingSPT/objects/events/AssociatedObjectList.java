@@ -1,4 +1,4 @@
-package trackingSPT.objects;
+package trackingSPT.objects.events;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import trackingSPT.math.CostMatrix;
+import trackingSPT.objects.TemporalObject;
 
 public class AssociatedObjectList extends SplittingMergingObj {
 	

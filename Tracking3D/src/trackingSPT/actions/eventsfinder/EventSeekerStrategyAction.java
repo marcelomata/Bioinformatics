@@ -1,15 +1,12 @@
-package trackingSPT;
+package trackingSPT.actions.eventsfinder;
 
 import trackingInterface.ObjectAction;
 import trackingInterface.Strategy;
 import trackingInterface.TrackingAction;
-import trackingSPT.actions.AssociationMinDistance;
-import trackingSPT.actions.MergingSimple;
-import trackingSPT.actions.SplittingSimple;
-import trackingSPT.objects.AssociatedObjectList;
-import trackingSPT.objects.EventMap;
-import trackingSPT.objects.EventMapItem;
 import trackingSPT.objects.TemporalPopulation;
+import trackingSPT.objects.events.AssociatedObjectList;
+import trackingSPT.objects.events.EventMap;
+import trackingSPT.objects.events.EventMapItem;
 
 public class EventSeekerStrategyAction extends Strategy implements TrackingAction {
 	

@@ -1,10 +1,10 @@
-package trackingSPT;
+package trackingSPT.actions.eventsfinder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import trackingInterface.Action;
-import trackingSPT.objects.Event;
+import trackingSPT.objects.events.Event;
 
 public abstract class EventSeekerAction implements Action {
 

@@ -1,4 +1,4 @@
-package trackingSPT.objects;
+package trackingSPT.objects.events;
 
 import java.util.ArrayList;
 import java.util.HashMap;

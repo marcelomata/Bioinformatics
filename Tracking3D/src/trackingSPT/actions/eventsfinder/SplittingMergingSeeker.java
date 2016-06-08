@@ -1,8 +1,7 @@
-package trackingSPT.actions;
+package trackingSPT.actions.eventsfinder;
 
 import trackingInterface.ObjectAction;
-import trackingSPT.EventSeekerAction;
-import trackingSPT.objects.SplittingMergingObj;
+import trackingSPT.objects.events.SplittingMergingObj;
 
 public abstract class SplittingMergingSeeker extends EventSeekerAction {
 	
