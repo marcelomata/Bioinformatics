@@ -25,16 +25,20 @@ public class HandlerSimple extends Handler {
 		TrackingResultSPT result = (TrackingResultSPT) this.objectAction.getResult();
 		
 		handleAssociations(associations, result);
-		
 		handleSplitting(splittings, result);
-		
-		//TODO
-		//overlap
-		for (Event event : mergings) {
-			result.addNewObjectId(event.getObjectSource().getId(), event.getObjectTarget());
-		}
+		handleMergings(mergings, result);
 		
 		return result;
+	}
+
+	private void handleMergings(List<Event> mergings, TrackingResultSPT result) {
+		TemporalObject obj = null;
+		//overlap
+		for (Event event : mergings) {
+			obj = event.getObjectSource();
+			result.addMissed(obj);
+			result.addNewObjectId(obj.getId(), new TemporalObject(null));
+		}
 	}
 
 	private void handleSplitting(List<Event> splittings, TrackingResultSPT result) {
@@ -88,15 +92,16 @@ public class HandlerSimple extends Handler {
 				result.addNewObjectId(min.getId(), obj1);
 			}
 		} else {
-			for (int i = 0; i < numMisses; i++) {
+			for (int i = 0; i < misses.size(); i++) {
 				missed = misses.get(i);
 				obj1 = missed.getObject();
-				for (int j = 0; j < numSplittings; j++) {
+				for (int j = 0; j < splittings.size(); j++) {
 					event = splittings.get(j);
-					minDistance = verifyMinDistance(minDistance, obj1, event.getObjectTarget(), min);	
+					minDistance = verifyMinDistance(minDistance, obj1, event.getObjectTarget(), min);
 				}
+				splittings.remove(min);
 				misses.remove(missed);
-				splittings.remove(event);
+				i--;
 			}
 		}
 	}

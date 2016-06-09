@@ -29,7 +29,6 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 		return misses;
 	}
 	
-	
 	@Override
 	public void init(ObjectAction objectAction) {
 		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D) objectAction;
@@ -53,8 +52,9 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 		motionField.addNewObject(obj);
 	}
 
-	
-	
+	public void addMissed(TemporalObject objMissed) {
+		misses.add(new MissedObject(objMissed, motionField.getMapObjects().get(objMissed.getId()).size()));
+	}
 	
 }
 	

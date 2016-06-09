@@ -39,5 +39,9 @@ public class TemporalObject implements ObjectAction {
 	public Integer getId() {
 		return id;
 	}
+	
+	public boolean isMissed() {
+		return object == null;
+	}
 
 }

@@ -16,6 +16,7 @@ public class MotionField {
 	
 	public MotionField() {
 		this.mapObjects = new HashMap<Integer, List<TemporalObject>>();
+		this.mapFinishedObjects = new HashMap<Integer, List<TemporalObject>>();
 	}
 	
 	public Map<Integer, List<TemporalObject>> getMapObjects() {
@@ -50,7 +51,7 @@ public class MotionField {
 			size = temp.size();
 			if(size > 0) {
 				last = temp.get(size-1);
-				if(last != null) {
+				if(!last.isMissed()) {
 					result.add(last);
 				}
 			}
