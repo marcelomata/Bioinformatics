@@ -1,15 +1,8 @@
-/*
- * Ahsan Rabbani <ahsan@xargsgrep.com>
- */
 
 package cell3DRenderer;
 
-/*
- * Represents a smaller cube (aka cubie/cubelet) in a Rubik's Cube.
- */
 public class Sphere {
 	
-	// bits denoting faces of the cubie
 	public static final int FACELET_FRONT  = (1 << 0);
 	public static final int FACELET_REAR   = (1 << 1);
 	public static final int FACELET_LEFT   = (1 << 2);

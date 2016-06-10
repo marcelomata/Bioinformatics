@@ -24,9 +24,13 @@ public class HandlerSimple extends Handler {
 		
 		TrackingResultSPT result = (TrackingResultSPT) this.objectAction.getResult();
 		
+		System.out.println(result.getMotionField().getN65());
+		
 		handleAssociations(associations, result);
 		handleSplitting(splittings, result);
 		handleMergings(mergings, result);
+		
+		System.out.println(result.getMotionField().getN65());
 		
 		return result;
 	}
@@ -74,45 +78,52 @@ public class HandlerSimple extends Handler {
 		int numMisses = misses.size();
 		
 		double minDistance = Double.MAX_VALUE;
+		double newDistance = Double.MAX_VALUE;
 		TemporalObject obj1 = null;
+		TemporalObject obj2 = null;
 		TemporalObject min = null;
 		Event event = null;
 		MissedObject missed = null;
 		if(numMisses > numSplittings) {
-			for (int i = 0; i < numSplittings; i++) {
+			for (int i = 0; i < numSplittings;) {
 				event = splittings.get(i);
 				obj1 = event.getObjectTarget();
 				min = misses.get(0).getObject();
 				for (int j = 0; j < numMisses; j++) {
 					missed = misses.get(j);
-					minDistance = verifyMinDistance(minDistance, obj1, missed.getObject(), min);
+					obj2 = missed.getObject();
+					newDistance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+					if(newDistance < minDistance) {
+						minDistance = newDistance;
+						min = obj2;
+					}
 				}
 				misses.remove(min);
 				splittings.remove(event);
 				result.addNewObjectId(min.getId(), obj1);
+				min = null;
+				minDistance = Double.MAX_VALUE;
 			}
 		} else {
-			for (int i = 0; i < misses.size(); i++) {
+			for (int i = 0; i < misses.size();) {
 				missed = misses.get(i);
 				obj1 = missed.getObject();
 				for (int j = 0; j < splittings.size(); j++) {
 					event = splittings.get(j);
-					minDistance = verifyMinDistance(minDistance, obj1, event.getObjectTarget(), min);
+					obj2 = event.getObjectTarget();
+					newDistance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+					if(newDistance < minDistance) {
+						minDistance = newDistance;
+						min = obj2;
+					}
 				}
-				splittings.remove(min);
+				splittings.remove(event);
 				misses.remove(missed);
-				i--;
+				result.addNewObjectId(obj1.getId(), min);
+				min = null;
+				minDistance = Double.MAX_VALUE;
 			}
 		}
-	}
-
-	private double verifyMinDistance(double minDistance, TemporalObject obj1, TemporalObject obj2, TemporalObject min) {
-		double newDistance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-		if(newDistance < minDistance) {
-			minDistance = newDistance;
-			min = obj2;
-		}
-		return minDistance;
 	}
 
 }

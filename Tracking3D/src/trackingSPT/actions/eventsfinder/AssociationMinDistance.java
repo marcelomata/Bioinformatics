@@ -65,6 +65,12 @@ public class AssociationMinDistance extends AssociationSeeker {
 		double minDistance = Double.MAX_VALUE;
 		double newDistance = Double.MAX_VALUE;
 		
+		for (TemporalObject temporalObject : list2) {
+			if(temporalObject.getId() == 65) {
+				System.out.println(65);
+			}
+		}
+		
 		for (int i = 0; i < list1.size(); i++) {
 			obj1 = list1.get(i);
 			for (int j = 0; j < list2.size(); j++) {

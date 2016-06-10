@@ -1,6 +1,3 @@
-/*
- * Ahsan Rabbani <ahsan@xargsgrep.com>
- */
 
 package cell3DRenderer;
 
@@ -53,13 +50,13 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	
 	private static final float DEFAULT_CAMERA_ANGLE_X = 45.0f;
 	private static final float DEFAULT_CAMERA_ANGLE_Y = 45.0f;
-	private static final float DEFAULT_ZOOM = -18.0f;
+	private static final float DEFAULT_ZOOM = -98.0f;
 	
 	private static final int SECTION_ROTATE_STEP_DEGREES = 90;
 	private static final int CAMERA_ROTATE_STEP_DEGREES  = 5;
 	
-	private static final int MIN_ZOOM = -80;
-	private static final int MAX_ZOOM = -10;
+	private static final int MIN_ZOOM = -180;
+	private static final int MAX_ZOOM = -1;
 	
 	private GLU glu;
 	private GLUT glut;
@@ -139,7 +136,8 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 		gl.glRotatef(cameraAngleZ, ZERO_F, ZERO_F, ONE_F);
 		
 		gl.glColor3f(1.0f, 1.0f, 0.0f);
-		glut.glutSolidSphere(1, 10, 10);
+//		glut.glutSolidSphere(1, 10, 10);
+		glut.glutWireSphere(1, 10, 10);
 		
 //		int lastIdx = rubiksCube.getSize()-1;
 //		for (int x=0; x<rubiksCube.getSize(); x++) {
@@ -364,7 +362,7 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 //					rowAnglesY = new float[rubiksCube.getSize()];
 //					faceAnglesZ = new float[rubiksCube.getSize()];
 //					rubiksCube.resetState();
-				}
+				}	
 				break;
 		}
 	}
@@ -372,7 +370,7 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	@Override
 	public void mouseWheelMoved(MouseEvent e) {
 //		zoom += 2*e.getWheelRotation(); TODO
-		zoom += 2*e.getRotationScale();
+		zoom += 2*e.getRotation()[1];
 		if (zoom > MAX_ZOOM) zoom = MAX_ZOOM;
 		if (zoom < MIN_ZOOM) zoom = MIN_ZOOM;
 	}

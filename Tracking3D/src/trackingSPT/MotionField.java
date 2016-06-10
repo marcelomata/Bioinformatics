@@ -36,8 +36,8 @@ public class MotionField {
 	}
 	
 	public void addNewObjectId(Integer idObject, TemporalObject object) {
-		mapObjects.get(idObject).add(object);
 		object.setId(idObject);
+		mapObjects.get(idObject).add(object);
 	}
 
 	public List<TemporalObject> getListLastObjects() {
@@ -57,6 +57,25 @@ public class MotionField {
 			}
 		}
 		return result;
+	}
+	
+	public int getN65() {
+		List<TemporalObject> temp = null;
+		TemporalObject last = null;
+		int count = 0;
+		int size = 0;
+		Set<Integer> keySet = mapObjects.keySet();
+		for (Integer integer : keySet) {
+			temp = mapObjects.get(integer);
+			size = temp.size();
+			if(size > 0) {
+				last = temp.get(size-1);
+				if(last.getId() == 65) {
+					count++;
+				}
+			}
+		}
+		return count;
 	}
 
 	public TemporalObject removeLastObject(Integer idObject) {

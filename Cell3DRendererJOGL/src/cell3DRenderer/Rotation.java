@@ -1,12 +1,6 @@
-/*
- * Ahsan Rabbani <ahsan@xargsgrep.com>
- */
 
 package cell3DRenderer;
 
-/*
- * Represents a single rotation of a Rubik's Cube. Specifies axis, section, and direction.
- */
 public class Rotation {
 	
 	public enum Axis { X, Y, Z; }
