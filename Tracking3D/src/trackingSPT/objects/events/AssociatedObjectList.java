@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import trackingSPT.math.CostMatrix;
 import trackingSPT.objects.TemporalObject;
@@ -59,6 +60,16 @@ public class AssociatedObjectList extends SplittingMergingObj {
 
 	public CostMatrix getCostMatrix() {
 		return this.matrix;
+	}
+
+	@Override
+	public List<TemporalObject> getAssociationsMapSources() {
+		Set<TemporalObject> sourcesSet = associationsMap.keySet();
+		List<TemporalObject> sourcesList = new ArrayList<TemporalObject>();
+		for (TemporalObject temporalObject : sourcesSet) {
+			sourcesList.add(temporalObject);
+		}
+		return sourcesList;
 	}
 	
 }

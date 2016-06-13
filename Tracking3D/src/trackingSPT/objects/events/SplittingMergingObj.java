@@ -13,4 +13,6 @@ public abstract class SplittingMergingObj extends EventSeekerObj {
 	
 	public abstract Map<TemporalObject, List<TemporalObject>> getAssociationsMap();
 	
+	public abstract List<TemporalObject> getAssociationsMapSources();
+	
 }

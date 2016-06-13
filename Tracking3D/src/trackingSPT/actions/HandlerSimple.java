@@ -1,6 +1,7 @@
 package trackingSPT.actions;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import trackingInterface.ObjectAction;
@@ -24,13 +25,9 @@ public class HandlerSimple extends Handler {
 		
 		TrackingResultSPT result = (TrackingResultSPT) this.objectAction.getResult();
 		
-		System.out.println(result.getMotionField().getN65());
-		
 		handleAssociations(associations, result);
 		handleSplitting(splittings, result);
 		handleMergings(mergings, result);
-		
-		System.out.println(result.getMotionField().getN65());
 		
 		return result;
 	}
@@ -81,30 +78,30 @@ public class HandlerSimple extends Handler {
 		double newDistance = Double.MAX_VALUE;
 		TemporalObject obj1 = null;
 		TemporalObject obj2 = null;
-		TemporalObject min = null;
 		Event event = null;
 		MissedObject missed = null;
 		if(numMisses > numSplittings) {
-			for (int i = 0; i < numSplittings;) {
+			MissedObject min = null;
+			for (int i = 0; i < splittings.size();) {
 				event = splittings.get(i);
 				obj1 = event.getObjectTarget();
-				min = misses.get(0).getObject();
-				for (int j = 0; j < numMisses; j++) {
+				min = misses.get(0);
+				for (int j = 0; j < misses.size(); j++) {
 					missed = misses.get(j);
 					obj2 = missed.getObject();
 					newDistance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 					if(newDistance < minDistance) {
 						minDistance = newDistance;
-						min = obj2;
+						min = missed;
 					}
 				}
 				misses.remove(min);
 				splittings.remove(event);
-				result.addNewObjectId(min.getId(), obj1);
-				min = null;
+				result.addNewObjectId(min.getObject().getId(), obj1);
 				minDistance = Double.MAX_VALUE;
 			}
 		} else {
+			Event min = null;
 			for (int i = 0; i < misses.size();) {
 				missed = misses.get(i);
 				obj1 = missed.getObject();
@@ -114,13 +111,12 @@ public class HandlerSimple extends Handler {
 					newDistance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 					if(newDistance < minDistance) {
 						minDistance = newDistance;
-						min = obj2;
+						min = event;
 					}
 				}
-				splittings.remove(event);
+				splittings.remove(min);
 				misses.remove(missed);
-				result.addNewObjectId(obj1.getId(), min);
-				min = null;
+				result.addNewObjectId(obj1.getId(), min.getObjectTarget());
 				minDistance = Double.MAX_VALUE;
 			}
 		}

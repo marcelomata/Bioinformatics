@@ -3,8 +3,6 @@ package trackingSPT.actions.eventsfinder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import mcib3d.geom.Object3D;
 import trackingInterface.ObjectAction;
@@ -21,14 +19,14 @@ public class SplittingSimple extends SplittingMergingSeeker {
 		this.events = new ArrayList<Event>();
 		EventMapItem eventItem = new EventMapItem(EventType.SPLITTING);
 		List<TemporalObject> leftTargetObjects = this.objectAction.getLeftTargetObjects();
-		Map<TemporalObject, List<TemporalObject>> associations = this.objectAction.getAssociationsMap();
+		List<TemporalObject> associationsSources = this.objectAction.getAssociationsMapSources();
 		Event event = null;
 		//If the number of elements in the frame t+1 is bigger than in the frame t
 		if(leftTargetObjects.size() > 0) {
 			for (int i = 0; i < leftTargetObjects.size(); i++) {
 				event = new Event(EventCause.EXCEEDED);
 				event.setObjectTarget(leftTargetObjects.get(i));
-				event.setObjectSource(findClosestSource(leftTargetObjects.get(i), associations));
+				event.setObjectSource(findClosestSource(leftTargetObjects.get(i), associationsSources));
 				event.setEventType(EventType.SPLITTING);
 				events.add(event);
 			}
@@ -39,13 +37,14 @@ public class SplittingSimple extends SplittingMergingSeeker {
 		return eventItem;
 	}
 	
-	private TemporalObject findClosestSource(TemporalObject temporalObject, Map<TemporalObject, List<TemporalObject>> associations) {
-		Set<TemporalObject> targetsKey = associations.keySet();
+	private TemporalObject findClosestSource(TemporalObject temporalObject, List<TemporalObject> associationsSources) {
 		TemporalObject minSource = null;
 		double minDistance = Double.MAX_VALUE;
 		double currentDistance = Double.MAX_VALUE;
 		Object3D obj1 = temporalObject.getObject();
-		for (TemporalObject key : targetsKey) {
+		TemporalObject key = null;
+		for (int i = 0; i < associationsSources.size(); i++) {
+			key = associationsSources.get(i);
 			currentDistance = obj1.getCenterAsPoint().distance(key.getObject().getCenterAsPoint());
 			if(currentDistance < minDistance) {
 				minDistance = currentDistance;
@@ -53,7 +52,8 @@ public class SplittingSimple extends SplittingMergingSeeker {
 			}
 		}
 		
-		associations.get(minSource).add(temporalObject);
+		this.objectAction.getAssociationsMap().get(minSource).add(temporalObject);
+		associationsSources.remove(minSource);
 		return minSource;
 	}
 

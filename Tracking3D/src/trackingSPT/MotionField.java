@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import mcib3d.geom.Object3D;
 import trackingSPT.objects.TemporalObject;
 
 public class MotionField {
@@ -23,8 +24,9 @@ public class MotionField {
 		return mapObjects;
 	}
 	
-	public int getMapSize() {
-		return mapObjects.size();
+	public int getSize() {
+		Set<Integer> keys = mapObjects.keySet();
+		return mapObjects.get(keys.iterator().next()).size();
 	}
 	
 	public void addNewObject(TemporalObject object) {
@@ -59,25 +61,6 @@ public class MotionField {
 		return result;
 	}
 	
-	public int getN65() {
-		List<TemporalObject> temp = null;
-		TemporalObject last = null;
-		int count = 0;
-		int size = 0;
-		Set<Integer> keySet = mapObjects.keySet();
-		for (Integer integer : keySet) {
-			temp = mapObjects.get(integer);
-			size = temp.size();
-			if(size > 0) {
-				last = temp.get(size-1);
-				if(last.getId() == 65) {
-					count++;
-				}
-			}
-		}
-		return count;
-	}
-
 	public TemporalObject removeLastObject(Integer idObject) {
 		List<TemporalObject> temp = mapObjects.get(idObject);
 		return temp.remove(temp.size()-1);
@@ -85,6 +68,28 @@ public class MotionField {
 
 	public void finishObject(Integer idObject) {
 		mapFinishedObjects.put(idObject, mapObjects.remove(idObject));
+	}
+	
+	public Map<Integer, List<Object3D>> getFinalResult() {
+		Map<Integer, List<Object3D>> result = new HashMap<Integer, List<Object3D>>();
+		Set<Integer> objectKeys = mapObjects.keySet();
+		fillResultMap(result, mapObjects, objectKeys);
+		objectKeys = mapFinishedObjects.keySet();
+		fillResultMap(result, mapFinishedObjects, objectKeys);
+		return result;
+	}
+
+	private void fillResultMap(Map<Integer, List<Object3D>> result, Map<Integer, List<TemporalObject>> mapTemporalObjects, Set<Integer> objectKeys) {
+		List<TemporalObject> resultsByTrack;
+		List<Object3D> trackObject3DList;
+		for (Integer integer : objectKeys) {
+			resultsByTrack = mapTemporalObjects.get(integer);
+			trackObject3DList = new ArrayList<Object3D>();
+			for (TemporalObject objectTracked : resultsByTrack) {
+				trackObject3DList.add(objectTracked.getObject());
+			}
+			result.put(integer, trackObject3DList);
+		}
 	}
 
 }

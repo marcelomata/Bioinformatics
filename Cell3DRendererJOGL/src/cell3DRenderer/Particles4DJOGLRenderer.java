@@ -12,7 +12,12 @@ import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import javax.media.opengl.GL2;
+import javax.media.opengl.GL2GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
@@ -33,10 +38,13 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import cell3DRenderer.Rotation.Axis;
 import cell3DRenderer.Rotation.Direction;
 import cell3DRenderer.Sphere.Color;
+import mcib3d.geom.Object3D;
 
-public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, KeyListener, MouseListener {
+public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener, KeyListener, MouseListener {
 	
-	private static final String TITLE = "JOGL 2.0 Rubik's Cube";
+	private static final long serialVersionUID = 1L;
+
+	private static final String TITLE = "JOGL 2.0 Particles 4D Viewer";
 	
 	private static final int CANVAS_WIDTH  = 640;
 	private static final int CANVAS_HEIGHT = 480;
@@ -44,13 +52,13 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	
 	private static final float ZERO_F = 0.0f;
 	private static final float ONE_F  = 1.0f;
-	private static final float TWO_F  = 2.0f;
-	private static final float CUBIE_GAP_F = 0.1f; // gap between cubies
-	private static final float CUBIE_TRANSLATION_FACTOR = TWO_F + CUBIE_GAP_F;
+//	private static final float TWO_F  = 2.0f;
+//	private static final float CUBIE_GAP_F = 0.1f; // gap between cubies
+//	private static final float CUBIE_TRANSLATION_FACTOR = TWO_F + CUBIE_GAP_F;
 	
 	private static final float DEFAULT_CAMERA_ANGLE_X = 45.0f;
 	private static final float DEFAULT_CAMERA_ANGLE_Y = 45.0f;
-	private static final float DEFAULT_ZOOM = -98.0f;
+	private static final float DEFAULT_ZOOM = -18.0f;
 	
 	private static final int SECTION_ROTATE_STEP_DEGREES = 90;
 	private static final int CAMERA_ROTATE_STEP_DEGREES  = 5;
@@ -78,18 +86,34 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	private int mouseX = CANVAS_WIDTH/2;
 	private int mouseY = CANVAS_HEIGHT/2;
 	
+	private Map<Integer, List<Object3D>> objects4D;
+	
 //	private RubiksCube rubiksCube;
 	
 //	private RotationAnimatorThread scrambleAnimatorThread;
-//	private RotationAnimatorThread solutionAnimatorThread;
+	private MovementAnimatorThread movementAnimatorThread;
+	private int maxTime;
 
-	public Cell3DJOGLRenderer(int size) {
+	public Particles4DJOGLRenderer(ParticlesObjects objects) {
 //		rubiksCube = new RubiksCube(size);
-		this.columnAnglesX = new float[size];
-		this.rowAnglesY = new float[size];
-		this.faceAnglesZ = new float[size];
+//		this.columnAnglesX = new float[size];
+//		this.rowAnglesY = new float[size];
+//		this.faceAnglesZ = new float[size];
+//		this.objects4D = objects.getObjectsListId();
+//		setMaxTime();
 	}
 	
+	private void setMaxTime() {
+		Set<Integer> keys = objects4D.keySet();
+		int max = 0;
+		for (Integer integer : keys) {
+			max = objects4D.get(integer).size();
+			if(max > maxTime) {
+				maxTime = max;
+			}
+		}
+	}
+
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
@@ -129,15 +153,17 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
+		drawWorldCenter(gl);
+		
 		// camera transformations
 		gl.glTranslatef(ZERO_F, ZERO_F, zoom);
 		gl.glRotatef(cameraAngleX, ONE_F, ZERO_F, ZERO_F);
 		gl.glRotatef(cameraAngleY, ZERO_F, ONE_F, ZERO_F);
 		gl.glRotatef(cameraAngleZ, ZERO_F, ZERO_F, ONE_F);
 		
-		gl.glColor3f(1.0f, 1.0f, 0.0f);
-//		glut.glutSolidSphere(1, 10, 10);
-		glut.glutWireSphere(1, 10, 10);
+//		gl.glColor3f(1.0f, 1.0f, 0.0f);
+////		glut.glutSolidSphere(1, 10, 10);
+//		glut.glutWireSphere(1, 10, 10);
 		
 //		int lastIdx = rubiksCube.getSize()-1;
 //		for (int x=0; x<rubiksCube.getSize(); x++) {
@@ -161,12 +187,31 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 //		}
 	}
 	
-	private void drawCubie(GL2 gl, int visibleFaces, Sphere cubie) {
+	private void drawWorldCenter(GL2 gl) {
+//		gl.glPointSize(1f);
+//		gl.glBegin(GL2.GL_LINES);
+//		
+//		// X axis
+//		gl.glColor3f(ONE_F, ONE_F, ONE_F);
+//		gl.glVertex3f(ZERO_F, ZERO_F, ZERO_F);
+//		gl.glVertex3f(ONE_F*10, ZERO_F, ZERO_F);
+//
+//		// Y axis
+//		gl.glColor3f(ONE_F, ONE_F, ONE_F);
+//		gl.glVertex3f(ZERO_F, ZERO_F, ZERO_F);
+//		gl.glVertex3f(ZERO_F, ONE_F*10, ZERO_F);
+//			 
+//		// Z axis
+//		gl.glColor3f(ONE_F, ONE_F, ONE_F);
+//		gl.glVertex3f(ZERO_F, ZERO_F, ZERO_F);
+//		gl.glVertex3f(ZERO_F, ZERO_F, ONE_F*10);
+//			 
+//		gl.glEnd();
+		
 		gl.glBegin(GL_QUADS);
 		
 		// top face
 		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
-		if ((visibleFaces & Sphere.FACELET_TOP) > 0) glApplyColor(gl, cubie.topColor);
 		gl.glVertex3f(ONE_F, ONE_F, -ONE_F);
 		gl.glVertex3f(-ONE_F, ONE_F, -ONE_F);
 		gl.glVertex3f(-ONE_F, ONE_F, ONE_F);
@@ -174,7 +219,6 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	 
 		// bottom face
 		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
-		if ((visibleFaces & Sphere.FACELET_BOTTOM) > 0) glApplyColor(gl, cubie.bottomColor);
 		gl.glVertex3f(ONE_F, -ONE_F, ONE_F);
 		gl.glVertex3f(-ONE_F, -ONE_F, ONE_F);
 		gl.glVertex3f(-ONE_F, -ONE_F, -ONE_F);
@@ -182,7 +226,6 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 			 
 		// front face
 		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
-		if ((visibleFaces & Sphere.FACELET_FRONT) > 0) glApplyColor(gl, cubie.frontColor);
 		gl.glVertex3f(ONE_F, ONE_F, ONE_F);
 		gl.glVertex3f(-ONE_F, ONE_F, ONE_F);
 		gl.glVertex3f(-ONE_F, -ONE_F, ONE_F);
@@ -190,7 +233,6 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 			 
 		// rear face
 		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
-		if ((visibleFaces & Sphere.FACELET_REAR) > 0) glApplyColor(gl, cubie.rearColor);
 		gl.glVertex3f(ONE_F, -ONE_F, -ONE_F);
 		gl.glVertex3f(-ONE_F, -ONE_F, -ONE_F);
 		gl.glVertex3f(-ONE_F, ONE_F, -ONE_F);
@@ -198,7 +240,6 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 			 
 		// left face
 		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
-		if ((visibleFaces & Sphere.FACELET_LEFT) > 0) glApplyColor(gl, cubie.leftColor);
 		gl.glVertex3f(-ONE_F, ONE_F, ONE_F);
 		gl.glVertex3f(-ONE_F, ONE_F, -ONE_F);
 		gl.glVertex3f(-ONE_F, -ONE_F, -ONE_F);
@@ -206,7 +247,6 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	 
 		// right face
 		gl.glColor3f(ZERO_F, ZERO_F, ZERO_F);
-		if ((visibleFaces & Sphere.FACELET_RIGHT) > 0) glApplyColor(gl, cubie.rightColor);
 		gl.glVertex3f(ONE_F, ONE_F, -ONE_F);
 		gl.glVertex3f(ONE_F, ONE_F, ONE_F);
 		gl.glVertex3f(ONE_F, -ONE_F, ONE_F);
@@ -277,6 +317,10 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 		}
 	}
 	
+	private void drawTime(int time) {
+		
+	}
+	
 	private void toggleScrambleCells() {
 //		if (scrambleAnimatorThread == null || !scrambleAnimatorThread.isAlive()) {
 //			scrambleAnimatorThread = new RotationAnimatorThread() {
@@ -292,23 +336,15 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 //		}
 	}
 	
-	private void toggleSolveCells() {
-//		if (solutionAnimatorThread == null || !solutionAnimatorThread.isAlive()) {
-//			RubiksCubeSolver solver = new LameRubiksCubeSolver(rubiksCube.getCopy());
-//			final List<Rotation> rotations = solver.getSolution();
-//			System.out.println("Found solution with " + rotations.size() + " moves");
-//		
-//			solutionAnimatorThread = new RotationAnimatorThread() {
-//				@Override protected int getSection(int i) { return rotations.get(i).getSection(); }
-//				@Override protected Axis getAxis(int i) { return rotations.get(i).getAxis(); }
-//				@Override protected boolean isReverse(int i) { return rotations.get(i).isClockwise(); }
-//				@Override protected boolean isComplete(int i) { return (i == rotations.size()); }
-//			};
-//			solutionAnimatorThread.start();
-//		}
-//		else {
-//			solutionAnimatorThread.terminate();
-//		}
+	private void toggleVideoCells() {
+		if (movementAnimatorThread == null || !movementAnimatorThread.isAlive()) {
+		
+			movementAnimatorThread = new MovementAnimatorThread();
+			movementAnimatorThread.start();
+		}
+		else {
+			movementAnimatorThread.terminate();
+		}
 	}
 	
 	@Override
@@ -350,7 +386,7 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 				toggleScrambleCells();
 				break;
 			case KeyEvent.VK_B:
-				toggleSolveCells();
+				toggleVideoCells();
 				break;
 			case KeyEvent.VK_R:
 				cameraAngleX = DEFAULT_CAMERA_ANGLE_X;
@@ -398,7 +434,7 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 	@Override public void mouseReleased(MouseEvent e) { }
 	@Override public void mouseMoved(MouseEvent e) { }
 	
-	public static void main(String[] args) {
+	public void run() {
 		GLProfile glp = GLProfile.getDefault();
 		GLCapabilities caps = new GLCapabilities(glp);
 		GLWindow window = GLWindow.create(caps);
@@ -417,37 +453,39 @@ public class Cell3DJOGLRenderer extends GLCanvas implements GLEventListener, Key
 			};
 		});
 		 
-		int size = (args.length == 1) ? Integer.parseInt(args[0]) : 3;
-		Cell3DJOGLRenderer cellRenderer = new Cell3DJOGLRenderer(size);
-		window.addGLEventListener(cellRenderer);
-		window.addKeyListener(cellRenderer);
-		window.addMouseListener(cellRenderer);
+//		int size = (args.length == 1) ? Integer.parseInt(args[0]) : 3;
+//		Particles3DJOGLRenderer cellRenderer = new Particles3DJOGLRenderer();
+		window.addGLEventListener(this);
+		window.addKeyListener(this);
+		window.addMouseListener(this);
 		window.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
 		window.setTitle(TITLE);
 		window.setVisible(true);
 		animator.start();	
 	}
 	
-	private abstract class RotationAnimatorThread extends Thread {
+	private class MovementAnimatorThread extends Thread {
 		private boolean isTerminated = false;
 		
-		public void terminate() { isTerminated = true; }
+		int time = 0;
 		
-		protected abstract int getSection(int i);
-		protected abstract Axis getAxis(int i);
-		protected abstract boolean isReverse(int i);
-		protected abstract boolean isComplete(int i);
+		protected boolean isComplete() { 
+			return (time == maxTime-1); 
+		}
+		
+		public void terminate() { 
+			isTerminated = true; 
+		}
 		
 		@Override
 		public void run() {
-			int i = 0;
-			while (!isTerminated && !isComplete(i)) {
+			while (!isTerminated && !isComplete()) {
 				while (isRotating()) {
 					try { Thread.sleep(10); }
 					catch (InterruptedException e) { }
 				}
-				rotateSection(getSection(i), getAxis(i), isReverse(i));
-				i++;
+				drawTime(time);
+				time++;
 			}
 		}
 	}
