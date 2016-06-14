@@ -1,7 +1,6 @@
 package trackingSPT.actions;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import trackingInterface.ObjectAction;
@@ -28,6 +27,7 @@ public class HandlerSimple extends Handler {
 		handleAssociations(associations, result);
 		handleSplitting(splittings, result);
 		handleMergings(mergings, result);
+		result.fillFinishedTrackings();
 		
 		return result;
 	}
@@ -37,17 +37,19 @@ public class HandlerSimple extends Handler {
 		//overlap
 		for (Event event : mergings) {
 			obj = event.getObjectSource();
-			result.addMissed(obj);
-			result.addNewObjectId(obj.getId(), new TemporalObject(null));
+			
+			result.finishObjectTracking(obj.getId());
+//			result.addMissed(obj);
+//			result.addNewObjectId(obj.getId(), new TemporalObject(null));
 		}
 	}
 
 	private void handleSplitting(List<Event> splittings, TrackingResultSPT result) {
-		List<MissedObject> misses = result.getMisses();
-		int numMisses = misses.size();
-		if(numMisses > 0) {
-			reconnect(misses, splittings, result);
-		}
+//		List<MissedObject> misses = result.getMisses();
+//		int numMisses = misses.size();
+//		if(numMisses > 0) {
+//			reconnect(misses, splittings, result);
+//		}
 		TemporalObject source = null;
 		TemporalObject target1 = null;
 		TemporalObject target2 = null;

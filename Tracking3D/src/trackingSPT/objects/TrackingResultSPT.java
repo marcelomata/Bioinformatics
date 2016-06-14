@@ -55,6 +55,10 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 	public void addMissed(TemporalObject objMissed) {
 		misses.add(new MissedObject(objMissed, motionField.getMapObjects().get(objMissed.getId()).size()));
 	}
+
+	public void fillFinishedTrackings() {
+		motionField.addVoidObjectFinishedTrack();
+	}
 	
 }
 	

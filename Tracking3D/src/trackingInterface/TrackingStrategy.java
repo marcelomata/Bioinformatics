@@ -1,5 +1,6 @@
 package trackingInterface;
 
+import trackingSPT.objects.ObjectActionSPT4D;
 import trackingSPT.objects.TrackingResultObjectAction;
 import trackingSPT.objects.TrackingResultSPT;
 
@@ -16,6 +17,9 @@ public abstract class TrackingStrategy extends Strategy {
 	public TrackingStrategy(Object4D inObject) {
 		super();
 		this.inObject = inObject;
+		while(((ObjectActionSPT4D) inObject).getCurrentFrame() < 5) {
+			inObject.nextFrame();
+		}
 		this.result = new TrackingResultSPT();
 		result.init(inObject);
 		build();

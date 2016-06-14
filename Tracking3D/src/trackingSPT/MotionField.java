@@ -13,11 +13,13 @@ public class MotionField {
 	
 	private Map<Integer, List<TemporalObject>> mapObjects;
 	private Map<Integer, List<TemporalObject>> mapFinishedObjects;
+	private int numberMaxPerId;
 	private static Integer id = 1;
 	
 	public MotionField() {
 		this.mapObjects = new HashMap<Integer, List<TemporalObject>>();
 		this.mapFinishedObjects = new HashMap<Integer, List<TemporalObject>>();
+		this.numberMaxPerId = 0;
 	}
 	
 	public Map<Integer, List<TemporalObject>> getMapObjects() {
@@ -32,6 +34,13 @@ public class MotionField {
 	public void addNewObject(TemporalObject object) {
 		List<TemporalObject> list = new ArrayList<TemporalObject>();
 		object.setId(id);
+		if(numberMaxPerId == 0) {
+			numberMaxPerId++;
+		} else {
+			for (int i = 0; i < numberMaxPerId-1; i++) {
+				list.add(new TemporalObject(null));
+			}
+		}
 		list.add(object);
 		mapObjects.put(id, list);
 		id++;
@@ -40,6 +49,9 @@ public class MotionField {
 	public void addNewObjectId(Integer idObject, TemporalObject object) {
 		object.setId(idObject);
 		mapObjects.get(idObject).add(object);
+		if(mapObjects.get(idObject).size() > numberMaxPerId) {
+			numberMaxPerId = mapObjects.get(idObject).size();
+		}
 	}
 
 	public List<TemporalObject> getListLastObjects() {
@@ -90,6 +102,15 @@ public class MotionField {
 			}
 			result.put(integer, trackObject3DList);
 		}
+	}
+
+	public void addVoidObjectFinishedTrack() {
+		Set<Integer> objectKeys = mapFinishedObjects.keySet();
+		for (Integer integer : objectKeys) {
+			mapFinishedObjects.get(integer).add(new TemporalObject(null));
+		}
+		
+		
 	}
 
 }

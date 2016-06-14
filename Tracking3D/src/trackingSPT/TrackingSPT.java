@@ -30,7 +30,8 @@ public class TrackingSPT extends TrackingStrategy {
 		EventHandlerObjectAction eventList = null;
 		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D)inObject;
 		
-		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
+//		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
+		while(inObject4D.getCurrentFrame() < 12) {
 			System.out.println("Current Frame -> "+inObject4D.getCurrentFrame());
 			object3DToAssociate = inObject4D.getAssociationLastResult(result);
 			current = nextAction();

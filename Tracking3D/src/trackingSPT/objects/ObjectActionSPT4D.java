@@ -28,9 +28,9 @@ public class ObjectActionSPT4D implements Object4D {
 		// extract each time 
         Duplicator dup = new Duplicator();
         int[] dim = imp.getDimensions();
-        ImagePlus timedup = null;
-        Objects3DPopulationAdapter populationT = null;
-        for (int t = 1; t <= imp.getNFrames(); t++) {
+        ImagePlus timedup;
+        Objects3DPopulationAdapter populationT;
+        for (int t = 0; t <= imp.getNFrames(); t++) {
         	timedup = dup.run(imp, 1, 1, 1, dim[3], t, t);
         	populationT = new Objects3DPopulationAdapter(new Objects3DPopulation(timedup));
         	population3DPlusT.add(populationT);

@@ -7,6 +7,6 @@ import mcib3d.geom.Object3D;
 
 public interface ParticlesObjects {
 	
-	Map<Integer,List<Object3D>> getObjectsListId();
+	Map<Integer,List<Particle>> getObjectsListId();
 
 }

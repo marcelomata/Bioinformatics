@@ -13,15 +13,16 @@ import trackingSPT.objects.TrackingResultSPT;
 public class PluginTracking implements PlugIn {
 	@Override
 	public void run(String arg) {
-//		File image = new File("/home/marcelodmo/Documents/data/droso-seg.tif");	
-//		Opener open = new Opener();
-//		ImagePlus imp = open.openImage(image.getAbsolutePath());
-//		
-//		TrackingStrategy tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
-//		tracking.run();
+		File image = new File("/home/marcelodmo/Documents/data/droso/droso-seg.tif");	
+		Opener open = new Opener();
+		ImagePlus imp = open.openImage(image.getAbsolutePath());
 		
-//		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResultSPT) tracking.getResult()));
-		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult(null));
+		TrackingStrategy tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
+		tracking.run();
+		
+		System.out.println("Rendering");
+		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResultSPT) tracking.getResult()));
+//		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult(null));
 		renderer.run();
 		
 		
