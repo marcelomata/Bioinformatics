@@ -13,7 +13,7 @@ import trackingSPT.objects.TrackingResultSPT;
 public class PluginTracking implements PlugIn {
 	@Override
 	public void run(String arg) {
-		File image = new File("/home/marcelodmo/Documents/data/droso/droso-seg.tif");	
+		File image = new File(arg);	
 		Opener open = new Opener();
 		ImagePlus imp = open.openImage(image.getAbsolutePath());
 		
