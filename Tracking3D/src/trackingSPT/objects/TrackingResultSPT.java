@@ -5,7 +5,9 @@ import java.util.List;
 
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.ObjectAction;
+import trackingInterface.ObjectAction4D;
 import trackingSPT.MotionField;
+import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
 
 public class TrackingResultSPT extends TrackingResultObjectAction {
 
@@ -21,7 +23,7 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 		return motionField;
 	}
 	
-	public List<TemporalObject> getListLastObjects() {
+	public List<ObjectTree> getListLastObjects() {
 		return motionField.getListLastObjects();
 	}
 	
@@ -31,16 +33,17 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 	
 	@Override
 	public void init(ObjectAction objectAction) {
-		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D) objectAction;
-		Objects3DPopulation populationAdapter = inObject4D.getFrame().getObject3D();
-		for (int i = 0; i < populationAdapter.getNbObjects(); i++) {
-			this.motionField.addNewObject(new TemporalObject(populationAdapter.getObject(i)));
+		this.objectAction = (ObjectAction4D) objectAction;
+		Objects3DPopulationAdapter populationAdapter = (Objects3DPopulationAdapter) this.objectAction.getFrame();
+		Objects3DPopulation population = populationAdapter.getObject3D();
+		for (int i = 0; i < population.getNbObjects(); i++) {
+			this.motionField.addNewObject(new ObjectTree(population.getObject(i)));
 		}
 		
-		inObject4D.nextFrame();
+		this.objectAction.nextFrame();
 	}
 
-	public void addNewObjectId(Integer id, TemporalObject objectTarget) {
+	public void addNewObjectId(Integer id, ObjectTree objectTarget) {
 		motionField.addNewObjectId(id, objectTarget);
 	}
 
@@ -48,12 +51,12 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 		motionField.finishObject(id);
 	}
 
-	public void addNewObject(TemporalObject obj) {
+	public void addNewObject(ObjectTree obj) {
 		motionField.addNewObject(obj);
 	}
 
-	public void addMissed(TemporalObject objMissed) {
-		misses.add(new MissedObject(objMissed, motionField.getMapObjects().get(objMissed.getId()).size()));
+	public void addMissed(ObjectTree objMissed) {
+		misses.add(new MissedObject(objMissed, this.objectAction.getFrameTime()));
 	}
 
 	public void fillFinishedTrackings() {

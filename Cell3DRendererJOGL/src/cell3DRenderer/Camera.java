@@ -55,12 +55,12 @@ public class Camera {
 		cameraAngleX += CAMERA_ROTATE_STEP_DEGREES;	
 	}
 
-	public void rotateLeft(int orientation) {
-		cameraAngleZ += CAMERA_ROTATE_STEP_DEGREES*orientation;
+	public void rotateLeft() {
+		cameraAngleY += CAMERA_ROTATE_STEP_DEGREES;
 	}
 
-	public void rotateRight(int orientation) {
-		cameraAngleZ -= CAMERA_ROTATE_STEP_DEGREES*orientation;
+	public void rotateRight() {
+		cameraAngleY -= CAMERA_ROTATE_STEP_DEGREES;
 	}
 
 	public void changeX(int orientation) {

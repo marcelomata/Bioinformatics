@@ -105,9 +105,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				}
 			}
 			
-			r = (float) (1-(random.nextFloat()*0.5));
-			g = (float) (1-(random.nextFloat()*0.5));
-			b = (float) (1-(random.nextFloat()*0.5));
+			r = (float) (1-(random.nextFloat()*0.7));
+			g = (float) (1-(random.nextFloat()*0.7));
+			b = (float) (1-(random.nextFloat()*0.7));
 			color = new Color(r, g, b);
 //			while(colorUsed.contains(color.getRGB())) {
 //				r = 255-random.nextInt(55);
@@ -190,36 +190,53 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	    gl.glEnd();
 	}
 	
+//	int count = 0; //TODO
+//	double max = 0;
 	private void drawTime(GL2 gl) {
 		Set<Integer> keys = objects4D.keySet();
 		Particle particle;
+		Particle particle2;
 		Particle lastParticle;
 		Particle currentParticle;
 		List<Particle> particles;
-		int count = 0;
-		int time;
+//		count = 0;
 		for (Integer motionTime : keys) {
 			particles = objects4D.get(motionTime);
 			if(particles.size() > currentTime) {
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
-					particle.draw(gl, glut, minPosition, particleColor.get(motionTime));
-					count++;
+					particle.draw(gl, glut, minPosition, particleColor.get(motionTime)); //TODO
+//					particle.draw(gl, glut, minPosition, Color.BLUE);
+//					count++;
 				}
-				
-				for (int i = 1; i < 2; i++) {
-					time = currentTime+i;
-					if(time >= 1 && time < particles.size()) {
-						lastParticle = particles.get(time-1);
-						currentParticle = particles.get(time);
-						if(!lastParticle.isHidden() && !currentParticle.isHidden()) {
-							drawLine(gl, lastParticle.getPosition(), currentParticle.getPosition(), particleColor.get(motionTime));
-						}
+//				int time;
+//				for (int i = 1; i < 2; i++) { //TODO
+//					time = currentTime+i;
+//					if(time >= 1 && time < particles.size()) {
+//						lastParticle = particles.get(time-1);
+//						currentParticle = particles.get(time);
+//						if(!lastParticle.isHidden() && !currentParticle.isHidden()) {
+//							drawLine(gl, lastParticle.getPosition(), currentParticle.getPosition(), particleColor.get(motionTime));
+//						}
+//					}
+//				}
+			}
+			
+			int newtime = currentTime+1;
+			if(particles.size() > newtime) {
+				particle2 = particles.get(currentTime+1);
+				if(!particle2.isHidden()) {
+					particle2.draw(gl, glut, minPosition, particleColor.get(motionTime)); //TODO
+//					particle2.draw(gl, glut, minPosition, Color.WHITE);
+					lastParticle = particles.get(newtime-1);
+					currentParticle = particles.get(newtime);
+					if(!lastParticle.isHidden() && !currentParticle.isHidden()) {
+						drawLine(gl, lastParticle.getPosition(), currentParticle.getPosition(), particleColor.get(motionTime));
 					}
 				}
 			}
 		}
-		System.out.println(count);
+//		System.out.println("\n MAX = "+max+"\n\n###"); //TODO
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {
@@ -229,6 +246,11 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		float x2 = (float) (p2.getX() - minPosition.getX());
 		float y2 = (float) (p2.getY() - minPosition.getY());
 		float z2 = (float) (p2.getZ() - minPosition.getZ());
+//		double distance = p1.distance(p2);  //TODO
+//		if(distance > max) {
+//			max = distance;
+//		}
+//		System.out.println(distance);
 		gl.glPointSize(2f);
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f((float)c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255);
@@ -260,16 +282,18 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				camera.rotateDown();
 				break;
 			case KeyEvent.VK_LEFT:
-				camera.rotateLeft(orientation);
+				camera.rotateLeft();
 				break;
 			case KeyEvent.VK_RIGHT:
-				camera.rotateRight(-orientation);
+				camera.rotateRight();
 				break;
 			case KeyEvent.VK_B:
 				currentTime = (currentTime-1) < 0 ? 0 : currentTime - 1;
+//				System.out.println(count); //TODO
 				break;
 			case KeyEvent.VK_F:
 				currentTime = (currentTime+1) >= maxTime-1 ? maxTime-1 : currentTime + 1;
+//				System.out.println(count); //TODO
 				break;
 			case KeyEvent.VK_X:
 				camera.changeX(orientation);

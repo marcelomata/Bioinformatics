@@ -7,22 +7,22 @@ import java.util.Map;
 import java.util.Set;
 
 import mcib3d.geom.Object3D;
-import trackingSPT.objects.TemporalObject;
+import trackingSPT.objects.ObjectTree;
 
 public class MotionField {
 	
-	private Map<Integer, List<TemporalObject>> mapObjects;
-	private Map<Integer, List<TemporalObject>> mapFinishedObjects;
+	private Map<Integer, List<ObjectTree>> mapObjects;
+	private Map<Integer, List<ObjectTree>> mapFinishedObjects;
 	private int numberMaxPerId;
 	private static Integer id = 1;
 	
 	public MotionField() {
-		this.mapObjects = new HashMap<Integer, List<TemporalObject>>();
-		this.mapFinishedObjects = new HashMap<Integer, List<TemporalObject>>();
+		this.mapObjects = new HashMap<Integer, List<ObjectTree>>();
+		this.mapFinishedObjects = new HashMap<Integer, List<ObjectTree>>();
 		this.numberMaxPerId = 0;
 	}
 	
-	public Map<Integer, List<TemporalObject>> getMapObjects() {
+	public Map<Integer, List<ObjectTree>> getMapObjects() {
 		return mapObjects;
 	}
 	
@@ -31,14 +31,14 @@ public class MotionField {
 		return mapObjects.get(keys.iterator().next()).size();
 	}
 	
-	public void addNewObject(TemporalObject object) {
-		List<TemporalObject> list = new ArrayList<TemporalObject>();
+	public void addNewObject(ObjectTree object) {
+		List<ObjectTree> list = new ArrayList<ObjectTree>();
 		object.setId(id);
 		if(numberMaxPerId == 0) {
 			numberMaxPerId++;
 		} else {
 			for (int i = 0; i < numberMaxPerId-1; i++) {
-				list.add(new TemporalObject(null));
+				list.add(new ObjectTree(null));
 			}
 		}
 		list.add(object);
@@ -46,7 +46,7 @@ public class MotionField {
 		id++;
 	}
 	
-	public void addNewObjectId(Integer idObject, TemporalObject object) {
+	public void addNewObjectId(Integer idObject, ObjectTree object) {
 		object.setId(idObject);
 		mapObjects.get(idObject).add(object);
 		if(mapObjects.get(idObject).size() > numberMaxPerId) {
@@ -54,12 +54,12 @@ public class MotionField {
 		}
 	}
 
-	public List<TemporalObject> getListLastObjects() {
-		List<TemporalObject> result = new ArrayList<TemporalObject>();
-		List<TemporalObject> temp = null;
+	public List<ObjectTree> getListLastObjects() {
+		List<ObjectTree> result = new ArrayList<ObjectTree>();
+		List<ObjectTree> temp = null;
 		int size = 0;
 		Set<Integer> keySet = mapObjects.keySet();
-		TemporalObject last = null;
+		ObjectTree last = null;
 		for (Integer integer : keySet) {
 			temp = mapObjects.get(integer);
 			size = temp.size();
@@ -73,8 +73,8 @@ public class MotionField {
 		return result;
 	}
 	
-	public TemporalObject removeLastObject(Integer idObject) {
-		List<TemporalObject> temp = mapObjects.get(idObject);
+	public ObjectTree removeLastObject(Integer idObject) {
+		List<ObjectTree> temp = mapObjects.get(idObject);
 		return temp.remove(temp.size()-1);
 	}
 
@@ -91,13 +91,13 @@ public class MotionField {
 		return result;
 	}
 
-	private void fillResultMap(Map<Integer, List<Object3D>> result, Map<Integer, List<TemporalObject>> mapTemporalObjects, Set<Integer> objectKeys) {
-		List<TemporalObject> resultsByTrack;
+	private void fillResultMap(Map<Integer, List<Object3D>> result, Map<Integer, List<ObjectTree>> mapTemporalObjects, Set<Integer> objectKeys) {
+		List<ObjectTree> resultsByTrack;
 		List<Object3D> trackObject3DList;
 		for (Integer integer : objectKeys) {
 			resultsByTrack = mapTemporalObjects.get(integer);
 			trackObject3DList = new ArrayList<Object3D>();
-			for (TemporalObject objectTracked : resultsByTrack) {
+			for (ObjectTree objectTracked : resultsByTrack) {
 				trackObject3DList.add(objectTracked.getObject());
 			}
 			result.put(integer, trackObject3DList);
@@ -107,7 +107,7 @@ public class MotionField {
 	public void addVoidObjectFinishedTrack() {
 		Set<Integer> objectKeys = mapFinishedObjects.keySet();
 		for (Integer integer : objectKeys) {
-			mapFinishedObjects.get(integer).add(new TemporalObject(null));
+			mapFinishedObjects.get(integer).add(new ObjectTree(null));
 		}
 		
 		

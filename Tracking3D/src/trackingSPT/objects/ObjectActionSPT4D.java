@@ -6,10 +6,10 @@ import java.util.List;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
-import trackingInterface.Object4D;
+import trackingInterface.ObjectAction4D;
 import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
 
-public class ObjectActionSPT4D implements Object4D {
+public class ObjectActionSPT4D implements ObjectAction4D {
 	
 	private List<Objects3DPopulationAdapter> population3DPlusT;
 	private int currentFrame;
@@ -60,7 +60,7 @@ public class ObjectActionSPT4D implements Object4D {
 		return population3DPlusT.size();
 	}
 	
-	public int getCurrentFrame() {
+	public int getFrameTime() {
 		return currentFrame;
 	}
 	

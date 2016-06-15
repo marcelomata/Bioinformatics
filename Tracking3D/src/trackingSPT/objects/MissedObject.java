@@ -2,15 +2,15 @@ package trackingSPT.objects;
 
 public class MissedObject {
 	
-	private TemporalObject object;
+	private ObjectTree object;
 	private int frameEvent;
 	
-	public MissedObject(TemporalObject obj, int frame) {
+	public MissedObject(ObjectTree obj, int frame) {
 		this.object = obj;
 		this.frameEvent = frame;
 	}
 	
-	public TemporalObject getObject() {
+	public ObjectTree getObject() {
 		return object;
 	}
 	

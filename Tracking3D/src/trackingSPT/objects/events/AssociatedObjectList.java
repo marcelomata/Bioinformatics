@@ -7,40 +7,40 @@ import java.util.Map;
 import java.util.Set;
 
 import trackingSPT.math.CostMatrix;
-import trackingSPT.objects.TemporalObject;
+import trackingSPT.objects.ObjectTree;
 
 public class AssociatedObjectList extends SplittingMergingObj {
 	
-	private Map<TemporalObject, List<TemporalObject>> associationsMap;
-	private List<TemporalObject> leftTargetObjects;
-	private List<TemporalObject> leftSourceObjects;
+	private Map<ObjectTree, List<ObjectTree>> associationsMap;
+	private List<ObjectTree> leftTargetObjects;
+	private List<ObjectTree> leftSourceObjects;
 	private CostMatrix matrix;
 	
 	public AssociatedObjectList() {
-		this.associationsMap = new HashMap<TemporalObject, List<TemporalObject>>();
-		this.leftTargetObjects = new ArrayList<TemporalObject>();
-		this.leftSourceObjects = new ArrayList<TemporalObject>();
+		this.associationsMap = new HashMap<ObjectTree, List<ObjectTree>>();
+		this.leftTargetObjects = new ArrayList<ObjectTree>();
+		this.leftSourceObjects = new ArrayList<ObjectTree>();
 	}
 	
-	public void addAssociation(TemporalObject source, TemporalObject target) {
+	public void addAssociation(ObjectTree source, ObjectTree target) {
 		if(this.associationsMap.containsKey(source)) {
 			this.associationsMap.get(source).add(target);
 		} else {
-			List<TemporalObject> newList = new ArrayList<TemporalObject>();
+			List<ObjectTree> newList = new ArrayList<ObjectTree>();
 			newList.add(target);
 			this.associationsMap.put(source, newList);
 		}
 	}
 	
-	public Map<TemporalObject, List<TemporalObject>> getAssociationsMap() {
+	public Map<ObjectTree, List<ObjectTree>> getAssociationsMap() {
 		return associationsMap;
 	}
 	
-	public void addAllLeftTargetObjects(List<TemporalObject> leftTargetObjects) {
+	public void addAllLeftTargetObjects(List<ObjectTree> leftTargetObjects) {
 		this.leftTargetObjects.addAll(leftTargetObjects);
 	}
 	
-	public void addAllLeftSourceObjects(List<TemporalObject> leftSourceObjects) {
+	public void addAllLeftSourceObjects(List<ObjectTree> leftSourceObjects) {
 		this.leftSourceObjects.addAll(leftSourceObjects);
 	}
 	
@@ -49,12 +49,12 @@ public class AssociatedObjectList extends SplittingMergingObj {
 	}
 
 	@Override
-	public List<TemporalObject> getLeftTargetObjects() {
+	public List<ObjectTree> getLeftTargetObjects() {
 		return this.leftTargetObjects;
 	}
 
 	@Override
-	public List<TemporalObject> getLeftSourceObjects() {
+	public List<ObjectTree> getLeftSourceObjects() {
 		return this.leftSourceObjects;
 	}
 
@@ -63,10 +63,10 @@ public class AssociatedObjectList extends SplittingMergingObj {
 	}
 
 	@Override
-	public List<TemporalObject> getAssociationsMapSources() {
-		Set<TemporalObject> sourcesSet = associationsMap.keySet();
-		List<TemporalObject> sourcesList = new ArrayList<TemporalObject>();
-		for (TemporalObject temporalObject : sourcesSet) {
+	public List<ObjectTree> getAssociationsMapSources() {
+		Set<ObjectTree> sourcesSet = associationsMap.keySet();
+		List<ObjectTree> sourcesList = new ArrayList<ObjectTree>();
+		for (ObjectTree temporalObject : sourcesSet) {
 			sourcesList.add(temporalObject);
 		}
 		return sourcesList;

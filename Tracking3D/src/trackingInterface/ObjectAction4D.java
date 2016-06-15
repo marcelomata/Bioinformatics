@@ -1,10 +1,12 @@
 package trackingInterface;
 
-public interface Object4D extends ObjectAction {
+public interface ObjectAction4D extends ObjectAction {
 	
 	ObjectAction getLastFrame();
 	
 	ObjectAction getFrame();
+	
+	int getFrameTime();
 	
 	void nextFrame();
 	

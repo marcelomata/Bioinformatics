@@ -6,17 +6,17 @@ import java.util.List;
 import mcib3d.geom.Object3D;
 import trackingInterface.ObjectAction;
 
-public class TemporalObject implements ObjectAction {
+public class ObjectTree implements ObjectAction {
 	
 	private Object3D object;
-	private TemporalObject parent;
-	private List<TemporalObject> children;
+	private ObjectTree parent;
+	private List<ObjectTree> children;
 	private Integer id;
 	
-	public TemporalObject(Object3D object) {
+	public ObjectTree(Object3D object) {
 		this.object = object;
 		this.parent = null;
-		this.children = new ArrayList<TemporalObject>();
+		this.children = new ArrayList<ObjectTree>();
 		this.id = -1;
 	}
 	
@@ -24,11 +24,11 @@ public class TemporalObject implements ObjectAction {
 		return object;
 	}
 	
-	public TemporalObject getParent() {
+	public ObjectTree getParent() {
 		return parent;
 	}
 	
-	public List<TemporalObject> getChildren() {
+	public List<ObjectTree> getChildren() {
 		return children;
 	}
 	
@@ -42,6 +42,10 @@ public class TemporalObject implements ObjectAction {
 	
 	public boolean isMissed() {
 		return object == null;
+	}
+	
+	public boolean isRoot() {
+		return this.parent == null;
 	}
 
 }

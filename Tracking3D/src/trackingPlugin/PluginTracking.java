@@ -26,20 +26,5 @@ public class PluginTracking implements PlugIn {
 		renderer.run();
 		
 		
-//		Objects3DPopulation population = new Objects3DPopulation(imp);
-//		System.out.println(population.getNbObjects());
-////		population.getObject(0).getLabelImage().show();
-//		
-//		// extract current time 
-//        Duplicator dup = new Duplicator();
-//        int[] dim = imp.getDimensions();
-//        int selectedTime = imp.getFrame();
-//        System.out.println(selectedTime);
-//        System.out.println(imp.getNFrames());
-//        ImagePlus timedup = null;
-//        for (int i = 0; i < imp.getNFrames(); i++) {
-//        	timedup = dup.run(imp, 1, 1, 1, dim[3], i+1, i+1);			
-//        	timedup.show();
-//		}
 	}
 }

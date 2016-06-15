@@ -2,7 +2,7 @@ package trackingSPT;
 
 
 import trackingInterface.Action;
-import trackingInterface.Object4D;
+import trackingInterface.ObjectAction4D;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.actions.HandlerSimple;
 import trackingSPT.actions.eventsfinder.EventSeekerStrategyAction;
@@ -13,7 +13,7 @@ import trackingSPT.objects.events.EventSeekerObj;
 
 public class TrackingSPT extends TrackingStrategy {
 	
-	public TrackingSPT(Object4D inObject) {
+	public TrackingSPT(ObjectAction4D inObject) {
 		super(inObject);
 	}
 
@@ -30,9 +30,8 @@ public class TrackingSPT extends TrackingStrategy {
 		EventHandlerObjectAction eventList = null;
 		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D)inObject;
 		
-//		while(inObject4D.getCurrentFrame() < inObject4D.getSize()) {
-		while(inObject4D.getCurrentFrame() < 12) {
-			System.out.println("Current Frame -> "+inObject4D.getCurrentFrame());
+		while(inObject4D.getFrameTime() < inObject4D.getSize()) {
+			System.out.println("Current Frame -> "+inObject4D.getFrameTime());
 			object3DToAssociate = inObject4D.getAssociationLastResult(result);
 			current = nextAction();
 			current.setObject(object3DToAssociate);

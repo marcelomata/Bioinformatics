@@ -1,13 +1,13 @@
 package trackingSPT.objects.events;
 
 import trackingSPT.enums.EventType;
-import trackingSPT.objects.TemporalObject;
+import trackingSPT.objects.ObjectTree;
 import trackingSPT.enums.EventCause;
 
 public class Event {
 
-	private TemporalObject objectSource;
-	private TemporalObject objectTarget;
+	private ObjectTree objectSource;
+	private ObjectTree objectTarget;
 	private EventCause objectType;
 	private EventType eventType;
 	
@@ -17,19 +17,19 @@ public class Event {
 		this.objectTarget = null;
 	}
 	
-	public TemporalObject getObjectSource() {
+	public ObjectTree getObjectSource() {
 		return objectSource;
 	}
 	
-	public void setObjectSource(TemporalObject objectSource) {
+	public void setObjectSource(ObjectTree objectSource) {
 		this.objectSource = objectSource;
 	}
 	
-	public void setObjectTarget(TemporalObject objectTarget) {
+	public void setObjectTarget(ObjectTree objectTarget) {
 		this.objectTarget = objectTarget;
 	}
 	
-	public TemporalObject getObjectTarget() {
+	public ObjectTree getObjectTarget() {
 		return objectTarget;
 	}
 	
