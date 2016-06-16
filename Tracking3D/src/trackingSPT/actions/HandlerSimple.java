@@ -36,13 +36,17 @@ public class HandlerSimple extends Handler {
 	}
 
 	private void handleMergings(List<Event> mergings, TrackingResultSPT result) {
-		ObjectTree obj = null;
+		ObjectTree obj;
+		ObjectTree nullObject;
 		//overlap
 		for (Event event : mergings) {
 			obj = event.getObjectSource();
 //			result.finishObjectTracking(obj.getId());
 			result.addMissed(obj);
-			result.addNewObjectId(obj.getId(), new ObjectTree(null));
+			nullObject = new ObjectTree(null);
+			result.addNewObjectId(obj.getId(), nullObject);
+			nullObject.setParent(obj);
+			obj.addChild(nullObject);
 		}
 	}
 
@@ -52,28 +56,30 @@ public class HandlerSimple extends Handler {
 		ObjectTree obj1 = null;
 		ObjectTree obj2 = null;
 		ObjectTree obj3 = null;
-//		double distance;
 		//divisions
 		for (Event event : splittings) {
 			obj1 = event.getObjectSource();
 			obj2 = event.getObjectTarget();
 			obj3 = result.getMotionField().removeLastObject(obj1.getId());
-//			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()); //TODO
-//			System.out.print(distance+" ");
-//			distance = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
-//			System.out.print(distance+" \n");
 			result.finishObjectTracking(obj1.getId());
 			result.addNewObject(obj2);
 			result.addNewObject(obj3);
+			obj1.addChild(obj2);
+			obj1.addChild(obj3);
+			obj2.setParent(obj1);
+			obj3.setParent(obj1);
 		}
-//		System.out.println("######");
 	}
 
 	private void handleAssociations(List<Event> associations, TrackingResultSPT result) {
 		Event temp = null;
 		for (int i = 0; i < associations.size(); i++) {
 			temp = associations.get(i);
-			result.addNewObjectId(temp.getObjectSource().getId(), temp.getObjectTarget());
+			ObjectTree obj1 = temp.getObjectSource();
+			ObjectTree obj2 = temp.getObjectTarget();
+			result.addNewObjectId(obj1.getId(), obj2);
+			obj2.setParent(obj1);
+			obj1.addChild(obj2);
 		}
 	}
 	
@@ -111,6 +117,8 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					resultTracking.addNewObjectId(obj2.getId(), obj1);
+					obj1.setParent(obj2);
+					obj2.addChild(obj1);
 					missedRemove.add(misses.get(result[i]));
 				}
 				misses.removeAll(missedRemove);
@@ -136,6 +144,8 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					resultTracking.addNewObjectId(obj1.getId(), obj2);
+					obj1.addChild(obj2);
+					obj2.setParent(obj1);
 					eventsRemove.add(splittings.get(result[i]));
 				}
 				splittings.removeAll(eventsRemove);

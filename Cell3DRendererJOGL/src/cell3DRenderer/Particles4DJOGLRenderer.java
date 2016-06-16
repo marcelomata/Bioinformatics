@@ -105,9 +105,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				}
 			}
 			
-			r = (float) (1-(random.nextFloat()*0.7));
-			g = (float) (1-(random.nextFloat()*0.7));
-			b = (float) (1-(random.nextFloat()*0.7));
+			r = random.nextFloat();//(float) (1-(random.nextFloat()*0.7));
+			g = random.nextFloat();//(float) (1-(random.nextFloat()*0.7));
+			b = random.nextFloat();//(float) (1-(random.nextFloat()*0.7));
 			color = new Color(r, g, b);
 //			while(colorUsed.contains(color.getRGB())) {
 //				r = 255-random.nextInt(55);
@@ -190,67 +190,48 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	    gl.glEnd();
 	}
 	
-//	int count = 0; //TODO
-//	double max = 0;
+	int count = 0; //TODO
+	boolean canprint = true;
 	private void drawTime(GL2 gl) {
 		Set<Integer> keys = objects4D.keySet();
 		Particle particle;
 		Particle particle2;
-		Particle lastParticle;
-		Particle currentParticle;
+//		Particle lastParticle;
+//		Particle currentParticle;
 		List<Particle> particles;
-//		count = 0;
-		for (Integer motionTime : keys) {
-			particles = objects4D.get(motionTime);
+		count = 0;
+		for (Integer track : keys) {
+			particles = objects4D.get(track);
 			if(particles.size() > currentTime) {
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
-					particle.draw(gl, glut, minPosition, particleColor.get(motionTime)); //TODO
-//					particle.draw(gl, glut, minPosition, Color.BLUE);
-//					count++;
+					particle.draw(gl, glut, minPosition, particleColor.get(track));
+					count++;
 				}
-//				int time;
-//				for (int i = 1; i < 2; i++) { //TODO
-//					time = currentTime+i;
-//					if(time >= 1 && time < particles.size()) {
-//						lastParticle = particles.get(time-1);
-//						currentParticle = particles.get(time);
-//						if(!lastParticle.isHidden() && !currentParticle.isHidden()) {
-//							drawLine(gl, lastParticle.getPosition(), currentParticle.getPosition(), particleColor.get(motionTime));
+				
+//				if(track == 21) {
+//					for (int i = 1; i < particles.size(); i++) {
+//						particle2 = particles.get(i);
+//						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+//							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), minPosition, particleColor.get(track));
 //						}
 //					}
 //				}
 			}
-			
-			int newtime = currentTime+1;
-			if(particles.size() > newtime) {
-				particle2 = particles.get(currentTime+1);
-				if(!particle2.isHidden()) {
-					particle2.draw(gl, glut, minPosition, particleColor.get(motionTime)); //TODO
-//					particle2.draw(gl, glut, minPosition, Color.WHITE);
-					lastParticle = particles.get(newtime-1);
-					currentParticle = particles.get(newtime);
-					if(!lastParticle.isHidden() && !currentParticle.isHidden()) {
-						drawLine(gl, lastParticle.getPosition(), currentParticle.getPosition(), particleColor.get(motionTime));
-					}
-				}
-			}
 		}
-//		System.out.println("\n MAX = "+max+"\n\n###"); //TODO
+		if(canprint) {
+			System.out.println(count);
+			canprint = false;
+		}
 	}
 	
-	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {
-		float x1 = (float) (p1.getX() - minPosition.getX());
-		float y1 = (float) (p1.getY() - minPosition.getY());
-		float z1 = (float) (p1.getZ() - minPosition.getZ());
-		float x2 = (float) (p2.getX() - minPosition.getX());
-		float y2 = (float) (p2.getY() - minPosition.getY());
-		float z2 = (float) (p2.getZ() - minPosition.getZ());
-//		double distance = p1.distance(p2);  //TODO
-//		if(distance > max) {
-//			max = distance;
-//		}
-//		System.out.println(distance);
+	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Point3D translate, Color c) {
+		float x1 = (float) (p1.getX() - translate.getX());
+		float y1 = (float) (p1.getY() - translate.getY());
+		float z1 = (float) (p1.getZ() - translate.getZ());
+		float x2 = (float) (p2.getX() - translate.getX());
+		float y2 = (float) (p2.getY() - translate.getY());
+		float z2 = (float) (p2.getZ() - translate.getZ());
 		gl.glPointSize(2f);
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f((float)c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255);
@@ -289,11 +270,11 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				break;
 			case KeyEvent.VK_B:
 				currentTime = (currentTime-1) < 0 ? 0 : currentTime - 1;
-//				System.out.println(count); //TODO
+				canprint = true;
 				break;
 			case KeyEvent.VK_F:
 				currentTime = (currentTime+1) >= maxTime-1 ? maxTime-1 : currentTime + 1;
-//				System.out.println(count); //TODO
+				canprint = true;
 				break;
 			case KeyEvent.VK_X:
 				camera.changeX(orientation);

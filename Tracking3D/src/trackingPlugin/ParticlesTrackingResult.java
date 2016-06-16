@@ -8,7 +8,7 @@ import java.util.Set;
 
 import cell3DRenderer.Particle;
 import cell3DRenderer.ParticlesObjects;
-import mcib3d.geom.Object3D;
+import trackingSPT.objects.ObjectTree;
 import trackingSPT.objects.TrackingResultSPT;
 
 public class ParticlesTrackingResult implements ParticlesObjects {
@@ -21,17 +21,26 @@ public class ParticlesTrackingResult implements ParticlesObjects {
 
 	@Override
 	public Map<Integer, List<Particle>> getObjectsListId() {
-		Map<Integer, List<Object3D>> objects = trackingResult.getMotionField().getFinalResult();
+		Map<Integer, List<ObjectTree>> objects = trackingResult.getMotionField().getFinalResult();
 		Map<Integer, List<Particle>> particles = new HashMap<Integer, List<Particle>>();
 		Set<Integer> objectKeys = objects.keySet();
 		List<Particle> particleList;
-		List<Object3D> objectsList;
+		List<ObjectTree> objectsList;
+		Particle particle;
+		ObjectTree parent;
 		
 		for (Integer integer : objectKeys) {
 			objectsList = objects.get(integer);
 			particleList = new ArrayList<Particle>();
-			for (Object3D object3d : objectsList) {
-				particleList.add(new Particle(object3d));
+			for (ObjectTree objectTree : objectsList) {
+				particle = new Particle(objectTree.getObject());
+				parent = objectTree.getParent();
+				if(parent != null) {
+					particle.setParent(new Particle(parent.getObject()));
+				} else {
+					particle.setParent(null);
+				}
+				particleList.add(particle);
 			}
 			particles.put(integer, particleList);
 		}

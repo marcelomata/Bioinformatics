@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import mcib3d.geom.Object3D;
 import trackingSPT.objects.ObjectTree;
 
 public class MotionField {
@@ -82,8 +81,8 @@ public class MotionField {
 		mapFinishedObjects.put(idObject, mapObjects.remove(idObject));
 	}
 	
-	public Map<Integer, List<Object3D>> getFinalResult() {
-		Map<Integer, List<Object3D>> result = new HashMap<Integer, List<Object3D>>();
+	public Map<Integer, List<ObjectTree>> getFinalResult() {
+		Map<Integer, List<ObjectTree>> result = new HashMap<Integer, List<ObjectTree>>();
 		Set<Integer> objectKeys = mapObjects.keySet();
 		fillResultMap(result, mapObjects, objectKeys);
 		objectKeys = mapFinishedObjects.keySet();
@@ -91,14 +90,14 @@ public class MotionField {
 		return result;
 	}
 
-	private void fillResultMap(Map<Integer, List<Object3D>> result, Map<Integer, List<ObjectTree>> mapTemporalObjects, Set<Integer> objectKeys) {
+	private void fillResultMap(Map<Integer, List<ObjectTree>> result, Map<Integer, List<ObjectTree>> mapTemporalObjects, Set<Integer> objectKeys) {
 		List<ObjectTree> resultsByTrack;
-		List<Object3D> trackObject3DList;
+		List<ObjectTree> trackObject3DList;
 		for (Integer integer : objectKeys) {
 			resultsByTrack = mapTemporalObjects.get(integer);
-			trackObject3DList = new ArrayList<Object3D>();
+			trackObject3DList = new ArrayList<ObjectTree>();
 			for (ObjectTree objectTracked : resultsByTrack) {
-				trackObject3DList.add(objectTracked.getObject());
+				trackObject3DList.add(objectTracked);
 			}
 			result.put(integer, trackObject3DList);
 		}

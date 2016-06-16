@@ -32,6 +32,14 @@ public class ObjectTree implements ObjectAction {
 		return children;
 	}
 	
+	public List<Object3D> getChildrenObject3D() {
+		List<Object3D> childrenObject3D = new ArrayList<Object3D>();
+		for (ObjectTree objectTree : children) {
+			childrenObject3D.add(objectTree.getObject());
+		}
+		return childrenObject3D;
+	}
+	
 	public void setId(Integer id) {
 		this.id = id;
 	}
@@ -47,5 +55,12 @@ public class ObjectTree implements ObjectAction {
 	public boolean isRoot() {
 		return this.parent == null;
 	}
+	
+	public void setParent(ObjectTree parent) {
+		this.parent = parent;
+	}
 
+	public void addChild(ObjectTree child) {
+		this.children.add(child);
+	}
 }
