@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mcib3d.geom.Objects3DPopulation;
-import trackingInterface.ObjectAction;
-import trackingInterface.ObjectAction4D;
 import trackingSPT.MotionField;
 import trackingSPT.mcib3DAdapters.Objects3DPopulationAdapter;
 
@@ -14,7 +12,8 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 	private MotionField motionField;
 	private List<MissedObject> misses;
 	
-	public TrackingResultSPT() {
+	public TrackingResultSPT(ObjectActionSPT4D inObject) {
+		super(inObject);
 		this.motionField = new MotionField();
 		this.misses = new ArrayList<MissedObject>();
 	}
@@ -32,8 +31,7 @@ public class TrackingResultSPT extends TrackingResultObjectAction {
 	}
 	
 	@Override
-	public void init(ObjectAction objectAction) {
-		this.objectAction = (ObjectAction4D) objectAction;
+	public void init() {
 		Objects3DPopulationAdapter populationAdapter = (Objects3DPopulationAdapter) this.objectAction.getFrame();
 		Objects3DPopulation population = populationAdapter.getObject3D();
 		for (int i = 0; i < population.getNbObjects(); i++) {

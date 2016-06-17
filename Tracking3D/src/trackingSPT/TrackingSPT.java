@@ -1,77 +1,55 @@
 package trackingSPT;
 
 
-import trackingInterface.Action;
-import trackingInterface.ObjectAction4D;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.actions.HandlerSimple;
 import trackingSPT.actions.eventsfinder.EventSeekerStrategyAction;
+import trackingSPT.objects.MovieObjectAction;
 import trackingSPT.objects.ObjectActionSPT4D;
+import trackingSPT.objects.TemporalPopulation;
 import trackingSPT.objects.TrackingResultSPT;
-import trackingSPT.objects.events.EventHandlerObjectAction;
-import trackingSPT.objects.events.EventSeekerObj;
+import trackingSPT.objects.events.EventMap;
 
 public class TrackingSPT extends TrackingStrategy {
 	
-	public TrackingSPT(ObjectAction4D inObject) {
+	private EventMap eventList;
+	private TemporalPopulation object3DToAssociate;
+	protected ObjectActionSPT4D inObject;
+	
+	public TrackingSPT(ObjectActionSPT4D inObject) {
 		super(inObject);
 	}
 
 	@Override
 	public void build() {
-		addTrackingAction(new EventSeekerStrategyAction());
-		addTrackingAction(new HandlerSimple());
+		addTrackingAction(new EventSeekerStrategyAction(object3DToAssociate, eventList));
+		addTrackingAction(new HandlerSimple(eventList));
 	}
 
 	@Override
 	public void run() {
-		Action current = null;
-		EventSeekerObj object3DToAssociate = null;
-		EventHandlerObjectAction eventList = null;
-		ObjectActionSPT4D inObject4D = (ObjectActionSPT4D)inObject;
+		TrackingAction current;
 		
-		while(inObject4D.getFrameTime() < inObject4D.getSize()) {
-			System.out.println("Current Frame -> "+inObject4D.getFrameTime());
-			object3DToAssociate = inObject4D.getAssociationLastResult(result);
-			current = nextAction();
-			current.setObject(object3DToAssociate);
-			eventList = (EventHandlerObjectAction) current.execute();
+		while(inObject.getFrameTime() < inObject.getSize()) {
+			System.out.println("Current Frame -> "+inObject.getFrameTime());
+			object3DToAssociate = inObject.getAssociationLastResult(result);
+			current = (TrackingAction) nextAction();
+			current.execute();
 			
-//			printAssociationMap(associatedObjects);
-//			System.out.println("\n");
-//			printEventList(eventList);
-			
-			current = nextAction();
-			current.setObject(eventList);
-			result = (TrackingResultSPT) current.execute();
-			inObject4D.nextFrame();
+			current = (TrackingAction) nextAction();
+			current.execute();
+			inObject.nextFrame();
 			System.out.println("################################");
 		}
 	}
 
-//	private void printEventList(EventHandlerObjectAction eventList) {
-//		for (Event event : eventList.getEventList()) {
-//			System.out.println("Object "+event.getObject().getName()+" event type "+event.getEventType());
-//		}
-//		System.out.println("\n");
-//	}
-//
-//	private void printAssociationMap(EventSeekerObjectAction associatedObjects) {
-//		Map<Object3D, List<Object3D>> associationsMap = associatedObjects.getAssociationsMap();
-//		Set<Object3D> keys = associationsMap.keySet();
-//		int count = 1;
-//		for (Object3D object3d : keys) {
-//			System.out.print(count + " Object "+object3d.getName()+" associated to ");
-//			List<Object3D> list = associationsMap.get(object3d);
-//			for (Object3D object3d2 : list) {
-//				System.out.print(object3d2.getName()+" - ");
-//			}
-//			System.out.println();
-//			count++;
-//			if(count > 10) {
-//				break;
-//			}
-//		}
-//	}
+	@Override
+	public void init(MovieObjectAction movie) {
+		this.eventList = new EventMap();
+		this.inObject = (ObjectActionSPT4D) movie;
+		this.result = new TrackingResultSPT(this.inObject);
+		this.result.init();
+		object3DToAssociate = inObject.getAssociationLastResult(result);
+	}
 
 }

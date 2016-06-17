@@ -4,24 +4,25 @@ package trackingSPT.actions.eventsfinder;
 import java.util.ArrayList;
 import java.util.List;
 
-import trackingInterface.ObjectAction;
 import trackingSPT.enums.EventCause;
 import trackingSPT.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects.ObjectTree;
+import trackingSPT.objects.events.AssociatedObjectList;
 import trackingSPT.objects.events.Event;
-import trackingSPT.objects.events.EventMapItem;
 
-public class SplittingSimple extends SplittingMergingSeeker {
+public class SplittingSimple extends EventSeekerAction {
 
+	public SplittingSimple(AssociatedObjectList associations) {
+		super(associations, EventType.SPLITTING);
+	}
+	
 	@Override
-	public ObjectAction execute() {
+	public void execute() {
 		this.events = new ArrayList<Event>();
-		EventMapItem eventItem = new EventMapItem(EventType.SPLITTING);
-		List<ObjectTree> leftTargetObjects = this.objectAction.getLeftTargetObjects();
-		List<ObjectTree> associationsSources = this.objectAction.getAssociationsMapSources();
-//		double max = 0; //TODO
+		List<ObjectTree> leftTargetObjects = this.associations.getLeftTargetObjects();
+		List<ObjectTree> associationsSources = this.associations.getAssociationsMapSources();
 		//If the number of elements in the frame t+1 is bigger than in the frame t
 		if(leftTargetObjects.size() > 0) {
 			//Verify the closest object in the associations to the left target objects
@@ -52,11 +53,6 @@ public class SplittingSimple extends SplittingMergingSeeker {
 				// The order was changed because the list of left target is smaller
 				obj1 = matrix.getTarget(result[i]);
 				obj2 = matrix.getSource(i);
-//				distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()); //TODO
-//				if (distance > max) {
-//					max = distance;
-//				}
-//				System.out.print(distance+" ");
 				event.setObjectSource(obj1);
 				event.setObjectTarget(obj2);
 				event.setEventType(EventType.SPLITTING);
@@ -64,12 +60,9 @@ public class SplittingSimple extends SplittingMergingSeeker {
 			}
 		}
 		
-//		System.out.println("\n MAX = "+max+"\n\n###"); //TODO
 		associationsSources.clear();
 		leftTargetObjects.clear();
 		
 		eventItem.addEventList(events);
-		
-		return eventItem;
 	}
 }

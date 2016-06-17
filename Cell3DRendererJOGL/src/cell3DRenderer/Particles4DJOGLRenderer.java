@@ -196,8 +196,6 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		Set<Integer> keys = objects4D.keySet();
 		Particle particle;
 		Particle particle2;
-//		Particle lastParticle;
-//		Particle currentParticle;
 		List<Particle> particles;
 		count = 0;
 		for (Integer track : keys) {
@@ -209,14 +207,14 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 					count++;
 				}
 				
-//				if(track == 21) {
-//					for (int i = 1; i < particles.size(); i++) {
-//						particle2 = particles.get(i);
-//						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
-//							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), minPosition, particleColor.get(track));
-//						}
-//					}
-//				}
+				if(track == 21) {
+					for (int i = 1; i < particles.size(); i++) {
+						particle2 = particles.get(i);
+						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), minPosition, particleColor.get(track));
+						}
+					}
+				}
 			}
 		}
 		if(canprint) {

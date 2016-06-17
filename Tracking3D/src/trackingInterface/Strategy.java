@@ -16,7 +16,6 @@ public abstract class Strategy {
 	public Strategy() {
 		this.actions = new ArrayList<Action>();
 		this.currentAction = 0;
-		build();
 	}
 
 	protected abstract void build();
@@ -31,6 +30,11 @@ public abstract class Strategy {
 		Action result = actions.get(currentAction);
 		currentAction = (currentAction + 1) % actions.size();
 		return result;
+	}
+	
+	public void clear() {
+		this.actions.clear();
+		build();
 	}
 	
 }

@@ -1,7 +1,8 @@
 package trackingInterface;
 
+import trackingSPT.TrackingAction;
+import trackingSPT.objects.MovieObjectAction;
 import trackingSPT.objects.TrackingResultObjectAction;
-import trackingSPT.objects.TrackingResultSPT;
 
 /**
  * 
@@ -10,22 +11,21 @@ import trackingSPT.objects.TrackingResultSPT;
  */
 public abstract class TrackingStrategy extends Strategy {
 	
-	protected ObjectAction4D inObject;
 	protected TrackingResultObjectAction result;
 	
-	public TrackingStrategy(ObjectAction4D inObject) {
+	public TrackingStrategy(MovieObjectAction movie) {
 		super();
-		this.inObject = inObject;
-		this.result = new TrackingResultSPT();
-		result.init(inObject);
+		init(movie);
 		build();
 	}
+	
+	public abstract void init(MovieObjectAction movie);
 	
 	public abstract void build();
 	
 	public abstract void run();
 	
-	public void addTrackingAction(TrackingAction action) {
+	protected void addTrackingAction(TrackingAction action) {
 		addAction(action);
 	}
 	

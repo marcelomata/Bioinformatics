@@ -1,14 +1,15 @@
 package trackingSPT.actions.eventsfinder;
 
-import trackingInterface.ObjectAction;
+import trackingSPT.enums.EventType;
+import trackingSPT.objects.events.AssociatedObjectList;
 import trackingSPT.objects.events.SplittingMergingObj;
 
 public abstract class SplittingMergingSeeker extends EventSeekerAction {
 	
 	protected SplittingMergingObj objectAction;
 	
-	public void setObject(ObjectAction object) {
-		this.objectAction = (SplittingMergingObj) object;
+	public SplittingMergingSeeker(AssociatedObjectList associations, EventType type) {
+		super(associations, type);
 	}
-	
+
 }

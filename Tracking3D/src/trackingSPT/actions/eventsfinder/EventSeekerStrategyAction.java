@@ -1,63 +1,71 @@
 package trackingSPT.actions.eventsfinder;
 
-import trackingInterface.ObjectAction;
+import trackingInterface.Action;
 import trackingInterface.Strategy;
-import trackingInterface.TrackingAction;
+import trackingSPT.TrackingAction;
 import trackingSPT.objects.TemporalPopulation;
+import trackingSPT.objects.TrackingResultObjectAction;
 import trackingSPT.objects.events.AssociatedObjectList;
+import trackingSPT.objects.events.EventHandlerObjectAction;
 import trackingSPT.objects.events.EventMap;
-import trackingSPT.objects.events.EventMapItem;
 
 public class EventSeekerStrategyAction extends Strategy implements TrackingAction {
 	
 	private TemporalPopulation assObjectAction;
-	private EventMap eventMap;
+	protected EventHandlerObjectAction eventMap;
+	private AssociatedObjectList associatedList;
 
-	public EventSeekerStrategyAction() {
+	public EventSeekerStrategyAction(TemporalPopulation object3dToAssociate, EventHandlerObjectAction eventList) {
 		super();
+		this.associatedList = new AssociatedObjectList();
+		this.assObjectAction = object3dToAssociate;
+		this.eventMap = eventList;
+		build();
 	}
 	
 	public void build() {
-		addEventSeekerAction(new AssociationMinDistance());
-		addEventSeekerAction(new SplittingSimple());
-		addEventSeekerAction(new MergingSimple());
+		addEventSeekerAction(new AssociationMinDistance(assObjectAction, associatedList));
+		addEventSeekerAction(new SplittingSimple(associatedList));
+		addEventSeekerAction(new MergingSimple(associatedList));
 	}
 	
 	public void run() {
-		this.eventMap = new EventMap();
+//		this.associatedList = new AssociatedObjectList();
+//		this.eventMap = new EventMap();
 		eventMap.setResult(assObjectAction.getResult());
 		
 		EventSeekerAction current = (EventSeekerAction) nextAction();
-		current.setObject(assObjectAction);
-		EventMapItem eventItem = (EventMapItem) current.execute();
-		this.eventMap.addEventItem(eventItem);
-		AssociatedObjectList associatedList = ((AssociationMinDistance)current).getAssociations();
+		current.execute();
+		this.eventMap.addEventItem(current.getEventMapItem());
+		associatedList = current.getAssociations();
 		this.eventMap.addEventSeekerObj(associatedList);
 		
 		current = (EventSeekerAction) nextAction();
-		current.setObject(associatedList);
-		eventItem = (EventMapItem) current.execute();
-		this.eventMap.addEventItem(eventItem);
+		current.execute();
+		this.eventMap.addEventItem(current.getEventMapItem());
 		
 		current = (EventSeekerAction) nextAction();
-		current.setObject(associatedList);
-		eventItem = (EventMapItem) current.execute();
-		this.eventMap.addEventItem(eventItem);
+		current.execute();
+		this.eventMap.addEventItem(current.getEventMapItem());
 	}
 	
-	public void addEventSeekerAction(EventSeekerAction action) {
+	public void addEventSeekerAction(Action action) {
 		addAction(action);
 	}
 
 	@Override
-	public void setObject(ObjectAction object) {
-		this.assObjectAction = (TemporalPopulation) object;
+	public void execute() {
+		this.run();
 	}
 
 	@Override
-	public ObjectAction execute() {
-		this.run();
+	public EventHandlerObjectAction getEventHandler() {
 		return eventMap;
 	}
-	
+
+	@Override
+	public TrackingResultObjectAction getResult() {
+		return this.eventMap.getResult();
+	}
+
 }

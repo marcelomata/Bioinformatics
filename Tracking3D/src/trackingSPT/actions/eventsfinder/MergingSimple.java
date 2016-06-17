@@ -6,23 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import trackingInterface.ObjectAction;
 import trackingSPT.enums.EventCause;
 import trackingSPT.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects.ObjectTree;
+import trackingSPT.objects.events.AssociatedObjectList;
 import trackingSPT.objects.events.Event;
-import trackingSPT.objects.events.EventMapItem;
 
-public class MergingSimple extends SplittingMergingSeeker {
+public class MergingSimple extends EventSeekerAction {
+
+	public MergingSimple(AssociatedObjectList associations) {
+		super(associations, EventType.MERGING);
+	}
 
 	@Override
-	public ObjectAction execute() {
+	public void execute() {
 		this.events = new ArrayList<Event>();
-		EventMapItem eventItem = new EventMapItem(EventType.MERGING);
-		List<ObjectTree> leftSourceObjects = this.objectAction.getLeftSourceObjects();
-		Map<ObjectTree, List<ObjectTree>> associations = this.objectAction.getAssociationsMap();
+		List<ObjectTree> leftSourceObjects = this.associations.getLeftSourceObjects();
+		Map<ObjectTree, List<ObjectTree>> associations = this.associations.getAssociationsMap();
 		//If the number of elements in the frame t is bigger than in the frame t+1
 		if(leftSourceObjects.size() > 0) {
 			//Verify the closest object in the associations to the left source objects
@@ -63,8 +65,6 @@ public class MergingSimple extends SplittingMergingSeeker {
 		}
 		
 		eventItem.addEventList(events);
-		
-		return eventItem;
 	}
 
 }

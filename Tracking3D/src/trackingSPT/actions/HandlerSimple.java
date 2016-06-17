@@ -4,19 +4,24 @@ package trackingSPT.actions;
 import java.util.ArrayList;
 import java.util.List;
 
-import trackingInterface.ObjectAction;
 import trackingSPT.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects.MissedObject;
 import trackingSPT.objects.ObjectTree;
+import trackingSPT.objects.TrackingResultObjectAction;
 import trackingSPT.objects.TrackingResultSPT;
 import trackingSPT.objects.events.Event;
+import trackingSPT.objects.events.EventHandlerObjectAction;
 
 public class HandlerSimple extends Handler {
 
+	public HandlerSimple(EventHandlerObjectAction eventList) {
+		super(eventList);
+	}
+
 	@Override
-	public ObjectAction execute() {
+	public void execute() {
 		System.out.println("Association Events -> "+this.objectAction.getEventList(EventType.ASSOCIATION).size());
 		System.out.println("Splitting Events -> "+this.objectAction.getEventList(EventType.SPLITTING).size());
 		System.out.println("Merging Events -> "+this.objectAction.getEventList(EventType.MERGING).size());
@@ -31,8 +36,6 @@ public class HandlerSimple extends Handler {
 		handleSplitting(splittings, result);
 		handleMergings(mergings, result);
 		result.fillFinishedTrackings();
-		
-		return result;
 	}
 
 	private void handleMergings(List<Event> mergings, TrackingResultSPT result) {
@@ -153,5 +156,17 @@ public class HandlerSimple extends Handler {
 			}
 		}
 	}
+	
+	@Override
+	public EventHandlerObjectAction getEventHandler() {
+		return objectAction;
+	}
+
+	@Override
+	public TrackingResultObjectAction getResult() {
+		return this.objectAction.getResult();
+	}
 
 }
+
+	
