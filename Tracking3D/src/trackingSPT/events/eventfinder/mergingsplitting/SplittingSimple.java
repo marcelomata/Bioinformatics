@@ -4,10 +4,10 @@ package trackingSPT.events.eventfinder.mergingsplitting;
 import java.util.ArrayList;
 import java.util.List;
 
-import trackingSPT.enums.EventCause;
-import trackingSPT.enums.EventType;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
+import trackingSPT.events.enums.EventCause;
+import trackingSPT.events.enums.EventType;
 import trackingSPT.events.eventfinder.EventSeekerAction;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;

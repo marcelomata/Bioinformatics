@@ -1,4 +1,4 @@
-package trackingSPT.enums;
+package trackingSPT.events.enums;
 
 public enum EventType {
 	

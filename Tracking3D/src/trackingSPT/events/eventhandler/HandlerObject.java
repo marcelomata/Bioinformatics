@@ -2,8 +2,8 @@ package trackingSPT.events.eventhandler;
 
 import java.util.List;
 
-import trackingSPT.enums.EventType;
 import trackingSPT.events.Event;
+import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.MissedObject;
 import trackingSPT.objects3D.ObjectTree3D;
 

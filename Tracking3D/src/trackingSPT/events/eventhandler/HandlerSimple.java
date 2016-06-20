@@ -4,8 +4,8 @@ package trackingSPT.events.eventhandler;
 import java.util.ArrayList;
 import java.util.List;
 
-import trackingSPT.enums.EventType;
 import trackingSPT.events.Event;
+import trackingSPT.events.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.MissedObject;

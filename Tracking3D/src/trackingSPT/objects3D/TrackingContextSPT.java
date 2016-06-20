@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import mcib3d.geom.Objects3DPopulation;
-import trackingSPT.enums.EventType;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
+import trackingSPT.events.enums.EventType;
 import trackingSPT.events.eventfinder.EventSeekerObjInterface;
 import trackingSPT.events.eventhandler.HandlerObject;
 

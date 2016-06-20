@@ -3,7 +3,7 @@ package trackingSPT.events;
 import java.util.List;
 
 import trackingInterface.ObjectAction;
-import trackingSPT.enums.EventType;
+import trackingSPT.events.enums.EventType;
 
 public interface EventHandlerObjectAction extends ObjectAction {
 	

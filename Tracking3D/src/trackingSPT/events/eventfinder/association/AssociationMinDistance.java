@@ -6,10 +6,10 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
-import trackingSPT.enums.EventCause;
-import trackingSPT.enums.EventType;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
+import trackingSPT.events.enums.EventCause;
+import trackingSPT.events.enums.EventType;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;

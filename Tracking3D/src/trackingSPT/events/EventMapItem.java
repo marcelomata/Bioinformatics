@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import trackingInterface.ObjectAction;
-import trackingSPT.enums.EventType;
+import trackingSPT.events.enums.EventType;
 
 public class EventMapItem implements ObjectAction {
 
