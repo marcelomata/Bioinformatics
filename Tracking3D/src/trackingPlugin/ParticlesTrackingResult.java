@@ -8,31 +8,31 @@ import java.util.Set;
 
 import cell3DRenderer.Particle;
 import cell3DRenderer.ParticlesObjects;
-import trackingSPT.objects.ObjectTree;
-import trackingSPT.objects.TrackingResultSPT;
+import trackingSPT.objects3D.ObjectTree3D;
+import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class ParticlesTrackingResult implements ParticlesObjects {
 	
-	private TrackingResultSPT trackingResult;
+	private TrackingResult3DSPT trackingResult;
 	
-	public ParticlesTrackingResult(TrackingResultSPT result) {
+	public ParticlesTrackingResult(TrackingResult3DSPT result) {
 		this.trackingResult = result;
 	}
 
 	@Override
 	public Map<Integer, List<Particle>> getObjectsListId() {
-		Map<Integer, List<ObjectTree>> objects = trackingResult.getMotionField().getFinalResult();
+		Map<Integer, List<ObjectTree3D>> objects = trackingResult.getMotionField().getFinalResult();
 		Map<Integer, List<Particle>> particles = new HashMap<Integer, List<Particle>>();
 		Set<Integer> objectKeys = objects.keySet();
 		List<Particle> particleList;
-		List<ObjectTree> objectsList;
+		List<ObjectTree3D> objectsList;
 		Particle particle;
-		ObjectTree parent;
+		ObjectTree3D parent;
 		
 		for (Integer integer : objectKeys) {
 			objectsList = objects.get(integer);
 			particleList = new ArrayList<Particle>();
-			for (ObjectTree objectTree : objectsList) {
+			for (ObjectTree3D objectTree : objectsList) {
 				particle = new Particle(objectTree.getObject());
 				parent = objectTree.getParent();
 				if(parent != null) {

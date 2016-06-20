@@ -1,8 +1,8 @@
 package trackingInterface;
 
 import trackingSPT.TrackingAction;
-import trackingSPT.objects.MovieObjectAction;
-import trackingSPT.objects.TrackingResultObjectAction;
+import trackingSPT.objects3D.MovieObjectAction;
+import trackingSPT.objects3D.TrackingResultObjectAction;
 
 /**
  * 

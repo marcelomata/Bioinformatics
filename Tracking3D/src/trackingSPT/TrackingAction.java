@@ -1,13 +1,14 @@
 package trackingSPT;
 
 import trackingInterface.Action;
-import trackingSPT.objects.TrackingResultObjectAction;
-import trackingSPT.objects.events.EventHandlerObjectAction;
+import trackingSPT.objects3D.TrackingContextSPT;
 
-public interface TrackingAction extends Action {
+public abstract class TrackingAction implements Action {
+	
+	protected TrackingContextSPT context;
+	
+	public TrackingAction(TrackingContextSPT context) {
+		this.context = context;
+	}
 
-	EventHandlerObjectAction getEventHandler();
-	
-	TrackingResultObjectAction getResult();
-	
 }

@@ -1,25 +1,25 @@
 package trackingSPT.math;
 
 import mcib3d.Jama.Matrix;
-import trackingSPT.objects.ObjectTree;
+import trackingSPT.objects3D.ObjectTree3D;
 
 public class CostMatrix {
 	
 	private Matrix costs;
-	private ObjectTree[] source;
-	private ObjectTree[] target;
+	private ObjectTree3D[] source;
+	private ObjectTree3D[] target;
 	
 	public CostMatrix(int m, int n) {
-		this.source = new ObjectTree[m];
-		this.target = new ObjectTree[n];
+		this.source = new ObjectTree3D[m];
+		this.target = new ObjectTree3D[n];
 		this.costs = new Matrix(m, n);
 	}
 	
-	public void addObjectSource(ObjectTree source, int i) {
+	public void addObjectSource(ObjectTree3D source, int i) {
 		this.source[i] = source;
 	}
 	
-	public void addObjectTarget(ObjectTree target, int j) {
+	public void addObjectTarget(ObjectTree3D target, int j) {
 		this.target[j] = target;
 	}
 	
@@ -31,11 +31,11 @@ public class CostMatrix {
 		return costs.getArray();
 	}
 	
-	public ObjectTree getSource(int i) {
+	public ObjectTree3D getSource(int i) {
 		return source[i];
 	}
 	
-	public ObjectTree getTarget(int j) {
+	public ObjectTree3D getTarget(int j) {
 		return target[j];
 	}
 

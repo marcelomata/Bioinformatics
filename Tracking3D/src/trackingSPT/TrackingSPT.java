@@ -2,19 +2,18 @@ package trackingSPT;
 
 
 import trackingInterface.TrackingStrategy;
-import trackingSPT.actions.HandlerSimple;
-import trackingSPT.actions.eventsfinder.EventSeekerStrategyAction;
-import trackingSPT.objects.MovieObjectAction;
-import trackingSPT.objects.ObjectActionSPT4D;
-import trackingSPT.objects.TemporalPopulation;
-import trackingSPT.objects.TrackingResultSPT;
-import trackingSPT.objects.events.EventMap;
+import trackingSPT.events.eventfinder.EventSeekerTrackingAction;
+import trackingSPT.events.eventhandler.HandlerSimple;
+import trackingSPT.objects3D.MovieObjectAction;
+import trackingSPT.objects3D.ObjectActionSPT4D;
+import trackingSPT.objects3D.TrackingContextSPT;
+import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class TrackingSPT extends TrackingStrategy {
 	
-	private EventMap eventList;
-	private TemporalPopulation object3DToAssociate;
+	
 	protected ObjectActionSPT4D inObject;
+	private TrackingContextSPT context;
 	
 	public TrackingSPT(ObjectActionSPT4D inObject) {
 		super(inObject);
@@ -22,8 +21,8 @@ public class TrackingSPT extends TrackingStrategy {
 
 	@Override
 	public void build() {
-		addTrackingAction(new EventSeekerStrategyAction(object3DToAssociate, eventList));
-		addTrackingAction(new HandlerSimple(eventList));
+		addTrackingAction(new EventSeekerTrackingAction(context));
+		addTrackingAction(new HandlerSimple(context));
 	}
 
 	@Override
@@ -32,7 +31,8 @@ public class TrackingSPT extends TrackingStrategy {
 		
 		while(inObject.getFrameTime() < inObject.getSize()) {
 			System.out.println("Current Frame -> "+inObject.getFrameTime());
-			object3DToAssociate = inObject.getAssociationLastResult(result);
+			context.clear();
+			context.setTemporalPopulation(inObject.getTemporalPopulation(result));
 			current = (TrackingAction) nextAction();
 			current.execute();
 			
@@ -45,11 +45,10 @@ public class TrackingSPT extends TrackingStrategy {
 
 	@Override
 	public void init(MovieObjectAction movie) {
-		this.eventList = new EventMap();
 		this.inObject = (ObjectActionSPT4D) movie;
-		this.result = new TrackingResultSPT(this.inObject);
+		this.result = new TrackingResult3DSPT(this.inObject);
+		this.context = new TrackingContextSPT((TrackingResult3DSPT)result);
 		this.result.init();
-		object3DToAssociate = inObject.getAssociationLastResult(result);
 	}
 
 }

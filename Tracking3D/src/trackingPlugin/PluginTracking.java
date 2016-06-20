@@ -7,8 +7,8 @@ import ij.io.Opener;
 import ij.plugin.PlugIn;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.TrackingSPT;
-import trackingSPT.objects.ObjectActionSPT4D;
-import trackingSPT.objects.TrackingResultSPT;
+import trackingSPT.objects3D.ObjectActionSPT4D;
+import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class PluginTracking implements PlugIn {
 	@Override
@@ -21,7 +21,7 @@ public class PluginTracking implements PlugIn {
 		tracking.run();
 		
 		System.out.println("Rendering");
-		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResultSPT) tracking.getResult()));
+		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
 //		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult(null));
 		renderer.run();
 		
