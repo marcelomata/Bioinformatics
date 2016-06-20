@@ -32,7 +32,7 @@ public class TrackingSPT extends TrackingStrategy {
 		while(inObject.getFrameTime() < inObject.getSize()) {
 			System.out.println("Current Frame -> "+inObject.getFrameTime());
 			context.clear();
-			context.setTemporalPopulation(inObject.getTemporalPopulation(result));
+			context.setTemporalPopulation(inObject.getTemporalPopulation3D());
 			current = (TrackingAction) nextAction();
 			current.execute();
 			
@@ -48,7 +48,6 @@ public class TrackingSPT extends TrackingStrategy {
 		this.inObject = (ObjectActionSPT4D) movie;
 		this.result = new TrackingResult3DSPT(this.inObject);
 		this.context = new TrackingContextSPT((TrackingResult3DSPT)result);
-		this.result.init();
 	}
 
 }

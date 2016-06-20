@@ -39,16 +39,17 @@ public class HandlerSimple extends Handler {
 
 	private void handleMergings(List<Event> mergings) {
 		ObjectTree3D obj;
-		ObjectTree3D nullObject;
+//		ObjectTree3D nullObject;
 		//overlap
 		for (Event event : mergings) {
 			obj = event.getObjectSource();
 			context.addMissed(obj);
-			nullObject = new ObjectTree3D(null);
-			context.addNewObjectId(obj.getId(), nullObject);
-			nullObject.setParent(obj);
-			obj.addChild(nullObject);
+//			nullObject = new ObjectTree3D(null);
+//			context.addNewObjectId(obj.getId(), nullObject);
+//			nullObject.setParent(obj);
+//			obj.addChild(nullObject);
 		}
+		addNullToMisses(context.getMisses());
 	}
 
 	private void handleSplitting(List<Event> splittings, TrackingResult3DSPT result) {
@@ -124,6 +125,7 @@ public class HandlerSimple extends Handler {
 				}
 				misses.removeAll(missedRemove);
 				splittings.clear();
+				addNullToMisses(misses);
 			} else {
 				List<Event> eventsRemove = new ArrayList<Event>();
 				matrix = new CostMatrix(misses.size(), splittings.size());
@@ -152,6 +154,18 @@ public class HandlerSimple extends Handler {
 				splittings.removeAll(eventsRemove);
 				misses.clear();
 			}
+		}
+	}
+
+	private void addNullToMisses(List<MissedObject> misses) {
+		ObjectTree3D obj;
+		ObjectTree3D nullObject;
+		for (MissedObject missedObject : misses) {
+			obj = missedObject.getObject();
+			nullObject = new ObjectTree3D(null);
+			context.addNewObjectId(obj.getId(), nullObject);
+			obj.addChild(nullObject);
+			nullObject.setParent(obj);
 		}
 	}
 	

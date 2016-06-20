@@ -26,16 +26,16 @@ public class Particle {
 		return position;
 	}
 	
-	public void draw(GL2 gl, GLUT glut, Point3D minPosition, Color color) {
+	public void draw(GL2 gl, GLUT glut, Point3D translate, Color color) {
 		gl.glPushMatrix();
-		float x = (float) (position.getX() - minPosition.getX());
-		float y = (float) (position.getY() - minPosition.getY());
-		float z = (float) (position.getZ() - minPosition.getZ());
+		float x = (float) (position.getX() - translate.getX());
+		float y = (float) (position.getY() - translate.getY());
+		float z = (float) (position.getZ() - translate.getZ());
 		draw2(gl, glut, x, y, z, object.getDistCenterMax(), color);
 		gl.glPopMatrix();
 		if(parent != null) {
-			parent.draw(gl, glut, minPosition, Color.WHITE);
-			drawLine(gl, position, parent.getPosition(), minPosition, color);
+			parent.draw(gl, glut, translate, Color.WHITE);
+			drawLine(gl, position, parent.getPosition(), translate, color);
 		}
 	}
 	

@@ -105,11 +105,69 @@ public class MotionField {
 
 	public void addVoidObjectFinishedTrack() {
 		Set<Integer> objectKeys = mapFinishedObjects.keySet();
+		ObjectTree3D nullObject;
+		ObjectTree3D obj;
+		List<ObjectTree3D> list;
 		for (Integer integer : objectKeys) {
-			mapFinishedObjects.get(integer).add(new ObjectTree3D(null));
+			nullObject = new ObjectTree3D(null);
+			nullObject.setId(integer);
+			list = mapFinishedObjects.get(integer);
+			obj = list.get(list.size()-1);
+			obj.addChild(nullObject);
+			mapFinishedObjects.get(integer).add(nullObject);
+		}
+	}
+
+	public boolean isDifferentNumber() {
+		Set<Integer> keys = mapObjects.keySet();
+		List<ObjectTree3D> list; 
+		int number = 0;
+		boolean first = true;
+		int count = 0;
+		for (Integer key : keys) {
+			if(key==65)count++;
+			list = mapObjects.get(key);
+			if(first) {
+				number = list.size();
+				first = false;
+			} else if(number != list.size()) {
+				System.out.println("number - "+count);
+				return true;
+			}
 		}
 		
+		keys = mapFinishedObjects.keySet();
+		first = true;
+		for (Integer key : keys) {
+			if(key==65)count++;
+			list = mapObjects.get(key);
+			if(first) {
+				number = list.size();
+			} else if(number != list.size()) {
+				System.out.println("number - "+count);
+				return true;
+			}
+		}
+		System.out.println("number - "+count);
 		
+		return false;
+	}
+	
+	public void printSize() {
+		Set<Integer> keys = mapObjects.keySet();
+		List<ObjectTree3D> list; 
+		for (Integer key : keys) {
+			list = mapObjects.get(key);
+			System.out.print(key+"-"+list.size()+", ");
+		}
+		System.out.println();
+		
+		keys = mapFinishedObjects.keySet();
+		for (Integer key : keys) {
+			list = mapObjects.get(key);
+			System.out.print(key+"-"+list.size()+", ");
+		}
+		System.out.println();
 	}
 
 }

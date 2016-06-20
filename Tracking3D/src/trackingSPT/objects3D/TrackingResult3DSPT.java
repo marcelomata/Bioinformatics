@@ -1,6 +1,7 @@
 package trackingSPT.objects3D;
 
 import java.util.List;
+import java.util.Set;
 
 import mcib3d.geom.Objects3DPopulation;
 import trackingSPT.MotionField;
@@ -12,7 +13,6 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	
 	public TrackingResult3DSPT(ObjectActionSPT4D inObject) {
 		super(inObject);
-		this.motionField = new MotionField();
 	}
 
 	public MotionField getMotionField() {
@@ -25,6 +25,7 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	
 	@Override
 	public void init() {
+		this.motionField = new MotionField();
 		Objects3DPopulationSPT populationAdapter = (Objects3DPopulationSPT) this.objectAction.getFrame();
 		Objects3DPopulation population = populationAdapter.getObject3D();
 		for (int i = 0; i < population.getNbObjects(); i++) {
@@ -48,6 +49,10 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 
 	public void fillFinishedTrackings() {
 		motionField.addVoidObjectFinishedTrack();
+		if(motionField.isDifferentNumber()) {
+			motionField.printSize();
+		}
+		System.out.println(motionField.isDifferentNumber());
 	}
 	
 }

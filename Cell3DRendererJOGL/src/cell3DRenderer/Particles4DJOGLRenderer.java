@@ -64,7 +64,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	
 //	private MovementAnimatorThread movementAnimatorThread;
 	private int maxTime;
+	private int maxTrack;
 	private int currentTime;
+	private int currentTrack;
 	private Point3D minPosition;
 	private Camera camera;
 
@@ -75,6 +77,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		this.particleColor = new HashMap<Integer, Color>();
 		this.colorUsed = new ArrayList<Integer>();
 		this.currentTime = 0;
+		this.currentTrack = 0;
 		setMaxTimePosition();
 	}
 	
@@ -87,6 +90,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		float r;
 		float g;
 		float b;
+		maxTrack = keys.size();
 		for (Integer integer : keys) {
 			max = objects4D.get(integer).size();
 			min = objects4D.get(integer).get(0).getPosition();
@@ -105,16 +109,10 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				}
 			}
 			
-			r = random.nextFloat();//(float) (1-(random.nextFloat()*0.7));
-			g = random.nextFloat();//(float) (1-(random.nextFloat()*0.7));
-			b = random.nextFloat();//(float) (1-(random.nextFloat()*0.7));
+			r = random.nextFloat();
+			g = random.nextFloat();
+			b = random.nextFloat();
 			color = new Color(r, g, b);
-//			while(colorUsed.contains(color.getRGB())) {
-//				r = 255-random.nextInt(55);
-//				g = 255-random.nextInt(55);
-//				b = 255-random.nextInt(55);
-//				color = new Color(r/255, g/255, b/255);
-//			}
 			colorUsed.add(color.getRGB());
 			particleColor.put(integer, color);
 		}
@@ -198,8 +196,10 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		Particle particle2;
 		List<Particle> particles;
 		count = 0;
+		System.out.println();
 		for (Integer track : keys) {
 			particles = objects4D.get(track);
+			System.out.print(particles.size()+" ");
 			if(particles.size() > currentTime) {
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
@@ -207,7 +207,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 					count++;
 				}
 				
-				if(track == 21) {
+				if(track == currentTrack) {
 					for (int i = 1; i < particles.size(); i++) {
 						particle2 = particles.get(i);
 						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
@@ -218,6 +218,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 			}
 		}
 		if(canprint) {
+			System.out.println();
 			System.out.println(count);
 			canprint = false;
 		}
@@ -285,6 +286,12 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				break;
 			case KeyEvent.VK_R:
 				camera.reset();
+				break;
+			case KeyEvent.VK_U:
+				currentTrack = (currentTrack + 1) % maxTrack;
+				break;
+			case KeyEvent.VK_D:
+				currentTrack = currentTrack > 0 ? currentTrack - 1 : 0;
 				break;
 		}
 	}

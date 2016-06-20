@@ -19,7 +19,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	 */
 	public ObjectActionSPT4D(ImagePlus imp) {
 		this.population3DPlusT = new ArrayList<Objects3DPopulationSPT>();
-		this.currentFrame = 0;
+		this.currentFrame = 1;
 		loadFrames3D(imp);
 	}
 
@@ -37,7 +37,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	}
 
 	public Objects3DPopulationSPT getLastFrame() {
-		if(currentFrame == 0) {
+		if(currentFrame == 1) {
 			return null;
 		}
 		return population3DPlusT.get(currentFrame-1);
@@ -61,12 +61,12 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		return currentFrame;
 	}
 	
-	public TemporalPopulation3D getAssociationObjectAction() {
+	public TemporalPopulation3D getTemporalPopulation3D() {
 		return new Object3DTracking(this.getLastFrame(), this.getFrame());
 	}
 	
-	public TemporalPopulation3D getTemporalPopulation(TrackingResultObjectAction trackingResult) {
-		Object3DTracking objectTracking = new Object3DTracking(this.getLastFrame(), this.getFrame());
-		return objectTracking;
-	}
+//	public TemporalPopulation3D getTemporalPopulation(TrackingResultObjectAction trackingResult) {
+//		Object3DTracking objectTracking = new Object3DTracking(this.getLastFrame(), this.getFrame());
+//		return objectTracking;
+//	}
 }

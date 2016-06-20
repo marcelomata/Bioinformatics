@@ -8,6 +8,7 @@ public abstract class TrackingResultObjectAction implements ObjectAction {
 	
 	public TrackingResultObjectAction(ObjectActionSPT4D inObject) {
 		this.objectAction = inObject;
+		init();
 	}
 	
 	public int getCurrentFrame() {
