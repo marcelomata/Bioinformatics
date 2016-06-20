@@ -2,7 +2,7 @@ package trackingSPT.objects3D;
 
 import trackingInterface.ObjectAction;
 
-public interface ObjectActionSPT extends ObjectAction {
+public interface ObjectActionTracking extends ObjectAction {
 	
 	TrackingResultObjectAction getResult();
 	
