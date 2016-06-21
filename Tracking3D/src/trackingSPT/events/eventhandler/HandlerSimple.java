@@ -35,21 +35,17 @@ public class HandlerSimple extends Handler {
 		handleSplitting(splittings, result);
 		handleMergings(mergings);
 		result.fillFinishedTrackings();
+		addNullToMisses(context.getMisses());
+		System.out.println(result.getMotionField().isDifferentNumber());
 	}
 
 	private void handleMergings(List<Event> mergings) {
 		ObjectTree3D obj;
-//		ObjectTree3D nullObject;
 		//overlap
 		for (Event event : mergings) {
 			obj = event.getObjectSource();
 			context.addMissed(obj);
-//			nullObject = new ObjectTree3D(null);
-//			context.addNewObjectId(obj.getId(), nullObject);
-//			nullObject.setParent(obj);
-//			obj.addChild(nullObject);
 		}
-		addNullToMisses(context.getMisses());
 	}
 
 	private void handleSplitting(List<Event> splittings, TrackingResult3DSPT result) {
@@ -63,7 +59,7 @@ public class HandlerSimple extends Handler {
 			obj1 = event.getObjectSource();
 			obj2 = event.getObjectTarget();
 			obj3 = result.getMotionField().removeLastObject(obj1.getId());
-			result.finishObjectTracking(obj1.getId());
+			result.finishObjectTracking(obj1);
 			result.addNewObject(obj2);
 			result.addNewObject(obj3);
 			obj1.addChild(obj2);
@@ -115,7 +111,7 @@ public class HandlerSimple extends Handler {
 				HungarianAlgorithm lapSolver = new HungarianAlgorithm(matrix.getCosts());
 				int []result = lapSolver.execute();
 				for (int i = 0; i < result.length; i++) {
-					// Source in the matrix was the object in the frame t+1
+					// Source in the matrix is the object in the frame t+1
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					resultTracking.addNewObjectId(obj2.getId(), obj1);
@@ -125,7 +121,6 @@ public class HandlerSimple extends Handler {
 				}
 				misses.removeAll(missedRemove);
 				splittings.clear();
-				addNullToMisses(misses);
 			} else {
 				List<Event> eventsRemove = new ArrayList<Event>();
 				matrix = new CostMatrix(misses.size(), splittings.size());

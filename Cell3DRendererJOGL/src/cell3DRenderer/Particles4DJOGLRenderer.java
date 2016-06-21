@@ -199,7 +199,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		System.out.println();
 		for (Integer track : keys) {
 			particles = objects4D.get(track);
-			System.out.print(particles.size()+" ");
+//			System.out.print(particles.size()+" ");
 			if(particles.size() > currentTime) {
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
