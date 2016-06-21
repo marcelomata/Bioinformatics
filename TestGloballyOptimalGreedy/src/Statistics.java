@@ -34,14 +34,27 @@ public class Statistics {
 		return 0;
 	}
 	
-	public double likelihood(Track track) {
+	public double likelihood(List<Track> tracks) {
 		double p = 1; 
+		double z = 1;
+		List<Vector> vectors;
 		for (Track track : tracks) {
-			p *= trackProbability(track);
+			vectors = track.getVectorList();
+			for (Vector vector : vectors) {
+				p *= (foregroundLikelihood(vector.getFeature())/backgroundLikelihood(vector.getFeature()));
+				z *= backgroundLikelihood(vector.getFeature());
+			}
 		}
+		
+		return z*	p;
 	}
 	
 	public double foregroundLikelihood(Feature feature) {
+		
+		return 0;
+	}
+	
+	public double backgroundLikelihood(Feature feature) {
 		
 		return 0;
 	}
