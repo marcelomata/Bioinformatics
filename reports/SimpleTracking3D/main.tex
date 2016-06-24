@@ -17,19 +17,48 @@
 
 The current version of the framework is shown in the Figure~\ref{fig:diagram}.
 
-\begin{figure}[!hbt]
+\begin{figure}[!h]
 	\centering
     \centerline{\includegraphics[width=40em]{images/diagram.png}}
     \caption{Framework.}
     \label{fig:diagram}
 \end{figure}
 
+All framework is organized in 3 main objects, Strategy, Action and ObjectAction. The Strategy works like the "Command" pattern of GoF`s design patterns. In the implementation example of the tracking using this structure, the way that Strategy call the actions and how actions work together is similar to the pattern "Chain of Responsibility" of GoF`s design patterns. The exchange of data between the actions is made using a Context, who implements each interface required for each action.
 
+The first version of the example using the framework is shown in the Figures~\ref{fig:f1},~\ref{fig:f2},~\ref{fig:f3} and~\ref{fig:fn}. A simple viewer was developed to get this visualization. One sphere is drawn in the position of each cell tracked, with a diameter of the max width of the cell. Each sphere is drawn using a different color. The viewer draws the cell in the last position with white color and a line linking the last position to the current one. Transformations in the camera is also provided.
 
+In this first example, the cells in the frame t are being linked to someone in the frame t+1. A cost matrix is built and solved, after that the link is done. Missing cells are saved and when a splitting or division happen they are linked to one cell left. Left cells are linked to closest missed one, if there is someone, or to the closest one in the last frame. No other event is being processed for now. Some strange links are observed in the Figures~\ref{fig:f1},~\ref{fig:f2},~\ref{fig:f3} and~\ref{fig:fn}. This is happening because even the distance is too big one link is done between cells. For example, one cell could be alone because of some overlap, however if other cell goes in to the scene a link can be done between these 2 outliers.
 
+For now, I am trying print the tracking in the same format required in the challenge, using the Amal`s implementation. I am also improving the algorithms.
 
-%The goal of this simple project is try to understand all of the problems to be solved in these cells studies. This first version works with 2D videos. For the first step, a simple algorithm was developed to process basic situations, where a smaller number of events can happen. We consider here a perfect scenario the case where all cells were correctly segmented in each frame of the video, the number of cells from the frame on the time \(t\) to \(t+1\) is the same and no overlap, no problem with too close cells or high velocity happens. However, some events are allowed, the size changing and \(n\) number of division of cells. So in this case, only one event can change the number of cells from the frame on the time \(t\) to \(t+1\). This first simple version of the algorithm is described below.\\
+\begin{figure}[!hbt]
+	\centering
+    \centerline{\includegraphics[width=40em]{images/f1.png}}
+    \caption{Frame 1.}
+    \label{fig:f1}
+\end{figure}
 
+\begin{figure}[!hbt]
+	\centering
+    \centerline{\includegraphics[width=40em]{images/f2.png}}
+    \caption{Frame 2.}
+    \label{fig:f2}
+\end{figure}
+
+\begin{figure}[!hbt]
+	\centering
+    \centerline{\includegraphics[width=40em]{images/f3.png}}
+    \caption{Frame 3.}
+    \label{fig:f3}
+\end{figure}
+
+\begin{figure}[!hbt]
+	\centering
+    \centerline{\includegraphics[width=40em]{images/f4.png}}
+    \caption{Frame N.}
+    \label{fig:fn}
+\end{figure}
 
 %
 %\begin{algorithm}[H]
