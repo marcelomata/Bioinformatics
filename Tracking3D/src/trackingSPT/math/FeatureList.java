@@ -3,6 +3,8 @@ package trackingSPT.math;
 import java.util.ArrayList;
 import java.util.List;
 
+import trackingSPT.objects3D.ObjectTree3D;
+
 public class FeatureList {
 	
 	private List<Feature> features;
@@ -18,6 +20,10 @@ public class FeatureList {
 	
 	public int size() {
 		return features.size();
+	}
+
+	public double getResult(ObjectTree3D obj1, ObjectTree3D obj2, int i) {
+		return features.get(i).getResult(obj1, obj2);
 	}
 
 }
