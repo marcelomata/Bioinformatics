@@ -11,12 +11,15 @@ import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.math.CostMatrix;
+import trackingSPT.math.FunctionDistanceTracking;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class AssociationMinDistance extends AssociationSeeker {
+	
+	private FunctionDistanceTracking function;
 	
 	public AssociationMinDistance(TrackingContextSPT context) {
 		super(context);
