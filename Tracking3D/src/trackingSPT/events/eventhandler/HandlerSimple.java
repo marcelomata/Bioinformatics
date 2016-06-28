@@ -33,51 +33,93 @@ public class HandlerSimple extends Handler {
 		
 		handleAssociations(associations, result);
 		handleSplitting(splittings, result);
-		handleMergings(mergings);
+		handleMergings(mergings, result);
 		result.fillFinishedTrackings();
 		addNullToMisses(context.getMisses());
 		System.out.println(result.getMotionField().isDifferentNumber());
 	}
 
-	private void handleMergings(List<Event> mergings) {
-		ObjectTree3D obj;
+	private void handleMergings(List<Event> mergings, TrackingResult3DSPT result) {
+		ObjectTree3D obj1;
+		ObjectTree3D obj2;
+		double distance;
 		//overlap
 		for (Event event : mergings) {
-			obj = event.getObjectSource();
-			context.addMissed(obj);
+			obj1 = event.getObjectSource();
+			obj2 = event.getObjectTarget();
+			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+			//if the closest is near so a merge sould happened
+			if(distance < (obj1.getObject().getDistCenterMax()*3)) {
+				context.addMissed(obj1);
+			} else {
+				result.finishObjectTracking(obj1);
+			}
 		}
 	}
 
 	private void handleSplitting(List<Event> splittings, TrackingResult3DSPT result) {
 		List<MissedObject> misses = this.context.getMisses();
 		reconnect(misses, splittings, result);
-		ObjectTree3D obj1 = null;
-		ObjectTree3D obj2 = null;
-		ObjectTree3D obj3 = null;
+		ObjectTree3D obj1;
+		ObjectTree3D obj2;
+		ObjectTree3D obj3;
+		double distance1;
+		double distance2;
+		double difference;
+		
 		//divisions
 		for (Event event : splittings) {
 			obj1 = event.getObjectSource();
 			obj2 = event.getObjectTarget();
-			obj3 = result.getMotionField().removeLastObject(obj1.getId());
-			result.finishObjectTracking(obj1);
-			result.addNewObject(obj2);
-			result.addNewObject(obj3);
-			obj1.addChild(obj2);
-			obj1.addChild(obj3);
-			obj2.setParent(obj1);
-			obj3.setParent(obj1);
+			if(result.getMotionField().contains(obj1)) {
+				obj3 = result.getMotionField().removeLastObject(obj1.getId());
+
+				distance1 = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+				distance2 = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
+				difference = Math.abs(distance1-distance2);
+				
+				if(difference < distance1 && difference < distance2) {
+					result.finishObjectTracking(obj1);
+					result.addNewObject(obj2);
+					result.addNewObject(obj3);
+					obj1.addChild(obj2);
+					obj1.addChild(obj3);
+					obj2.setParent(obj1);
+					obj3.setParent(obj1);
+				} else {
+					if(distance1 < distance2) {
+						result.addNewObject(obj3);
+						obj1.addChild(obj2);
+						obj2.setParent(obj1);
+					} else {
+						result.addNewObject(obj2);
+						obj1.addChild(obj3);
+						obj3.setParent(obj1);
+					}
+				}
+			} else {
+				result.addNewObject(obj2);
+			}
+			
 		}
 	}
 
 	private void handleAssociations(List<Event> associations, TrackingResult3DSPT result) {
 		Event temp = null;
+		double distance;
 		for (int i = 0; i < associations.size(); i++) {
 			temp = associations.get(i);
 			ObjectTree3D obj1 = temp.getObjectSource();
 			ObjectTree3D obj2 = temp.getObjectTarget();
-			result.addNewObjectId(obj1.getId(), obj2);
-			obj2.setParent(obj1);
-			obj1.addChild(obj2);
+			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+			if(distance < (obj1.getObject().getDistCenterMax()*3)) {
+				result.addNewObjectId(obj1.getId(), obj2);
+				obj2.setParent(obj1);
+				obj1.addChild(obj2);
+			} else {
+				result.finishObjectTracking(obj1);
+				result.addNewObject(obj2);
+			}
 		}
 	}
 	
@@ -93,9 +135,10 @@ public class HandlerSimple extends Handler {
 			Event event;
 			MissedObject missed;
 			CostMatrix matrix;
+			List<Event> eventsRemove = new ArrayList<Event>();
+			List<MissedObject> missedRemove = new ArrayList<MissedObject>();
 			if(numMisses > numSplittings) {
 				matrix = new CostMatrix(numSplittings, numMisses);
-				List<MissedObject> missedRemove = new ArrayList<MissedObject>();
 				for (int i = 0; i < splittings.size(); i++) {
 					event = splittings.get(i);
 					obj1 = event.getObjectTarget();
@@ -114,15 +157,16 @@ public class HandlerSimple extends Handler {
 					// Source in the matrix is the object in the frame t+1
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
-					resultTracking.addNewObjectId(obj2.getId(), obj1);
-					obj1.setParent(obj2);
-					obj2.addChild(obj1);
-					missedRemove.add(misses.get(result[i]));
+					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+					if(distance < (obj1.getObject().getDistCenterMax()*2)) {
+						resultTracking.addNewObjectId(obj2.getId(), obj1);
+						obj1.setParent(obj2);
+						obj2.addChild(obj1);
+						missedRemove.add(misses.get(result[i]));
+						eventsRemove.add(splittings.get(i));
+					}
 				}
-				misses.removeAll(missedRemove);
-				splittings.clear();
 			} else {
-				List<Event> eventsRemove = new ArrayList<Event>();
 				matrix = new CostMatrix(misses.size(), splittings.size());
 				for (int i = 0; i < misses.size(); i++) {
 					missed = misses.get(i);
@@ -141,14 +185,18 @@ public class HandlerSimple extends Handler {
 					// Source in the matrix was the object in the frame t+1
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
-					resultTracking.addNewObjectId(obj1.getId(), obj2);
-					obj1.addChild(obj2);
-					obj2.setParent(obj1);
-					eventsRemove.add(splittings.get(result[i]));
+					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+					if(distance < (obj1.getObject().getDistCenterMax()*2)) {
+						resultTracking.addNewObjectId(obj1.getId(), obj2);
+						obj1.addChild(obj2);
+						obj2.setParent(obj1);
+						eventsRemove.add(splittings.get(result[i]));
+						missedRemove.add(misses.get(i));
+					}
 				}
-				splittings.removeAll(eventsRemove);
-				misses.clear();
 			}
+			splittings.removeAll(eventsRemove);
+			misses.removeAll(missedRemove);
 		}
 	}
 

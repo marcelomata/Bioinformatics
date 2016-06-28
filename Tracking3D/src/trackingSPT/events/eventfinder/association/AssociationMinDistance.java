@@ -10,8 +10,8 @@ import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
 import trackingSPT.events.enums.EventType;
+import trackingSPT.math.AssociationFunctionTracking;
 import trackingSPT.math.CostMatrix;
-import trackingSPT.math.FunctionDistanceTracking;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
@@ -19,11 +19,12 @@ import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class AssociationMinDistance extends AssociationSeeker {
 	
-	private FunctionDistanceTracking function;
+	private AssociationFunctionTracking function;
 	
 	public AssociationMinDistance(TrackingContextSPT context) {
 		super(context);
 		context.addEventType(EventType.ASSOCIATION);
+		this.function =  new AssociationFunctionTracking();
 	}
 
 	@Override
@@ -113,7 +114,8 @@ public class AssociationMinDistance extends AssociationSeeker {
 			for (int j = 0; j < list2.size(); j++) {
 				obj2 = list2.get(j);
 				matrix.addObjectTarget(obj2, j);
-				distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+				//distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+				distance = function.calcDistance(obj1, obj2);
 				matrix.setCost(i, j, distance);
 			}
 		}

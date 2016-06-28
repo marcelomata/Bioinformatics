@@ -9,7 +9,6 @@ public class FeatureList {
 	
 	private List<Feature> features;
 	
-	
 	public FeatureList() {
 		this.features = new ArrayList<Feature>();
 	}

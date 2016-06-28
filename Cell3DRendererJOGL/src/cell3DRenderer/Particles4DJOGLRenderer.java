@@ -189,13 +189,18 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	}
 	
 	int count = 0; //TODO
+	int division = 0; //TODO
+	List<Particle> parents = new ArrayList<Particle>();
 	boolean canprint = true;
 	private void drawTime(GL2 gl) {
 		Set<Integer> keys = objects4D.keySet();
 		Particle particle;
 		Particle particle2;
+		Particle parent;
 		List<Particle> particles;
 		count = 0;
+		division = 0;
+		parents.clear();
 		System.out.println();
 		for (Integer track : keys) {
 			particles = objects4D.get(track);
@@ -204,6 +209,14 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
 					particle.draw(gl, glut, minPosition, particleColor.get(track));
+					parent = particle.getParent();
+					if (parent != null) {
+						if(parents.contains(parent)) {
+							division++;
+						} else {
+							parents.add(particle.getParent());
+						}
+					}
 					count++;
 				}
 				
@@ -217,11 +230,11 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				}
 			}
 		}
-		if(canprint) {
-			System.out.println();
-			System.out.println(count);
-			canprint = false;
-		}
+//		if(canprint) {
+//			System.out.println();
+			System.out.println(count+" - "+division+" - "+parents.size());
+//			canprint = false;
+//		}
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Point3D translate, Color c) {

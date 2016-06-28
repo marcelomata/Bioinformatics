@@ -50,6 +50,7 @@ public class MergingSimple extends EventSeekerAction {
 						distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 						matrix.setCost(i, j, distance);
 					}
+					j++;
 				}
 			}
 			
@@ -57,7 +58,7 @@ public class MergingSimple extends EventSeekerAction {
 			int []result = lapSolver.execute();
 			Event event;
 			for (int i = 0; i < result.length; i++) {
-				event = new Event(EventCause.EXCEEDED);
+				event = new Event(EventCause.MISSED);
 				obj1 = matrix.getSource(i);
 				obj2 = matrix.getTarget(result[i]);
 				event.setObjectSource(obj1);

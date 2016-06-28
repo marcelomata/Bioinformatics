@@ -13,7 +13,9 @@ public class Camera {
 	
 	private static final float DEFAULT_CAMERA_ANGLE_X = 0.0f;
 	private static final float DEFAULT_CAMERA_ANGLE_Y = 0.0f;
-	private static final float DEFAULT_ZOOM = -408.0f;
+	private static final float DEFAULT_ZOOM = -138.0f;
+//	private static final float DEFAULT_ZOOM = -208.0f;
+//	private static final float DEFAULT_ZOOM = -408.0f;
 
 	private Point3D cameraPosition;
 	private Point3D initialPosition;
@@ -23,7 +25,10 @@ public class Camera {
 	private float zoom         = DEFAULT_ZOOM;
 	
 	public Camera() {
-		this.initialPosition = new Point3D(-100, -120, zoom);
+//		this.initialPosition = new Point3D(-100, -120, zoom);
+//		this.initialPosition = new Point3D(-40, -50, zoom);
+//		this.initialPosition = new Point3D(-20, -30, zoom);
+		this.initialPosition = new Point3D(-10, -30, zoom);
 		this.cameraPosition = new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ());
 	}
 	
@@ -98,6 +103,10 @@ public class Camera {
 
 	public void rotateX(int orientation) {
 		cameraAngleX += CAMERA_ROTATE_STEP_DEGREES*orientation;
+	}
+	
+	public void rotateQuaternion() {
+		
 	}
 	
 }

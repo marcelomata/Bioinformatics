@@ -184,4 +184,8 @@ public class MotionField {
 		System.out.println();
 	}
 
+	public boolean contains(ObjectTree3D obj1) {
+		return mapObjects.containsKey(obj1.getId());
+	}
+
 }

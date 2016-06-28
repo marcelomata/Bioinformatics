@@ -7,11 +7,11 @@ public class AssociationFunctionTracking {
 	
 	private FeatureList featureList;
 	
-	public AssociationFunctionTracking(FeatureList featureList) {
-		this.featureList = featureList;
-		this.featureList.addFeature(new Feature(new FunctionEuclidianDistance(), FeatureType.EUCLIDIAN_DISTANCE, 0.34));
-		this.featureList.addFeature(new Feature(new FunctionColocalization(), FeatureType.COLOCALIZATION, 0.33));
-		this.featureList.addFeature(new Feature(new FunctionBorderDistance(), FeatureType.BORDER_DISTANCE, 0.33));
+	public AssociationFunctionTracking() {
+		this.featureList = new FeatureList();
+		this.featureList.addFeature(new Feature(new FunctionEuclidianDistance(), FeatureType.EUCLIDIAN_DISTANCE, 1));
+		this.featureList.addFeature(new Feature(new FunctionColocalization(), FeatureType.COLOCALIZATION, 0.05));
+		this.featureList.addFeature(new Feature(new FunctionArea(), FeatureType.AREA, 1));
 	}
 	
 	public double calcDistance(ObjectTree3D obj1, ObjectTree3D obj2) {

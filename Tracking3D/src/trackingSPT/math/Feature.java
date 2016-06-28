@@ -7,16 +7,16 @@ public class Feature {
 
 	private FunctionCalcObjectRelation function;
 	private FeatureType type;
-	private double weight;
+	private double attenuation;
 	
-	public Feature(FunctionCalcObjectRelation function, FeatureType type, double weight) {
+	public Feature(FunctionCalcObjectRelation function, FeatureType type, double attenuation) {
 		this.function = function;
 		this.type = type;
-		this.weight = weight;
+		this.attenuation = attenuation;
 	}
 	
 	public double getResult(ObjectTree3D obj1, ObjectTree3D obj2) {
-		return function.calculate(obj1, obj2)*weight;
+		return function.calculate(obj1, obj2)*attenuation;
 	}
 	
 	public FeatureType getType() {
