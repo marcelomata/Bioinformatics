@@ -37,6 +37,7 @@ import com.jogamp.newt.opengl.GLWindow;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
+import mcib3d.geom.Object3D;
 import mcib3d.geom.Point3D;
 
 public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener, KeyListener, MouseListener {
@@ -68,6 +69,8 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private int currentTime;
 	private int currentTrack;
 	private Point3D minPosition;
+	private Point3D minPoint;
+	private Point3D maxPoint;
 	private Camera camera;
 
 	public Particles4DJOGLRenderer(ParticlesObjects objects) {
@@ -76,6 +79,8 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		this.camera = new Camera();
 		this.particleColor = new HashMap<Integer, Color>();
 		this.colorUsed = new ArrayList<Integer>();
+		this.maxPoint = objects.getMaxPoint();
+		this.minPoint = objects.getMinPoint();
 		this.currentTime = 0;
 		this.currentTrack = 0;
 		setMaxTimePosition();
@@ -116,6 +121,10 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 			colorUsed.add(color.getRGB());
 			particleColor.put(integer, color);
 		}
+		
+		maxPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
+		minPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
+		camera.initPosition(maxPoint, minPoint);
 	}
 
 	@Override
@@ -136,12 +145,12 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		GL2 gl = drawable.getGL().getGL2();
 	      
 		if (height == 0) height = 1;
-		float aspect = (float) width/height;
+		float aspect = (float) (camera.getFieldOfViewH()/camera.getFieldOfViewV());
 		
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(45.0, aspect, 0.1, 1000.0);
+		glu.gluPerspective(camera.getFieldOfViewH(), aspect, 0.1, 1000.0);
 			 
 		gl.glMatrixMode(GL_MODELVIEW);
 		gl.glLoadIdentity();
@@ -164,10 +173,57 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		
 		drawWorldCenter(gl);
 		
+		drawBoundBox(gl);
+		
 		drawTime(gl);
 		
 	}
 	
+	private void drawBoundBox(GL2 gl) {
+		gl.glPointSize(2f);
+		gl.glBegin(GL2.GL_LINES);
+			gl.glColor3f(ONE_F, ONE_F, ONE_F);
+			//back square
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+			
+			// front square
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	// link squares
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	    gl.glEnd();
+	}
+
 	private void drawWorldCenter(GL2 gl) {
 		gl.glPointSize(2f);
 		gl.glBegin(GL2.GL_LINES);
@@ -190,51 +246,53 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	
 	int count = 0; //TODO
 	int division = 0; //TODO
-	List<Particle> parents = new ArrayList<Particle>();
+	List<Object3D> parents = new ArrayList<Object3D>();
 	boolean canprint = true;
 	private void drawTime(GL2 gl) {
 		Set<Integer> keys = objects4D.keySet();
 		Particle particle;
 		Particle particle2;
 		Particle parent;
+		Object3D parentObj;
 		List<Particle> particles;
 		count = 0;
 		division = 0;
 		parents.clear();
-		System.out.println();
 		for (Integer track : keys) {
 			particles = objects4D.get(track);
 //			System.out.print(particles.size()+" ");
 			if(particles.size() > currentTime) {
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
-					particle.draw(gl, glut, minPosition, particleColor.get(track));
+//					particle.draw(gl, glut, minPosition, particleColor.get(track));
+					particle.draw(gl, glut, minPosition, Color.WHITE);
 					parent = particle.getParent();
 					if (parent != null) {
-						if(parents.contains(parent)) {
+						parentObj = parent.getObject();
+						if(parents.contains(parentObj)) {
 							division++;
 						} else {
-							parents.add(particle.getParent());
+							parents.add(parentObj);
 						}
 					}
 					count++;
 				}
 				
-				if(track == currentTrack) {
-					for (int i = 1; i < particles.size(); i++) {
-						particle2 = particles.get(i);
-						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
-							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), minPosition, particleColor.get(track));
-						}
-					}
-				}
+//				if(track == currentTrack) {
+//					for (int i = 1; i < particles.size(); i++) {
+//						particle2 = particles.get(i);
+//						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+//							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), minPosition, particleColor.get(track));
+//						}
+//					}
+//				}
 			}
 		}
-//		if(canprint) {
+		if(canprint) {
 //			System.out.println();
-			System.out.println(count+" - "+division+" - "+parents.size());
-//			canprint = false;
-//		}
+			System.out.println("Frame "+currentTime+" - Particles "+count+" - Divisions "+division+" - Parents "+parents.size());
+			canprint = false;
+		}
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Point3D translate, Color c) {
@@ -298,7 +356,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				camera.changeZ(orientation);
 				break;
 			case KeyEvent.VK_R:
-				camera.reset();
+				camera.reset(maxPoint, minPoint);
 				break;
 			case KeyEvent.VK_U:
 				currentTrack = (currentTrack + 1) % maxTrack;

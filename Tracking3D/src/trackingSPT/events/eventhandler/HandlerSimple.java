@@ -78,7 +78,7 @@ public class HandlerSimple extends Handler {
 				distance2 = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
 				difference = Math.abs(distance1-distance2);
 				
-				if(difference < distance1 && difference < distance2) {
+				if(difference < distance1*3 && difference < distance2*3) {
 					result.finishObjectTracking(obj1);
 					result.addNewObject(obj2);
 					result.addNewObject(obj3);
@@ -112,7 +112,9 @@ public class HandlerSimple extends Handler {
 			ObjectTree3D obj1 = temp.getObjectSource();
 			ObjectTree3D obj2 = temp.getObjectTarget();
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			if(distance < (obj1.getObject().getDistCenterMax()*3)) {
+			double comp = obj1.getObject().getDistCenterMax();
+			comp = Double.isNaN(comp) ? 3 : comp; 
+			if(distance < (comp*3)) {
 				result.addNewObjectId(obj1.getId(), obj2);
 				obj2.setParent(obj1);
 				obj1.addChild(obj2);
@@ -158,7 +160,7 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (obj1.getObject().getDistCenterMax()*2)) {
+					if(distance < (obj1.getObject().getDistCenterMax()*3)) {
 						resultTracking.addNewObjectId(obj2.getId(), obj1);
 						obj1.setParent(obj2);
 						obj2.addChild(obj1);
@@ -186,7 +188,7 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (obj1.getObject().getDistCenterMax()*2)) {
+					if(distance < (obj1.getObject().getDistCenterMax()*3)) {
 						resultTracking.addNewObjectId(obj1.getId(), obj2);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);

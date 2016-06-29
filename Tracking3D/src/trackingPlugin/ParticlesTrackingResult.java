@@ -8,6 +8,7 @@ import java.util.Set;
 
 import cell3DRenderer.Particle;
 import cell3DRenderer.ParticlesObjects;
+import mcib3d.geom.Point3D;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingResult3DSPT;
 
@@ -46,6 +47,16 @@ public class ParticlesTrackingResult implements ParticlesObjects {
 		}
 		
 		return particles; 
+	}
+
+	@Override
+	public Point3D getMaxPoint() {
+		return trackingResult.getMaxPoint();
+	}
+
+	@Override
+	public Point3D getMinPoint() {
+		return trackingResult.getMinPoint();
 	}
 
 }
