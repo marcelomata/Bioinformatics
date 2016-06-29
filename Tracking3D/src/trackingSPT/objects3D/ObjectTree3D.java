@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mcib3d.geom.Object3D;
+import mcib3d.geom.Point3D;
 import trackingInterface.ObjectAction;
 
 public class ObjectTree3D implements ObjectAction {
@@ -12,12 +13,18 @@ public class ObjectTree3D implements ObjectAction {
 	private ObjectTree3D parent;
 	private List<ObjectTree3D> children;
 	private Integer id;
+	private double velocity;
+	private double acceleration;
+	private Point3D orientation;
 	
 	public ObjectTree3D(Object3D object) {
 		this.object = object;
 		this.parent = null;
 		this.children = new ArrayList<ObjectTree3D>();
 		this.id = -1;
+		this.orientation = new Point3D();
+		this.velocity = 0;
+		this.acceleration = 0;
 	}
 	
 	public Object3D getObject() {

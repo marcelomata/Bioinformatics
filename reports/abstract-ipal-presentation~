@@ -1,0 +1,6 @@
+Tracking in 3D+t Biomedical Data
+
+The understanding of many biological process requires tracking of particles in a sequence of frames. This task has some features that hindering achieve good results like: complex dynamics of the objects, temporarily merging that leads to split after, noisy and blurry images, and cell division. This problem is usually modeled as a dense directed acyclic graph, trying to find an optimal solution that leads to a good tracking. I am improving an algorithm, with a similar aproach, but focus in two steps: find events and handle with events. The goal is make the algorithm to process efficiently that problems that happen in biomedical data.
+
+
+

@@ -5,6 +5,7 @@ import amal.penalties.*;
 import amal.xml.TrackMate;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.plugin.Duplicator;
 import mcib3d.geom.ObjectCreator3D;
 import mcib3d.geom.Objects3DPopulation;
 import mcib3d.image3d.ImageHandler;
@@ -392,13 +393,6 @@ public class Tracking {
         // the values entered by the user.
         init();
 
-        // Gets the paths of the segmented images
-        //String[] segPaths = getSegPaths(NbPad, first);
-        // Stores the distances between every pair of cells considered. 
-        // Defines the maximal distance allowed for a link to be considered and the blocking 
-        // value beyond which a link is too costly to be selected.
-        Distance distance = new Distance(Double.MAX_VALUE, null, null);
-
         // Defines the penalties considered for the first cost matrix
         Penalties penalties1 = getPenalties1();
 
@@ -408,13 +402,19 @@ public class Tracking {
 //        if (rawBaseName != null) {
 //            rawNames = getRawPaths(NbPad, first);
 //        }
+        
+        
+        Objects3DPopulation frame;
+        Objects3DPopulation lastFrame = null;
         // Loop through the number of frames considered
         for (int i = 0; i < nbFrames; i++) {
             // Retrieves the objects contained in every segmented image
             //IJ.log("opening seg" + i);
             //ImagePlus tmpPlus = new ImagePlus(segPaths[i]);
-            ImagePlus tmpPlus = dataset.getImageSeg(i).getImagePlus();
-            Objects3DPopulation frame = new Objects3DPopulation(tmpPlus);
+            ImagePlus tmpPlus = dataset.getImageSegPlus(i);
+        	
+            
+            frame = new Objects3DPopulation(tmpPlus);
             // THOMAS remove objects touching borders
             if (removeObjBorders) {
                 frame.removeObjectsTouchingBorders(tmpPlus, false);
@@ -434,6 +434,13 @@ public class Tracking {
                 graph.updateSpots();
             } // If the graph already contains spots
             else {
+            	// Gets the paths of the segmented images
+                //String[] segPaths = getSegPaths(NbPad, first);
+                // Stores the distances between every pair of cells considered. 
+                // Defines the maximal distance allowed for a link to be considered and the blocking 
+                // value beyond which a link is too costly to be selected.
+                Distance distance = new Distance(Double.MAX_VALUE, frame, lastFrame);
+            	
                 // Executes the first step: consider the easy links between the spots
                 // recently-added to the graph and those contained in the current frame
                 firstStep(frame, i, distance, penalties1);
@@ -448,6 +455,7 @@ public class Tracking {
                 // erroneous detections
                 thirdStep();
             }
+            lastFrame = frame;
         }
 
         // Terminates the pending associations (merging and fake spots aged less than 

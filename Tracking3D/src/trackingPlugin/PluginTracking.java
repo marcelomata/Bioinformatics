@@ -11,6 +11,7 @@ import trackingSPT.objects3D.ObjectActionSPT4D;
 import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class PluginTracking implements PlugIn {
+	
 	@Override
 	public void run(String arg) {
 		File image = new File(arg);	

@@ -6,14 +6,16 @@ import mcib3d.geom.Point3D;
 
 public class Camera {
 	
-	private static final int CAMERA_ROTATE_STEP_DEGREES  = 5;
+	private static final int CAMERA_ROTATE_STEP_DEGREES  = 2;
 	
 	private static final int MIN_ZOOM = -980;
 	private static final int MAX_ZOOM = -1;
 	
 	private static final float DEFAULT_CAMERA_ANGLE_X = 0.0f;
 	private static final float DEFAULT_CAMERA_ANGLE_Y = 0.0f;
-	private static final float DEFAULT_ZOOM = -408.0f;
+	private static final float DEFAULT_ZOOM = -138.0f;
+//	private static final float DEFAULT_ZOOM = -208.0f;
+//	private static final float DEFAULT_ZOOM = -408.0f;
 
 	private Point3D cameraPosition;
 	private Point3D initialPosition;
@@ -22,9 +24,17 @@ public class Camera {
 	private float cameraAngleZ = 0.0f;
 	private float zoom         = DEFAULT_ZOOM;
 	
+	private double fieldOfViewH;
+	private double fieldOfViewV;
+	
 	public Camera() {
-		this.initialPosition = new Point3D(-100, -120, zoom);
+//		this.initialPosition = new Point3D(-100, -120, zoom);
+//		this.initialPosition = new Point3D(-40, -50, zoom);
+//		this.initialPosition = new Point3D(-20, -30, zoom);
+		this.initialPosition = new Point3D(-10, -20, zoom);
 		this.cameraPosition = new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ());
+		this.fieldOfViewH = 60;
+		this.fieldOfViewV = 45;
 	}
 	
 	public void  draw(GL2 gl) {
@@ -75,9 +85,10 @@ public class Camera {
 		cameraPosition.setZ(cameraPosition.getZ()+(10*orientation));
 	}
 
-	public void reset() {
-		cameraAngleX = DEFAULT_CAMERA_ANGLE_X;
-		cameraAngleY = DEFAULT_CAMERA_ANGLE_Y;
+	public void reset(Point3D maxPoint, Point3D minPoint) {
+//		cameraAngleX = DEFAULT_CAMERA_ANGLE_X;
+//		cameraAngleY = DEFAULT_CAMERA_ANGLE_Y;
+		initPosition(maxPoint, minPoint);
 		cameraAngleZ = 0.0f;
 		zoom = DEFAULT_ZOOM;
 		cameraPosition.setX(initialPosition.getX());
@@ -98,6 +109,25 @@ public class Camera {
 
 	public void rotateX(int orientation) {
 		cameraAngleX += CAMERA_ROTATE_STEP_DEGREES*orientation;
+	}
+	
+	public void rotateQuaternion() {
+		
+	}
+
+	public void initPosition(Point3D maxPoint, Point3D minPoint) {
+		double z = maxPoint.getX() / Math.tan(fieldOfViewH);
+		cameraPosition.setZ(-z);
+		cameraPosition.setY((Math.abs(maxPoint.getY()-minPoint.getY())/2)+minPoint.getY());
+		cameraPosition.setX((Math.abs(maxPoint.getX()-minPoint.getX())/2)+minPoint.getX());
+	}
+
+	public double getFieldOfViewH() {
+		return fieldOfViewH;
+	}
+
+	public double getFieldOfViewV() {
+		return fieldOfViewV;
 	}
 	
 }

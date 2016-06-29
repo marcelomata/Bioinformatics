@@ -5,8 +5,11 @@
  */
 package amal;
 
+import java.io.File;
+
 import ij.IJ;
 import ij.ImagePlus;
+import ij.io.Opener;
 import ij.plugin.Duplicator;
 import mcib3d.image3d.ImageHandler;
 
@@ -207,7 +210,11 @@ public class DataSet {
         //System.out.println("Opening seg " + t);
         String fileName = dirSeg + baseSeg + IJ.pad(firstSeg, padSeg) + ".tif";
         //System.out.println("Opening " + fileName);
-        ImagePlus plus = IJ.openImage(fileName);
+        //ImagePlus plus = IJ.openImage(fileName);
+        File file = new File(fileName);	
+		Opener open = new Opener();
+		ImagePlus plus = open.openImage(file.getAbsolutePath());        
+        
         if (plus == null) {
             System.out.println("No image " + fileName);
             return null;

@@ -14,11 +14,16 @@ public class Particle {
 	private Object3D object;
 	private Particle parent;
 	private Point3D position;
+	private double diameter;
 	
 	public Particle(Object3D obj) {
 		this.object = obj;
+		this.diameter = 3;
 		if(obj != null) {
 			this.position = obj.getCenterAsPoint();
+			if(!Double.isNaN(object.getDistCenterMax())) {
+				this.diameter = object.getDistCenterMax();
+			}
 		}
 	}
 	
@@ -31,18 +36,18 @@ public class Particle {
 		float x = (float) (position.getX() - translate.getX());
 		float y = (float) (position.getY() - translate.getY());
 		float z = (float) (position.getZ() - translate.getZ());
-		draw2(gl, glut, x, y, z, object.getDistCenterMax(), color);
+		draw2(gl, glut, x, y, z, color);
 		gl.glPopMatrix();
-		if(parent != null) {
-			parent.draw(gl, glut, translate, Color.WHITE);
-			drawLine(gl, position, parent.getPosition(), translate, color);
-		}
+//		if(parent != null) {
+//			parent.draw(gl, glut, translate, Color.WHITE);
+//			drawLine(gl, position, parent.getPosition(), translate, color);
+//		}
 	}
 	
-	private void draw2(GL2 gl, GLUT glut, float x, float y, float z, double diameter, Color color) {
+	private void draw2(GL2 gl, GLUT glut, float x, float y, float z, Color color) {
 		gl.glTranslatef(x, y, z);
 		gl.glColor3f((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255);
-		glut.glutSolidSphere(diameter, 10, 10);
+		glut.glutSolidSphere(diameter*2, 10, 10);
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Point3D translate, Color c) {
@@ -70,5 +75,9 @@ public class Particle {
 	
 	public void setParent(Particle parent) {
 		this.parent = parent;
+	}
+	
+	public Object3D getObject() {
+		return object;
 	}
 }

@@ -33,11 +33,14 @@ public class MotionField {
 	public void addNewObject(ObjectTree3D object) {
 		List<ObjectTree3D> list = new ArrayList<ObjectTree3D>();
 		object.setId(id);
+		ObjectTree3D obj;
 		if(numberMaxPerId == 0) {
 			numberMaxPerId++;
 		} else {
 			for (int i = 0; i < numberMaxPerId-1; i++) {
-				list.add(new ObjectTree3D(null));
+				obj = new ObjectTree3D(null);
+				obj.setId(id);
+				list.add(obj);
 			}
 		}
 		list.add(object);
@@ -76,9 +79,19 @@ public class MotionField {
 		List<ObjectTree3D> temp = mapObjects.get(idObject);
 		return temp.remove(temp.size()-1);
 	}
+	
+	public ObjectTree3D getLastObject(Integer idObject) {
+		List<ObjectTree3D> temp = mapObjects.get(idObject);
+		return temp.get(temp.size()-1);
+	}
 
-	public void finishObject(Integer idObject) {
-		mapFinishedObjects.put(idObject, mapObjects.remove(idObject));
+	public void finishObject(ObjectTree3D obj) {
+		List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
+		ObjectTree3D nullObj = new ObjectTree3D(null);
+		nullObj.setId(obj.getId());
+		nullObj.setParent(obj);
+		temp.add(nullObj);
+		mapFinishedObjects.put(obj.getId(), temp);
 	}
 	
 	public Map<Integer, List<ObjectTree3D>> getFinalResult() {
@@ -114,7 +127,8 @@ public class MotionField {
 			list = mapFinishedObjects.get(integer);
 			obj = list.get(list.size()-1);
 			obj.addChild(nullObject);
-			mapFinishedObjects.get(integer).add(nullObject);
+			nullObject.setParent(obj);
+			list.add(nullObject);
 		}
 	}
 
@@ -140,7 +154,7 @@ public class MotionField {
 		first = true;
 		for (Integer key : keys) {
 			if(key==65)count++;
-			list = mapObjects.get(key);
+			list = mapFinishedObjects.get(key);
 			if(first) {
 				number = list.size();
 			} else if(number != list.size()) {
@@ -164,10 +178,14 @@ public class MotionField {
 		
 		keys = mapFinishedObjects.keySet();
 		for (Integer key : keys) {
-			list = mapObjects.get(key);
+			list = mapFinishedObjects.get(key);
 			System.out.print(key+"-"+list.size()+", ");
 		}
 		System.out.println();
+	}
+
+	public boolean contains(ObjectTree3D obj1) {
+		return mapObjects.containsKey(obj1.getId());
 	}
 
 }

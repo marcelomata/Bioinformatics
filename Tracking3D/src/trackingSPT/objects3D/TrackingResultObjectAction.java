@@ -1,5 +1,6 @@
 package trackingSPT.objects3D;
 
+import mcib3d.geom.Point3D;
 import trackingInterface.ObjectAction;
 
 public abstract class TrackingResultObjectAction implements ObjectAction {
@@ -18,5 +19,9 @@ public abstract class TrackingResultObjectAction implements ObjectAction {
 	abstract void addNewObjectId(Integer id, ObjectTree3D treeObj);
 
 	public abstract void init();
+	
+	public abstract Point3D getMaxPoint();
+	
+	public abstract Point3D getMinPoint();
 	
 }
