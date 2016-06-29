@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java-7-openjdk-amd64"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/Icy-App/lib/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="/Icy-App/lib/joal.jar"/>
 	<classpathentry kind="lib" path="/Icy-App/lib/jocl.jar"/>
 	<classpathentry kind="lib" path="/Icy-App/lib/jogl-all.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mcib-core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mcib3d-plugins"/>
+	<classpathentry kind="lib" path="lib/vecmath-1.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
