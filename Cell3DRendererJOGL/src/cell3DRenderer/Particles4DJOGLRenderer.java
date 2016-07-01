@@ -68,13 +68,13 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private int maxTrack;
 	private int currentTime;
 	private int currentTrack;
-	private Point3D minPosition;
+//	private Point3D minPosition;
 	private Point3D minPoint;
 	private Point3D maxPoint;
 	private Camera camera;
 
 	public Particles4DJOGLRenderer(ParticlesObjects objects) {
-		this.minPosition = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+//		this.minPosition = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 		this.objects4D = objects.getObjectsListId();
 		this.camera = new Camera();
 		this.particleColor = new HashMap<Integer, Color>();
@@ -89,7 +89,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private void setMaxTimePosition() {
 		Set<Integer> keys = objects4D.keySet();
 		int max = 0;
-		Point3D min = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+//		Point3D min = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 		Random random = new Random();
 		Color color;
 		float r;
@@ -98,21 +98,21 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		maxTrack = keys.size();
 		for (Integer integer : keys) {
 			max = objects4D.get(integer).size();
-			min = objects4D.get(integer).get(0).getPosition();
+//			min = objects4D.get(integer).get(0).getPosition();
 			if(max > maxTime) {
 				maxTime = max;
 			}
-			if(min != null) {
-				if(min.getX() < minPosition.getX()) {
-					minPosition.setX(min.getX());
-				}
-				if(min.getY() < minPosition.getY()) {
-					minPosition.setY(min.getY());
-				}
-				if(min.getZ() < minPosition.getZ()) {
-					minPosition.setZ(min.getZ());
-				}
-			}
+//			if(min != null) {
+//				if(min.getX() < minPosition.getX()) {
+//					minPosition.setX(min.getX());
+//				}
+//				if(min.getY() < minPosition.getY()) {
+//					minPosition.setY(min.getY());
+//				}
+//				if(min.getZ() < minPosition.getZ()) {
+//					minPosition.setZ(min.getZ());
+//				}
+//			}
 			
 			r = random.nextFloat();
 			g = random.nextFloat();
@@ -122,8 +122,8 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 			particleColor.put(integer, color);
 		}
 		
-		maxPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
-		minPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
+//		maxPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
+//		minPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
 		camera.initPosition(maxPoint, minPoint);
 	}
 
@@ -176,6 +176,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		drawBoundBox(gl);
 		
 		drawTime(gl);
+		
+//		System.out.println(camera.toString());
+//		System.out.println(maxPoint.toString()+" - "+minPoint.toString());
 		
 	}
 	
@@ -230,17 +233,17 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	      	// X axis
 			gl.glColor3f(ONE_F, ZERO_F, ZERO_F);
 	      	gl.glVertex3f(ZERO_F, ZERO_F, ZERO_F);
-			gl.glVertex3f(ONE_F*100, ZERO_F, ZERO_F);
+			gl.glVertex3f(ONE_F*300, ZERO_F, ZERO_F);
 			
 			// Y axis
 			gl.glColor3f(ZERO_F, ONE_F, ZERO_F);
 			gl.glVertex3f(ZERO_F, ZERO_F, ZERO_F);
-			gl.glVertex3f(ZERO_F, ONE_F*100, ZERO_F);
+			gl.glVertex3f(ZERO_F, ONE_F*300, ZERO_F);
 				 
 			// Z axis
 			gl.glColor3f(ZERO_F, ZERO_F, ONE_F);
 			gl.glVertex3f(ZERO_F, ZERO_F, ZERO_F);
-			gl.glVertex3f(ZERO_F, ZERO_F, ONE_F*100);
+			gl.glVertex3f(ZERO_F, ZERO_F, ONE_F*300);
 	    gl.glEnd();
 	}
 	
@@ -264,8 +267,8 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 			if(particles.size() > currentTime) {
 				particle = particles.get(currentTime);
 				if(!particle.isHidden()) {
-//					particle.draw(gl, glut, minPosition, particleColor.get(track));
-					particle.draw(gl, glut, minPosition, Color.WHITE);
+					particle.draw(gl, glut, particleColor.get(track));
+//					particle.draw(gl, glut, Color.WHITE);
 					parent = particle.getParent();
 					if (parent != null) {
 						parentObj = parent.getObject();
@@ -278,14 +281,14 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 					count++;
 				}
 				
-//				if(track == currentTrack) {
-//					for (int i = 1; i < particles.size(); i++) {
-//						particle2 = particles.get(i);
-//						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
-//							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), minPosition, particleColor.get(track));
-//						}
-//					}
-//				}
+				if(track == currentTrack) {
+					for (int i = 1; i < particles.size(); i++) {
+						particle2 = particles.get(i);
+						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particleColor.get(track));
+						}
+					}
+				}
 			}
 		}
 		if(canprint) {
@@ -295,13 +298,13 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		}
 	}
 	
-	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Point3D translate, Color c) {
-		float x1 = (float) (p1.getX() - translate.getX());
-		float y1 = (float) (p1.getY() - translate.getY());
-		float z1 = (float) (p1.getZ() - translate.getZ());
-		float x2 = (float) (p2.getX() - translate.getX());
-		float y2 = (float) (p2.getY() - translate.getY());
-		float z2 = (float) (p2.getZ() - translate.getZ());
+	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {
+		float x1 = (float) p1.getX();
+		float y1 = (float) p1.getY();
+		float z1 = (float) p1.getZ();
+		float x2 = (float) p2.getX();
+		float y2 = (float) p2.getY();
+		float z2 = (float) p2.getZ();
 		gl.glPointSize(2f);
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f((float)c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255);
@@ -343,7 +346,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				canprint = true;
 				break;
 			case KeyEvent.VK_F:
-				currentTime = (currentTime+1) >= maxTime-1 ? maxTime-1 : currentTime + 1;
+				currentTime = (currentTime+1) >= maxTime-2 ? maxTime-2 : currentTime + 1;
 				canprint = true;
 				break;
 			case KeyEvent.VK_X:

@@ -14,6 +14,8 @@ import trackingSPT.objects3D.TrackingContextSPT;
 import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class HandlerSimple extends Handler {
+	
+	private static double DISTANCE = 2;
 
 	public HandlerSimple(TrackingContextSPT context) {
 		super(context);
@@ -49,7 +51,7 @@ public class HandlerSimple extends Handler {
 			obj2 = event.getObjectTarget();
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 			//if the closest is near so a merge sould happened
-			if(distance < (obj1.getObject().getDistCenterMax()*3)) {
+			if(distance < (obj1.getObject().getDistCenterMax()*DISTANCE)) {
 				context.addMissed(obj1);
 			} else {
 				result.finishObjectTracking(obj1);
@@ -78,7 +80,7 @@ public class HandlerSimple extends Handler {
 				distance2 = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
 				difference = Math.abs(distance1-distance2);
 				
-				if(difference < distance1*3 && difference < distance2*3) {
+				if(difference < distance1*3 && difference < distance2*DISTANCE) {
 					result.finishObjectTracking(obj1);
 					result.addNewObject(obj2);
 					result.addNewObject(obj3);
@@ -160,7 +162,7 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (obj1.getObject().getDistCenterMax()*3)) {
+					if(distance < (obj1.getObject().getDistCenterMax()*DISTANCE)) {
 						resultTracking.addNewObjectId(obj2.getId(), obj1);
 						obj1.setParent(obj2);
 						obj2.addChild(obj1);
@@ -188,7 +190,7 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (obj1.getObject().getDistCenterMax()*3)) {
+					if(distance < (obj1.getObject().getDistCenterMax()*DISTANCE)) {
 						resultTracking.addNewObjectId(obj1.getId(), obj2);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);

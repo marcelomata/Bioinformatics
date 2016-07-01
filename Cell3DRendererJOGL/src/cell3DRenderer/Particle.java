@@ -31,32 +31,32 @@ public class Particle {
 		return position;
 	}
 	
-	public void draw(GL2 gl, GLUT glut, Point3D translate, Color color) {
+	public void draw(GL2 gl, GLUT glut, Color color) {
 		gl.glPushMatrix();
-		float x = (float) (position.getX() - translate.getX());
-		float y = (float) (position.getY() - translate.getY());
-		float z = (float) (position.getZ() - translate.getZ());
+		float x = (float) position.getX();
+		float y = (float) position.getY();
+		float z = (float) position.getZ();
 		draw2(gl, glut, x, y, z, color);
 		gl.glPopMatrix();
-//		if(parent != null) {
-//			parent.draw(gl, glut, translate, Color.WHITE);
-//			drawLine(gl, position, parent.getPosition(), translate, color);
-//		}
+		if(parent != null) {
+			parent.draw(gl, glut, Color.WHITE);
+			drawLine(gl, position, parent.getPosition(), color);
+		}
 	}
 	
 	private void draw2(GL2 gl, GLUT glut, float x, float y, float z, Color color) {
 		gl.glTranslatef(x, y, z);
 		gl.glColor3f((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255);
-		glut.glutSolidSphere(diameter*2, 10, 10);
+		glut.glutSolidSphere(diameter, 10, 10);
 	}
 	
-	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Point3D translate, Color c) {
-		float x1 = (float) (p1.getX() - translate.getX());
-		float y1 = (float) (p1.getY() - translate.getY());
-		float z1 = (float) (p1.getZ() - translate.getZ());
-		float x2 = (float) (p2.getX() - translate.getX());
-		float y2 = (float) (p2.getY() - translate.getY());
-		float z2 = (float) (p2.getZ() - translate.getZ());
+	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {
+		float x1 = (float) p1.getX();
+		float y1 = (float) p1.getY();
+		float z1 = (float) p1.getZ();
+		float x2 = (float) p2.getX();
+		float y2 = (float) p2.getY();
+		float z2 = (float) p2.getZ();
 		gl.glPointSize(2f);
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f((float)c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255);

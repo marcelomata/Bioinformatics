@@ -90,10 +90,12 @@ public class Camera {
 //		cameraAngleY = DEFAULT_CAMERA_ANGLE_Y;
 		initPosition(maxPoint, minPoint);
 		cameraAngleZ = 0.0f;
-		zoom = DEFAULT_ZOOM;
-		cameraPosition.setX(initialPosition.getX());
-		cameraPosition.setY(initialPosition.getY());
-		cameraPosition.setZ(initialPosition.getZ());
+		cameraAngleX = DEFAULT_CAMERA_ANGLE_X;
+		cameraAngleY = DEFAULT_CAMERA_ANGLE_Y;
+//		zoom = DEFAULT_ZOOM;
+//		cameraPosition.setX(initialPosition.getX());
+//		cameraPosition.setY(initialPosition.getY());
+//		cameraPosition.setZ(initialPosition.getZ());
 	}
 
 	public void zoom(float orientation) {
@@ -116,10 +118,11 @@ public class Camera {
 	}
 
 	public void initPosition(Point3D maxPoint, Point3D minPoint) {
-		double z = maxPoint.getX() / Math.tan(fieldOfViewH);
+		double z = ((Math.abs(maxPoint.getX()-minPoint.getX())/2) / Math.tan(fieldOfViewH))-(maxPoint.getZ()*1.5);
 		cameraPosition.setZ(-z);
-		cameraPosition.setY((Math.abs(maxPoint.getY()-minPoint.getY())/2)+minPoint.getY());
-		cameraPosition.setX((Math.abs(maxPoint.getX()-minPoint.getX())/2)+minPoint.getX());
+		zoom = (float) -z;
+		cameraPosition.setY(-((Math.abs(maxPoint.getY()-minPoint.getY())/2)+minPoint.getY()));
+		cameraPosition.setX(-((Math.abs(maxPoint.getX()-minPoint.getX())/2)+minPoint.getX()));
 	}
 
 	public double getFieldOfViewH() {
@@ -128,6 +131,13 @@ public class Camera {
 
 	public double getFieldOfViewV() {
 		return fieldOfViewV;
+	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		s += cameraPosition.getX()+", "+cameraPosition.getY()+", "+cameraPosition.getZ();
+		return s;
 	}
 	
 }
