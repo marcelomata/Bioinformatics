@@ -20,6 +20,12 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	
 	public TrackingResult3DSPT(ObjectActionSPT4D inObject) {
 		super(inObject);
+		this.maxX = -9999;
+		this.maxY = -9999;
+		this.maxZ = -9999;
+		this.minX = 9999;
+		this.minY = 9999;
+		this.minZ = 9999;
 	}
 
 	public MotionField getMotionField() {

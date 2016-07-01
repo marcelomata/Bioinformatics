@@ -38,7 +38,11 @@ public class Camera {
 	}
 	
 	public void  draw(GL2 gl) {
-		
+		// camera transformations
+		gl.glTranslatef((float)cameraPosition.getX(), (float)cameraPosition.getY(), (float)cameraPosition.getZ());
+		gl.glRotatef(cameraAngleX, 1.0f, 0.0f, 0.0f);
+		gl.glRotatef(cameraAngleY, 0.0f, 1.0f, 0.0f);
+		gl.glRotatef(cameraAngleZ, 0.0f, 0.0f, 1.0f);
 	}
 	
 	public Point3D getPosition() {
@@ -118,9 +122,11 @@ public class Camera {
 	}
 
 	public void initPosition(Point3D maxPoint, Point3D minPoint) {
-		double z = ((Math.abs(maxPoint.getX()-minPoint.getX())/2) / Math.tan(fieldOfViewH))-(maxPoint.getZ()*1.5);
-		cameraPosition.setZ(-z);
-		zoom = (float) -z;
+		double ratio = 1.0/180.0;
+		double z = ((Math.abs(maxPoint.getX()-minPoint.getX())/2) / Math.tan(((fieldOfViewH/2)*Math.PI)*ratio));
+		z = -z - maxPoint.getZ() - 10;
+		cameraPosition.setZ(z);
+		zoom = (float) z;
 		cameraPosition.setY(-((Math.abs(maxPoint.getY()-minPoint.getY())/2)+minPoint.getY()));
 		cameraPosition.setX(-((Math.abs(maxPoint.getX()-minPoint.getX())/2)+minPoint.getX()));
 	}

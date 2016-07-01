@@ -150,7 +150,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(camera.getFieldOfViewH(), aspect, 0.1, 1000.0);
+		glu.gluPerspective(camera.getFieldOfViewV(), aspect, 0.1, 1000.0);
 			 
 		gl.glMatrixMode(GL_MODELVIEW);
 		gl.glLoadIdentity();
@@ -165,11 +165,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
-		// camera transformations
-		gl.glTranslatef((float)camera.getPosition().getX(), (float)camera.getPosition().getY(), (float)camera.getPosition().getZ());
-		gl.glRotatef(camera.getAngleX(), ONE_F, ZERO_F, ZERO_F);
-		gl.glRotatef(camera.getAngleY(), ZERO_F, ONE_F, ZERO_F);
-		gl.glRotatef(camera.getAngleZ(), ZERO_F, ZERO_F, ONE_F);
+		camera.draw(gl);
 		
 		drawWorldCenter(gl);
 		
