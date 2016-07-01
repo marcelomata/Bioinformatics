@@ -16,8 +16,9 @@ public class ObjectTree3D implements ObjectAction {
 	private double velocity;
 	private double acceleration;
 	private Point3D orientation;
+	private int frame;
 	
-	public ObjectTree3D(Object3D object) {
+	public ObjectTree3D(Object3D object, int frame) {
 		this.object = object;
 		this.parent = null;
 		this.children = new ArrayList<ObjectTree3D>();
@@ -25,6 +26,7 @@ public class ObjectTree3D implements ObjectAction {
 		this.orientation = new Point3D();
 		this.velocity = 0;
 		this.acceleration = 0;
+		this.frame = frame;
 	}
 	
 	public Object3D getObject() {
@@ -69,5 +71,9 @@ public class ObjectTree3D implements ObjectAction {
 
 	public void addChild(ObjectTree3D child) {
 		this.children.add(child);
+	}
+	
+	public int getFrame() {
+		return frame;
 	}
 }

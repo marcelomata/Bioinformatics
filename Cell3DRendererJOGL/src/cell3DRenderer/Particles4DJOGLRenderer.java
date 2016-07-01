@@ -169,7 +169,8 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		
 		drawWorldCenter(gl);
 		
-		drawBoundBox(gl);
+		drawBoundBoxFan(gl);
+//		drawBoundBoxLines(gl);
 		
 		drawTime(gl);
 		
@@ -178,10 +179,93 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		
 	}
 	
-	private void drawBoundBox(GL2 gl) {
+	private void drawBoundBoxFan(GL2 gl) {
+		gl.glPointSize(2f);
+		gl.glBegin(GL2.GL_TRIANGLES);
+			//back square
+			gl.glColor3f(0.2f, 0.2f, 0.2f);
+			gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	//Up square
+	      	gl.glColor3f(0.4f, 0.0f, 0.4f);
+			gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	//Down square
+	      	gl.glColor3f(0.4f, 0.4f, 0.0f);
+			gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	//Left square
+	      	gl.glColor3f(0.0f, 0.4f, 0.4f);
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	
+	      	//Right square
+	      	gl.glColor3f(0.f, 0.0f, 0.4f);
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+      	gl.glEnd();
+	}
+	
+	private void drawBoundBoxLines(GL2 gl) {
 		gl.glPointSize(2f);
 		gl.glBegin(GL2.GL_LINES);
-			gl.glColor3f(ONE_F, ONE_F, ONE_F);
+			gl.glColor3f(0.4f, 0.4f, 0.4f);
+			
+//	      	//up square
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+//	      	
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+//	      	
+//	      	//left square
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+//	      	
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+//	      	
+//	      	//right square
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+//	      	
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
+//	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
+	      	
 			//back square
 	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
 	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());

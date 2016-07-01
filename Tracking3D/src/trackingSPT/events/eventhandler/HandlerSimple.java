@@ -209,7 +209,7 @@ public class HandlerSimple extends Handler {
 		ObjectTree3D nullObject;
 		for (MissedObject missedObject : misses) {
 			obj = missedObject.getObject();
-			nullObject = new ObjectTree3D(null);
+			nullObject = new ObjectTree3D(null, context.getResult().getCurrentFrame());
 			context.addNewObjectId(obj.getId(), nullObject);
 			obj.addChild(nullObject);
 			nullObject.setParent(obj);

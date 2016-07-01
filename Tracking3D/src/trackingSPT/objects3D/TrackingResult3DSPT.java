@@ -44,7 +44,7 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 		Object3D obj;
 		for (int i = 0; i < population.getNbObjects(); i++) {
 			obj = population.getObject(i);
-			this.motionField.addNewObject(new ObjectTree3D(obj));
+			this.motionField.addNewObject(new ObjectTree3D(obj, getCurrentFrame()), getCurrentFrame());
 			if(obj != null) {
 				updateBoundBox(obj.getCenterAsPoint());
 			}
@@ -70,18 +70,18 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	}
 
 	public void finishObjectTracking(ObjectTree3D obj1) {
-		motionField.finishObject(obj1);
+		motionField.finishObject(obj1, getCurrentFrame());
 	}
 
 	public void addNewObject(ObjectTree3D obj) {
-		motionField.addNewObject(obj);
+		motionField.addNewObject(obj, getCurrentFrame());
 		if(obj.getObject() != null) {
 			updateBoundBox(obj.getObject().getCenterAsPoint());
 		}
 	}
 
 	public void fillFinishedTrackings() {
-		motionField.addVoidObjectFinishedTrack();
+		motionField.addVoidObjectFinishedTrack(getCurrentFrame());
 	}
 
 	@Override

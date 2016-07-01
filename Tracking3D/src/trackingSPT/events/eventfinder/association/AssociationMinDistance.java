@@ -42,7 +42,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 		
 		
 		for (Object3D object3d : object3DListTarget) {
-			leftTargetObject3DList.add(new ObjectTree3D(object3d));
+			leftTargetObject3DList.add(new ObjectTree3D(object3d, result.getCurrentFrame()));
 		}
 		
 		findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix);

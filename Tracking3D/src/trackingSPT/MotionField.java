@@ -30,7 +30,7 @@ public class MotionField {
 		return mapObjects.get(keys.iterator().next()).size();
 	}
 	
-	public void addNewObject(ObjectTree3D object) {
+	public void addNewObject(ObjectTree3D object, int frame) {
 		List<ObjectTree3D> list = new ArrayList<ObjectTree3D>();
 		object.setId(id);
 		ObjectTree3D obj;
@@ -38,7 +38,7 @@ public class MotionField {
 			numberMaxPerId++;
 		} else {
 			for (int i = 0; i < numberMaxPerId-1; i++) {
-				obj = new ObjectTree3D(null);
+				obj = new ObjectTree3D(null, frame);
 				obj.setId(id);
 				list.add(obj);
 			}
@@ -85,9 +85,9 @@ public class MotionField {
 		return temp.get(temp.size()-1);
 	}
 
-	public void finishObject(ObjectTree3D obj) {
+	public void finishObject(ObjectTree3D obj, int frame) {
 		List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
-		ObjectTree3D nullObj = new ObjectTree3D(null);
+		ObjectTree3D nullObj = new ObjectTree3D(null, frame);
 		nullObj.setId(obj.getId());
 		nullObj.setParent(obj);
 		temp.add(nullObj);
@@ -116,13 +116,13 @@ public class MotionField {
 		}
 	}
 
-	public void addVoidObjectFinishedTrack() {
+	public void addVoidObjectFinishedTrack(int frame) {
 		Set<Integer> objectKeys = mapFinishedObjects.keySet();
 		ObjectTree3D nullObject;
 		ObjectTree3D obj;
 		List<ObjectTree3D> list;
 		for (Integer integer : objectKeys) {
-			nullObject = new ObjectTree3D(null);
+			nullObject = new ObjectTree3D(null, frame);
 			nullObject.setId(integer);
 			list = mapFinishedObjects.get(integer);
 			obj = list.get(list.size()-1);
