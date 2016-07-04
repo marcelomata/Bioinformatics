@@ -1,36 +1,56 @@
 package amal;
 
+import amal.tracking.Node;
+import amal.tracking.Spot;
+import amal.tracking.Tracking;
+
+import java.io.File;
 import java.util.ArrayList;
 
-import amal.tracking.Node;
-import amal.tracking.Tracking;
-import amal.tracking.Spot;
-import java.io.File;
-
-public class test3D_testingSets {
+public class test2D_Giulia {
 
     public static void main(String[] args) {
-
         // Define dataset
-        DataSet dataset = new DataSet("Test21", 10);
-        String baseDir = "/home/thomasb/DATA/Tracking/Testing Datasets/";
-        String data = "Test22";
-        String fs=File.separator;
-        dataset.setDirRaw(baseDir + data+fs);
-        dataset.setDirSeg(baseDir + data+fs);
-        dataset.setBaseRaw(data + "Raw-");
-        dataset.setBaseSeg(data + "Seg-");
+        DataSet dataset = new DataSet("Test780", 780);
+        String baseDir = "/home/thomasb/DATA/Tracking/Giulia/";
+        String data = "780";
+        String fs = File.separator;
+        dataset.setDirRaw(baseDir + data + fs);
+        dataset.setDirSeg(baseDir + data + fs);
+        dataset.setBaseRaw("Raw/Raw-");
+        dataset.setBaseSeg("Seg-1/Seg-");
         dataset.setFirstRaw(1);
         dataset.setFirstSeg(1);
-        dataset.setPadRaw(1);
-        dataset.setPadSeg(1);
+        dataset.setPadRaw(3);
+        dataset.setPadSeg(3);
         dataset.setCalXY(1);
         dataset.setCalZ(1);
         dataset.setCalT(1);
 
-        // The number of frames processed
-        int nbFrames = 10;
+        int nbFrames = 780;
 
+        // The time (in minutes) separating two consecutive frames
+        double timeInterval = 1; // 1 min for 110, 10 for 384, 5 for 780
+
+        // When two cells merge, the algorithm checks what happens in the next x frames: if they
+        // are still merging together after this period of frames, the merging association is 
+        // deleted because the final tree lineage should not contain merging cells. This defined
+        // number of frames is called mergingLife
+        int mergingLife = 10; //20
+
+        // When a cell is not linked to any other after the algorithm executed a whole step, a
+        // fake cell is created at the following time point to see if it finds a suitable link 
+        // later. If so, a missed detection is corrected. However, if it does not find a cell 
+        // to be linked to after a certain number of frames, the fake cells need to be deleted. 
+        // The fakeLife parameter defines the number of frames where the algorithm can keep the 
+        // fake cell. I also use this parameter when a cell is detected for the first time. It
+        // is set to fake unless it finds a suitable link in the following frames before its age 
+        // reaches fakeLife.
+        int fakeLife = 15; //10
+
+        int minLife = 10; // 20,50 do not display cells with life < minlife
+        
+        
 
         /*
          * The following performs the tracking for the objects detected in the
@@ -43,11 +63,9 @@ public class test3D_testingSets {
         // The base name of the segmented images
         // The path to the segmented image is : segBaseName + i + ".tif" where i refers to the 
         // index of the considered frame
-        String segBaseName = baseDir + data + "/" + data + "Seg-";
-        //String rawBaseName = baseDir + data + "/" + data + "Raw-";
+        String segBaseName = baseDir + "/Seg-1/Seg-";
+        String rawBaseName = baseDir + "/Raw/Raw-";
 
-        // The time (in minutes) separating two consecutive frames
-        double timeInterval = 1;
 
         // To compute the motion-based search radius for every cell, the algorithm considers its
         // displacements' standard deviation on a defined number of frames in which the cell has
@@ -74,23 +92,6 @@ public class test3D_testingSets {
         // close to each other. 
         double alternativeSearchRadius2Coef = 2.75;
 
-        // When two cells merge, the algorithm checks what happens in the next x frames: if they
-        // are still merging together after this period of frames, the merging association is 
-        // deleted because the final tree lineage should not contain merging cells. This defined
-        // number of frames is called mergingLife
-        int mergingLife = 5; //5
-
-        // When a cell is not linked to any other after the algorithm executed a whole step, a 
-        // fake cell is created at the following time point to see if it finds a suitable link 
-        // later. If so, a missed detection is corrected. However, if it does not find a cell 
-        // to be linked to after a certain number of frames, the fake cells need to be deleted. 
-        // The fakeLife parameter defines the number of frames where the algorithm can keep the 
-        // fake cell. I also use this parameter when a cell is detected for the first time. It
-        // is set to fake unless it finds a suitable link in the following frames before its age 
-        // reaches fakeLife.
-        int fakeLife = 5;
-
-        int minLife = 0; // do not display cells with life < minlife
 
         // The user defines according to his dataset the weight assigned to each penalty
         double weightArea = 0;
@@ -99,12 +100,12 @@ public class test3D_testingSets {
         double weightFlatness = 0;
         double weightSphericity = 0;
         double weightVolume = 0;
+        double weightSplit = 1;
         double weightColoc = 1;
-        double weightSplit = 0;
 
         // The spot's final search radius is bound by an upper and a lower limit depending on the
         // studied data set
-        double upperLimit = 1000;
+        double upperLimit = 50;
         double lowerLimit = 0;
 
         // In the second cost matrix, the algorithm considers the cells that could not be linked
@@ -115,7 +116,7 @@ public class test3D_testingSets {
         // coefficient to the old maximal distance. To preserve the algorithm flexibility, three
         // coefficients were defined according to the nature of the links to be made.
         double coefGapClose = 2.5;
-        double coefMerge = 16;// was 1.6
+        double coefMerge = 1.6;
         double coefSplit = 1.6;
 
         // To model an impossible link, a blocking value is chosen for every cost matrix. It is
@@ -130,33 +131,29 @@ public class test3D_testingSets {
                 coefSplit, mergingLife, fakeLife, blockingValue1, blockingValue2, weightArea,
                 weightCompactness, weightElongation, weightFlatness, weightSphericity,
                 weightVolume,weightColoc, weightSplit);
-        
-        algorithm.dataset=dataset;
-
-
+        algorithm.dataset = dataset;
 
         //algorithm.setRawBaseName(rawBaseName);
-        //algorithm.setCalibration(1, 1);
+        // algorithm.setCalibration(1, 1);// CALIBRATION
+        algorithm.removeObjBorders = true;
 
         // formatting 3 numbers, starts at 1
-        //algorithm.setFormat(1, 1);
+        // algorithm.setFormat(3, 1);
 
         // Exectue the algorithm and retrieve the data structure containing the 
         // lineage tree: an array list of the roots of every track
         ArrayList<Node<Spot>> roots = algorithm.execute();
 
-
-
-        algorithm.writeXML(baseDir + data + "/" + data + "Seg.tif", data + "Raw.tif", baseDir + data, baseDir + data + "/TRACK/lineage.xml");
+        algorithm.writeXML(baseDir + data + "/Seg.tif", "Raw.tif", baseDir + data, baseDir + data + "/TRACK/lineage.xml");
 
         /*
          * Use the forest structure to colour the cells belonging to the same tree
          * with the same colour
          * 
          */
-        algorithm.computeColorChallenge(roots, 1);
-        algorithm.challengeFormat(baseDir + data + "/TRACK/res_track.txt", minLife);
-        algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split.txt", false);
+        //algorithm.computeColorChallenge(roots, 1);
+        //algorithm.challengeFormat(baseDir + data + "/TRACK/res_track.txt", minLife);
+        //algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split.txt", false);
 
         /*
          * Colours the segmented images
@@ -166,10 +163,10 @@ public class test3D_testingSets {
          * 
          * The segmented image related to t = 1 will be stored at colorPath+"1.tif"
          */
-        String colorPath = baseDir + data + "/TRACK/color";
-        algorithm.saveColoredChallenge(colorPath, 2, 0, minLife);
-        String colorPath2 = baseDir + data + "/TRACK/mask";
-        algorithm.saveColored(colorPath2, 2, 0);
+        String colorPath = baseDir + data + "/TRACK/disk";
+        //algorithm.saveColoredChallenge(colorPath, 3, 1, minLife);
+        String colorPath2 = baseDir + data + "/TRACK/cell";
+        //algorithm.saveColored(colorPath2, 3, 1);
         /*
          * Analyse splitting events using the forest structure 
          * 
@@ -177,11 +174,10 @@ public class test3D_testingSets {
          * specified by textPath 
          * 
          */
-        String textPath = baseDir + data + "TRACK/split.txt";
+        //String textPath = baseDir + data + "TRACK/split.txt";
 
-        ArrayList<Node<Spot>> splittingForest = algorithm.analyseSplitting(textPath, false);
+        //ArrayList<Node<Spot>> splittingForest = algorithm.analyseSplitting(textPath,false);
 
-        //algorithm.challengeFormat();
 
         /*
          * The next part writes the XML file 
@@ -201,6 +197,8 @@ public class test3D_testingSets {
         // only one frame (one time point)
         // String segPath = segBaseName + data + "/" + data + "Raw.tif";
         //algorithm.writeXML(segPath, baseDir + "01.tif", stackFolder, xmlName);
+
+        System.out.println("Finished");
     }
 
 }

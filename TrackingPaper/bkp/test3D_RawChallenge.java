@@ -5,32 +5,16 @@ import java.util.ArrayList;
 import amal.tracking.Node;
 import amal.tracking.Tracking;
 import amal.tracking.Spot;
-import java.io.File;
 
-public class test3D_testingSets {
+public class test3D_RawChallenge {
 
     public static void main(String[] args) {
 
-        // Define dataset
-        DataSet dataset = new DataSet("Test21", 10);
-        String baseDir = "/home/thomasb/DATA/Tracking/Testing Datasets/";
-        String data = "Test22";
-        String fs=File.separator;
-        dataset.setDirRaw(baseDir + data+fs);
-        dataset.setDirSeg(baseDir + data+fs);
-        dataset.setBaseRaw(data + "Raw-");
-        dataset.setBaseSeg(data + "Seg-");
-        dataset.setFirstRaw(1);
-        dataset.setFirstSeg(1);
-        dataset.setPadRaw(1);
-        dataset.setPadSeg(1);
-        dataset.setCalXY(1);
-        dataset.setCalZ(1);
-        dataset.setCalT(1);
-
         // The number of frames processed
-        int nbFrames = 10;
-
+        int nbFrames = 38;
+        String baseDir = "/home/thomasb/DATA/Tracking/Challenge/";
+        int nbRaw = 2; // 1 or 2 
+        String data = "Raw" + nbRaw + "-amal";
 
         /*
          * The following performs the tracking for the objects detected in the
@@ -43,11 +27,11 @@ public class test3D_testingSets {
         // The base name of the segmented images
         // The path to the segmented image is : segBaseName + i + ".tif" where i refers to the 
         // index of the considered frame
-        String segBaseName = baseDir + data + "/" + data + "Seg-";
-        //String rawBaseName = baseDir + data + "/" + data + "Raw-";
+        String segBaseName = baseDir + data + "/Seg/" + nbRaw + "seg-";
+        String rawBaseName = baseDir + data + "/Raw/" + nbRaw + "raw-";
 
         // The time (in minutes) separating two consecutive frames
-        double timeInterval = 1;
+        double timeInterval = 10;
 
         // To compute the motion-based search radius for every cell, the algorithm considers its
         // displacements' standard deviation on a defined number of frames in which the cell has
@@ -78,7 +62,7 @@ public class test3D_testingSets {
         // are still merging together after this period of frames, the merging association is 
         // deleted because the final tree lineage should not contain merging cells. This defined
         // number of frames is called mergingLife
-        int mergingLife = 5; //5
+        int mergingLife = 5;
 
         // When a cell is not linked to any other after the algorithm executed a whole step, a 
         // fake cell is created at the following time point to see if it finds a suitable link 
@@ -90,7 +74,7 @@ public class test3D_testingSets {
         // reaches fakeLife.
         int fakeLife = 5;
 
-        int minLife = 0; // do not display cells with life < minlife
+        int minLife = 5; // do not display cells with life < minlife
 
         // The user defines according to his dataset the weight assigned to each penalty
         double weightArea = 0;
@@ -104,18 +88,18 @@ public class test3D_testingSets {
 
         // The spot's final search radius is bound by an upper and a lower limit depending on the
         // studied data set
-        double upperLimit = 1000;
+        double upperLimit = 12; // 12 for raw2
         double lowerLimit = 0;
 
         // In the second cost matrix, the algorithm considers the cells that could not be linked
-        // in the first step. The no-linking conclusino can be explained by a large distance 
+        // in the first step. The no-linking conclusion can be explained by a large distance 
         // between the cells. Therefore, the second cost matrix should consider a higher maximal 
         // distance at least for the gap closing associations. To do so, a coefficient (greater
         // than 1) is defined. The new maximal distance is the result of multiplying this 
         // coefficient to the old maximal distance. To preserve the algorithm flexibility, three
         // coefficients were defined according to the nature of the links to be made.
         double coefGapClose = 2.5;
-        double coefMerge = 16;// was 1.6
+        double coefMerge = 1.6;
         double coefSplit = 1.6;
 
         // To model an impossible link, a blocking value is chosen for every cost matrix. It is
@@ -130,24 +114,20 @@ public class test3D_testingSets {
                 coefSplit, mergingLife, fakeLife, blockingValue1, blockingValue2, weightArea,
                 weightCompactness, weightElongation, weightFlatness, weightSphericity,
                 weightVolume,weightColoc, weightSplit);
-        
-        algorithm.dataset=dataset;
 
-
+        algorithm.removeObjBorders = true;
 
         //algorithm.setRawBaseName(rawBaseName);
-        //algorithm.setCalibration(1, 1);
+        //algorithm.setCalibration(0.13, 0.2);
 
-        // formatting 3 numbers, starts at 1
-        //algorithm.setFormat(1, 1);
+        // formatting  numbers
+       // algorithm.setFormat(1, 1);
 
-        // Exectue the algorithm and retrieve the data structure containing the 
+        // Execute the algorithm and retrieve the data structure containing the 
         // lineage tree: an array list of the roots of every track
         ArrayList<Node<Spot>> roots = algorithm.execute();
 
-
-
-        algorithm.writeXML(baseDir + data + "/" + data + "Seg.tif", data + "Raw.tif", baseDir + data, baseDir + data + "/TRACK/lineage.xml");
+        algorithm.writeXML(baseDir+data+"/seg"+nbRaw+".tif","raw"+nbRaw+".tif",baseDir+data, baseDir+data+"/TRACK/lineage.xml");
 
         /*
          * Use the forest structure to colour the cells belonging to the same tree
@@ -166,10 +146,10 @@ public class test3D_testingSets {
          * 
          * The segmented image related to t = 1 will be stored at colorPath+"1.tif"
          */
-        String colorPath = baseDir + data + "/TRACK/color";
+        String colorPath = baseDir + data + "/TRACK/mask";
         algorithm.saveColoredChallenge(colorPath, 2, 0, minLife);
-        String colorPath2 = baseDir + data + "/TRACK/mask";
-        algorithm.saveColored(colorPath2, 2, 0);
+        String colorPath2 = baseDir + data + "/TRACK/color";
+        //algorithm.saveColored(colorPath2, 2, 0);
         /*
          * Analyse splitting events using the forest structure 
          * 
@@ -201,6 +181,8 @@ public class test3D_testingSets {
         // only one frame (one time point)
         // String segPath = segBaseName + data + "/" + data + "Raw.tif";
         //algorithm.writeXML(segPath, baseDir + "01.tif", stackFolder, xmlName);
+        
+        System.out.println("Finished");
     }
 
 }

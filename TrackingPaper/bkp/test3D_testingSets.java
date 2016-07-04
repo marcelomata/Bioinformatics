@@ -13,8 +13,8 @@ public class test3D_testingSets {
 
         // Define dataset
         DataSet dataset = new DataSet("Test21", 10);
-        String baseDir = "/home/thomasb/DATA/Tracking/Testing Datasets/";
-        String data = "Test22";
+        String baseDir = "/home/marcelodmo/Documents/data/";
+        String data = "droso";
         String fs=File.separator;
         dataset.setDirRaw(baseDir + data+fs);
         dataset.setDirSeg(baseDir + data+fs);

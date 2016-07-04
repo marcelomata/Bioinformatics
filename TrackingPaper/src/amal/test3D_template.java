@@ -1,6 +1,5 @@
 package amal;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import amal.tracking.Node;
@@ -10,28 +9,11 @@ import amal.tracking.Spot;
 public class test3D_template {
 
     public static void main(String[] args) {
-    	
-    	// Define dataset
-        DataSet dataset = new DataSet("Test21", 10);
-        String baseDir = "/home/marcelodmo/Documents/data/";
-        String data = "droso";
-        String fs=File.separator;
-        dataset.setDirRaw(baseDir + data+fs);
-        dataset.setDirSeg(baseDir + data+fs);
-        dataset.setBaseRaw(data + "Raw-");
-        dataset.setBaseSeg(data + "Seg-");
-        dataset.setFirstRaw(1);
-        dataset.setFirstSeg(1);
-        dataset.setPadRaw(1);
-        dataset.setPadSeg(1);
-        dataset.setCalXY(1);
-        dataset.setCalZ(1);
-        dataset.setCalT(1);
 
         // The number of frames processed
         int nbFrames = 10;
-//        String baseDir = "/home/marcelodmo/Documents/data/";///home/thomasb/DATA/Tracking/Testing Datasets/
-//        String data = "Test4";
+        String baseDir = "/home/marcelodmo/Documents/data/Challenge/";
+        String data = "Raw1-amal";
 
         /*
          * The following performs the tracking for the objects detected in the
@@ -44,7 +26,8 @@ public class test3D_template {
         // The base name of the segmented images
         // The path to the segmented image is : segBaseName + i + ".tif" where i refers to the 
         // index of the considered frame
-        String segBaseName = baseDir + data + "/" + data + "Seg-";
+//        String segBaseName = baseDir + data + "/" + data + "Seg-";
+        String segBaseName = baseDir + data + "/Seg/" + "1seg-";
         String rawBaseName = baseDir + data + "/" + data + "Raw-";
 
         // The time (in minutes) separating two consecutive frames
@@ -131,8 +114,6 @@ public class test3D_template {
                 coefSplit, mergingLife, fakeLife, blockingValue1, blockingValue2, weightArea,
                 weightCompactness, weightElongation, weightFlatness, weightSphericity,
                 weightVolume,weightColoc, weightSplit);
-        
-        algorithm.dataset=dataset;
 
        // algorithm.setRawBaseName(rawBaseName);
         //algorithm.setCalibration(1, 1);
@@ -142,8 +123,7 @@ public class test3D_template {
 
         // Exectue the algorithm and retrieve the data structure containing the 
         // lineage tree: an array list of the roots of every track
-//        ArrayList<Node<Spot>> roots = algorithm.execute();
-        ArrayList<Node<Spot>> roots = algorithm.executeOK();
+        ArrayList<Node<Spot>> roots = algorithm.execute();
 
         algorithm.writeXML(baseDir + data + "/TRACK", segBaseName, baseDir + "01.tif", baseDir + data + "/TRACK/lineage.xml");
 

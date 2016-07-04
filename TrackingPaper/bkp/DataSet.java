@@ -5,8 +5,12 @@
  */
 package amal;
 
+import java.io.File;
+
 import ij.IJ;
 import ij.ImagePlus;
+import ij.io.Opener;
+import ij.plugin.Duplicator;
 import mcib3d.image3d.ImageHandler;
 
 /**
@@ -158,6 +162,32 @@ public class DataSet {
 
         return ImageHandler.wrap(plus);
     }
+    
+    public ImagePlus getImageRawPlus(int t) {
+//        String fileName = dirRaw + baseRaw + IJ.pad(t, padRaw) + ".tif";
+//        ImagePlus plus = IJ.openImage(fileName);
+//        if (plus == null) {
+//            IJ.log("No image " + fileName);
+//            return null;
+//        }
+//
+//        return ImageHandler.wrap(plus);
+        
+        //System.out.println("Opening seg " + t);
+        String fileName = dirRaw + baseRaw + IJ.pad(0, padRaw) + ".tif";
+        //System.out.println("Opening " + fileName);
+        ImagePlus plus = IJ.openImage(fileName);
+        if (plus == null) {
+            System.out.println("No image " + fileName);
+            return null;
+        }
+        
+        Duplicator dup = new Duplicator();
+        int[] dim = plus.getDimensions();
+        ImagePlus timedup = dup.run(plus, 1, 1, 1, dim[3], t, t);
+
+        return timedup;
+    }
 
     public ImageHandler getImageSeg(int t) {
         //System.out.println("Opening seg " + t);
@@ -168,8 +198,33 @@ public class DataSet {
             System.out.println("No image " + fileName);
             return null;
         }
+        
+        Duplicator dup = new Duplicator();
+        int[] dim = plus.getDimensions();
+        ImagePlus timedup = dup.run(plus, 1, 1, 1, dim[3], t, t);
 
-        return ImageHandler.wrap(plus);
+        return ImageHandler.wrap(timedup);
+    }
+    
+    public ImagePlus getImageSegPlus(int t) {
+        //System.out.println("Opening seg " + t);
+        String fileName = dirSeg + baseSeg + IJ.pad(firstSeg, padSeg) + ".tif";
+        //System.out.println("Opening " + fileName);
+        //ImagePlus plus = IJ.openImage(fileName);
+        File file = new File(fileName);	
+		Opener open = new Opener();
+		ImagePlus plus = open.openImage(file.getAbsolutePath());        
+        
+        if (plus == null) {
+            System.out.println("No image " + fileName);
+            return null;
+        }
+        
+        Duplicator dup = new Duplicator();
+        int[] dim = plus.getDimensions();
+        ImagePlus timedup = dup.run(plus, 1, 1, 1, dim[3], t, t);
+
+        return timedup;
     }
 
 }

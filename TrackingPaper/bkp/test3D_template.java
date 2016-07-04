@@ -1,20 +1,20 @@
 package amal;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import amal.tracking.Node;
 import amal.tracking.Tracking;
 import amal.tracking.Spot;
-import java.io.File;
 
-public class test3D_testingSets {
+public class test3D_template {
 
     public static void main(String[] args) {
-
-        // Define dataset
+    	
+    	// Define dataset
         DataSet dataset = new DataSet("Test21", 10);
-        String baseDir = "/home/thomasb/DATA/Tracking/Testing Datasets/";
-        String data = "Test22";
+        String baseDir = "/home/marcelodmo/Documents/data/";
+        String data = "droso";
         String fs=File.separator;
         dataset.setDirRaw(baseDir + data+fs);
         dataset.setDirSeg(baseDir + data+fs);
@@ -30,7 +30,8 @@ public class test3D_testingSets {
 
         // The number of frames processed
         int nbFrames = 10;
-
+//        String baseDir = "/home/marcelodmo/Documents/data/";///home/thomasb/DATA/Tracking/Testing Datasets/
+//        String data = "Test4";
 
         /*
          * The following performs the tracking for the objects detected in the
@@ -44,10 +45,10 @@ public class test3D_testingSets {
         // The path to the segmented image is : segBaseName + i + ".tif" where i refers to the 
         // index of the considered frame
         String segBaseName = baseDir + data + "/" + data + "Seg-";
-        //String rawBaseName = baseDir + data + "/" + data + "Raw-";
+        String rawBaseName = baseDir + data + "/" + data + "Raw-";
 
         // The time (in minutes) separating two consecutive frames
-        double timeInterval = 1;
+        double timeInterval = 10;
 
         // To compute the motion-based search radius for every cell, the algorithm considers its
         // displacements' standard deviation on a defined number of frames in which the cell has
@@ -78,7 +79,7 @@ public class test3D_testingSets {
         // are still merging together after this period of frames, the merging association is 
         // deleted because the final tree lineage should not contain merging cells. This defined
         // number of frames is called mergingLife
-        int mergingLife = 5; //5
+        int mergingLife = 0;
 
         // When a cell is not linked to any other after the algorithm executed a whole step, a 
         // fake cell is created at the following time point to see if it finds a suitable link 
@@ -88,7 +89,7 @@ public class test3D_testingSets {
         // fake cell. I also use this parameter when a cell is detected for the first time. It
         // is set to fake unless it finds a suitable link in the following frames before its age 
         // reaches fakeLife.
-        int fakeLife = 5;
+        int fakeLife = 0;
 
         int minLife = 0; // do not display cells with life < minlife
 
@@ -115,7 +116,7 @@ public class test3D_testingSets {
         // coefficient to the old maximal distance. To preserve the algorithm flexibility, three
         // coefficients were defined according to the nature of the links to be made.
         double coefGapClose = 2.5;
-        double coefMerge = 16;// was 1.6
+        double coefMerge = 1.6;
         double coefSplit = 1.6;
 
         // To model an impossible link, a blocking value is chosen for every cost matrix. It is
@@ -133,9 +134,7 @@ public class test3D_testingSets {
         
         algorithm.dataset=dataset;
 
-
-
-        //algorithm.setRawBaseName(rawBaseName);
+       // algorithm.setRawBaseName(rawBaseName);
         //algorithm.setCalibration(1, 1);
 
         // formatting 3 numbers, starts at 1
@@ -143,11 +142,10 @@ public class test3D_testingSets {
 
         // Exectue the algorithm and retrieve the data structure containing the 
         // lineage tree: an array list of the roots of every track
-        ArrayList<Node<Spot>> roots = algorithm.execute();
+//        ArrayList<Node<Spot>> roots = algorithm.execute();
+        ArrayList<Node<Spot>> roots = algorithm.executeOK();
 
-
-
-        algorithm.writeXML(baseDir + data + "/" + data + "Seg.tif", data + "Raw.tif", baseDir + data, baseDir + data + "/TRACK/lineage.xml");
+        algorithm.writeXML(baseDir + data + "/TRACK", segBaseName, baseDir + "01.tif", baseDir + data + "/TRACK/lineage.xml");
 
         /*
          * Use the forest structure to colour the cells belonging to the same tree
@@ -156,7 +154,7 @@ public class test3D_testingSets {
          */
         algorithm.computeColorChallenge(roots, 1);
         algorithm.challengeFormat(baseDir + data + "/TRACK/res_track.txt", minLife);
-        algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split.txt", false);
+        algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split.txt",false);
 
         /*
          * Colours the segmented images
@@ -166,9 +164,9 @@ public class test3D_testingSets {
          * 
          * The segmented image related to t = 1 will be stored at colorPath+"1.tif"
          */
-        String colorPath = baseDir + data + "/TRACK/color";
+        String colorPath = baseDir + data + "/TRACK/mask";
         algorithm.saveColoredChallenge(colorPath, 2, 0, minLife);
-        String colorPath2 = baseDir + data + "/TRACK/mask";
+        String colorPath2 = baseDir + data + "/TRACK/maskT";
         algorithm.saveColored(colorPath2, 2, 0);
         /*
          * Analyse splitting events using the forest structure 
@@ -179,9 +177,9 @@ public class test3D_testingSets {
          */
         String textPath = baseDir + data + "TRACK/split.txt";
 
-        ArrayList<Node<Spot>> splittingForest = algorithm.analyseSplitting(textPath, false);
-
-        //algorithm.challengeFormat();
+        ArrayList<Node<Spot>> splittingForest = algorithm.analyseSplitting(textPath,false);
+        algorithm.challengeFormat(baseDir + data + "/TRACK/res_track-mini.txt", minLife);
+        algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split-mini.txt",false);
 
         /*
          * The next part writes the XML file 
@@ -201,6 +199,8 @@ public class test3D_testingSets {
         // only one frame (one time point)
         // String segPath = segBaseName + data + "/" + data + "Raw.tif";
         //algorithm.writeXML(segPath, baseDir + "01.tif", stackFolder, xmlName);
+        
+        System.out.println("Finished");
     }
 
 }

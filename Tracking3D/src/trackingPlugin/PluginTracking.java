@@ -14,11 +14,17 @@ public class PluginTracking implements PlugIn {
 	
 	@Override
 	public void run(String arg) {
-		File image = new File(arg);	
-		Opener open = new Opener();
-		ImagePlus imp = open.openImage(image.getAbsolutePath());
+		File image = new File(arg);
+		ImagePlus imp = null;
+		TrackingStrategy tracking;
+		if(image.isFile()) {
+			Opener open = new Opener();
+			imp = open.openImage(image.getAbsolutePath());
+			tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
+		} else {
+			tracking = new TrackingSPT(new ObjectActionSPT4D(arg));
+		}
 		
-		TrackingStrategy tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
 		tracking.run();
 		
 		System.out.println("Rendering");

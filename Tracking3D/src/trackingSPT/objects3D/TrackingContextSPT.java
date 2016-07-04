@@ -146,6 +146,7 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 		this.associationsMap = new HashMap<ObjectTree3D, List<ObjectTree3D>>();
 		this.leftTargetObjects = new ArrayList<ObjectTree3D>();
 		this.leftSourceObjects = new ArrayList<ObjectTree3D>();
+		this.temporalPopulation = null;
 		
 		//////////////////////////////////////
 		this.eventListMap = new HashMap<EventType, List<Event>>();
