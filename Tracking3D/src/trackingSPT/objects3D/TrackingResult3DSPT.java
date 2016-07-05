@@ -93,6 +93,10 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	public Point3D getMinPoint() {
 		return new Point3D(minX, minY, minZ);
 	}
+
+	public int getNumberOfFrames() {
+		return objectAction.getSize();
+	}
 	
 }
 	

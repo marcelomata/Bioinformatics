@@ -149,7 +149,8 @@ public class DataSet {
     }
 
     public ImageHandler getImageRaw(int t) {
-        String fileName = dirRaw + baseRaw + IJ.pad(t, padRaw) + ".tif";
+//        String fileName = dirRaw + baseRaw + IJ.pad(t, padRaw) + ".tif";
+        String fileName = dirRaw + baseRaw + t + ".tif";
         ImagePlus plus = IJ.openImage(fileName);
         if (plus == null) {
             IJ.log("No image " + fileName);
@@ -161,7 +162,8 @@ public class DataSet {
 
     public ImageHandler getImageSeg(int t) {
         //System.out.println("Opening seg " + t);
-        String fileName = dirSeg + baseSeg + IJ.pad(t+firstSeg, padSeg) + ".tif";
+//        String fileName = dirSeg + baseSeg + IJ.pad(t+firstSeg, padSeg) + ".tif";
+        String fileName = dirSeg + baseSeg + t + ".tif";
         //System.out.println("Opening " + fileName);
         ImagePlus plus = IJ.openImage(fileName);
         if (plus == null) {

@@ -76,7 +76,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
         ImagePlus timedup;
         Objects3DPopulationSPT populationT;
         try {
-	        for (int t = 0; t < frames.length; t++) {
+	        for (int t = 1; t <= frames.length; t++) {
 	            timedup = getImageSeg(t).getImagePlus();
 	            populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
 	        	population3DPlusT.add(populationT);

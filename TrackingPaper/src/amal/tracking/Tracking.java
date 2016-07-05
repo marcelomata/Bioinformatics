@@ -330,7 +330,7 @@ public class Tracking {
 
     public ArrayList<Node<Spot>> execute() {
         // test
-        int frame = 300;
+        int frame = 1;
 
         init();
 
@@ -392,13 +392,6 @@ public class Tracking {
         // the values entered by the user.
         init();
 
-        // Gets the paths of the segmented images
-        //String[] segPaths = getSegPaths(NbPad, first);
-        // Stores the distances between every pair of cells considered. 
-        // Defines the maximal distance allowed for a link to be considered and the blocking 
-        // value beyond which a link is too costly to be selected.
-        Distance distance = new Distance(Double.MAX_VALUE, null, null);
-
         // Defines the penalties considered for the first cost matrix
         Penalties penalties1 = getPenalties1();
 
@@ -409,7 +402,7 @@ public class Tracking {
 //            rawNames = getRawPaths(NbPad, first);
 //        }
         // Loop through the number of frames considered
-        for (int i = 0; i < nbFrames; i++) {
+        for (int i = 1; i <= nbFrames; i++) {
             // Retrieves the objects contained in every segmented image
             //IJ.log("opening seg" + i);
             //ImagePlus tmpPlus = new ImagePlus(segPaths[i]);
@@ -434,6 +427,13 @@ public class Tracking {
                 graph.updateSpots();
             } // If the graph already contains spots
             else {
+            	// Gets the paths of the segmented images
+                //String[] segPaths = getSegPaths(NbPad, first);
+                // Stores the distances between every pair of cells considered. 
+                // Defines the maximal distance allowed for a link to be considered and the blocking 
+                // value beyond which a link is too costly to be selected.
+                Distance distance = new Distance(Double.MAX_VALUE, frame, frame);
+            	
                 // Executes the first step: consider the easy links between the spots
                 // recently-added to the graph and those contained in the current frame
                 firstStep(frame, i, distance, penalties1);
@@ -504,7 +504,7 @@ public class Tracking {
 
         // Add the spots in the frame(t+1) to the graph
         ArrayList<Spot> spots2;
-        ImageHandler img = dataset.getImageRaw(0);
+        ImageHandler img = dataset.getImageRaw(1);
         if (img != null) {
             //IJ.log("opening raw 0");
             spots2 = graph.addFrame(frame, img);
@@ -774,7 +774,7 @@ public class Tracking {
 
         // Retrieve the paths to the segmented images
         // String[] paths = getSegPaths(NbPad, first);
-        ImageHandler seg = dataset.getImageSeg(0);
+        ImageHandler seg = dataset.getImageSeg(1);
 
         // Loop through the frames in which the colour of the objects will be changed
         for (int f = 0; f < nbFrames; f++) {

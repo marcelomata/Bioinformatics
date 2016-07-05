@@ -68,13 +68,11 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private int maxTrack;
 	private int currentTime;
 	private int currentTrack;
-//	private Point3D minPosition;
 	private Point3D minPoint;
 	private Point3D maxPoint;
 	private Camera camera;
 
 	public Particles4DJOGLRenderer(ParticlesObjects objects) {
-//		this.minPosition = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 		this.objects4D = objects.getObjectsListId();
 		this.camera = new Camera();
 		this.particleColor = new HashMap<Integer, Color>();
@@ -89,7 +87,6 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private void setMaxTimePosition() {
 		Set<Integer> keys = objects4D.keySet();
 		int max = 0;
-//		Point3D min = new Point3D(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
 		Random random = new Random();
 		Color color;
 		float r;
@@ -98,21 +95,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		maxTrack = keys.size();
 		for (Integer integer : keys) {
 			max = objects4D.get(integer).size();
-//			min = objects4D.get(integer).get(0).getPosition();
 			if(max > maxTime) {
 				maxTime = max;
 			}
-//			if(min != null) {
-//				if(min.getX() < minPosition.getX()) {
-//					minPosition.setX(min.getX());
-//				}
-//				if(min.getY() < minPosition.getY()) {
-//					minPosition.setY(min.getY());
-//				}
-//				if(min.getZ() < minPosition.getZ()) {
-//					minPosition.setZ(min.getZ());
-//				}
-//			}
 			
 			r = random.nextFloat();
 			g = random.nextFloat();
@@ -122,8 +107,6 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 			particleColor.put(integer, color);
 		}
 		
-//		maxPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
-//		minPoint.translate(-minPosition.getX(), -minPosition.getY(), -minPosition.getZ());
 		camera.initPosition(maxPoint, minPoint);
 	}
 
@@ -170,7 +153,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		drawWorldCenter(gl);
 		
 		drawBoundBoxFan(gl);
-//		drawBoundBoxLines(gl);
+		drawBoundBoxLines(gl);
 		
 		drawTime(gl);
 		
@@ -239,33 +222,6 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f(0.4f, 0.4f, 0.4f);
 			
-//	      	//up square
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
-//	      	
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
-//	      	
-//	      	//left square
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
-//	      	
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) maxPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
-//	      	
-//	      	//right square
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) minPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
-//	      	
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) maxPoint.getZ());
-//	      	gl.glVertex3f((float) minPoint.getX(), (float) minPoint.getY(), (float) minPoint.getZ());
-	      	
 			//back square
 	      	gl.glVertex3f((float) maxPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());
 	      	gl.glVertex3f((float) minPoint.getX(), (float) maxPoint.getY(), (float) maxPoint.getZ());

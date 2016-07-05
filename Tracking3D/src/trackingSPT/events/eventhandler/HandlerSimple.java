@@ -15,7 +15,7 @@ import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class HandlerSimple extends Handler {
 	
-	private static double DISTANCE = 2;
+	private static double DISTANCE = 8;
 
 	public HandlerSimple(TrackingContextSPT context) {
 		super(context);
@@ -35,7 +35,7 @@ public class HandlerSimple extends Handler {
 		
 		handleAssociations(associations, result);
 		handleSplitting(splittings, result);
-		handleMergings(mergings, result);
+		handleMergings(mergings, result);	
 		result.fillFinishedTrackings();
 		addNullToMisses(context.getMisses());
 		System.out.println(result.getMotionField().isDifferentNumber());
@@ -80,7 +80,7 @@ public class HandlerSimple extends Handler {
 				distance2 = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
 				difference = Math.abs(distance1-distance2);
 				
-				if(difference < distance1*3 && difference < distance2*DISTANCE) {
+				if(difference < distance1*DISTANCE && difference < distance2*DISTANCE) {
 					result.finishObjectTracking(obj1);
 					result.addNewObject(obj2);
 					result.addNewObject(obj3);
@@ -115,8 +115,8 @@ public class HandlerSimple extends Handler {
 			ObjectTree3D obj2 = temp.getObjectTarget();
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 			double comp = obj1.getObject().getDistCenterMax();
-			comp = Double.isNaN(comp) ? 3 : comp; 
-			if(distance < (comp*3)) {
+			comp = Double.isNaN(comp) ? DISTANCE : comp; 
+			if(distance < (comp*DISTANCE)) {
 				result.addNewObjectId(obj1.getId(), obj2);
 				obj2.setParent(obj1);
 				obj1.addChild(obj2);

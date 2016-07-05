@@ -29,6 +29,10 @@ public class PluginTracking implements PlugIn {
 		
 		System.out.println("Rendering");
 		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult());
+		gen.computeColorChallenge(1);
+//		gen.challengeFormat("/home/marcelodmo/Documents/data/simulated_15f_res_track.txt", 0);
+//		gen.challengeFormat("/home/marcelodmo/Documents/data/droso/drosoSeg-1-small-3_res_track.txt", 0);
+		gen.challengeFormat("/home/marcelodmo/Documents/data/simulated_15f/simulated_15f_res_track.txt", 0);
 		System.out.println(gen.getRoots().size());
 		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
 //		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult(null));
