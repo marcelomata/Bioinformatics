@@ -143,7 +143,8 @@ public class test3D_template2 {
 //        ArrayList<Node<Spot>> roots = algorithm.execute();
         ArrayList<Node<Spot>> roots = algorithm.executeOK();
 
-        algorithm.writeXML(baseDir + data + "/TRACK", segBaseName, baseDir + "01.tif", baseDir + data + "/TRACK/lineage.xml");
+//        algorithm.writeXML(baseDir + data + "/TRACK", segBaseName, baseDir + "01.tif", baseDir + data + "/TRACK/lineage.xml");
+        algorithm.writeXML(baseDir + data + "/", segBaseName, baseDir + "01.tif", baseDir + data + "/lineage.xml");
 
         /*
          * Use the forest structure to colour the cells belonging to the same tree
@@ -164,9 +165,11 @@ public class test3D_template2 {
          * 
          * The segmented image related to t = 1 will be stored at colorPath+"1.tif"
          */
-        String colorPath = baseDir + data + "/TRACK/mask";
+//        String colorPath = baseDir + data + "/TRACK/mask";
+        String colorPath = baseDir + data + "/mask";
         algorithm.saveColoredChallenge(colorPath, 2, 0, minLife);
-        String colorPath2 = baseDir + data + "/TRACK/maskT";
+//        String colorPath2 = baseDir + data + "/TRACK/maskT";
+        String colorPath2 = baseDir + data + "/maskT";
         algorithm.saveColored(colorPath2, 2, 0);
         /*
          * Analyse splitting events using the forest structure 
@@ -175,11 +178,14 @@ public class test3D_template2 {
          * specified by textPath 
          * 
          */
-        String textPath = baseDir + data + "TRACK/split.txt";
+//        String textPath = baseDir + data + "TRACK/split.txt";
+        String textPath = baseDir + data + "split.txt";
 
         ArrayList<Node<Spot>> splittingForest = algorithm.analyseSplitting(textPath,false);
-        algorithm.challengeFormat(baseDir + data + "/TRACK/res_track-mini.txt", minLife);
-        algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split-mini.txt",false);
+//        algorithm.challengeFormat(baseDir + data + "/TRACK/res_track-mini.txt", minLife);
+//        algorithm.analyseSplitting(baseDir + data + "/TRACK/res_split-mini.txt",false);
+        algorithm.challengeFormat(baseDir + data + "/res_track-mini.txt", minLife);
+        algorithm.analyseSplitting(baseDir + data + "/res_split-mini.txt",false);
 
         /*
          * The next part writes the XML file 
