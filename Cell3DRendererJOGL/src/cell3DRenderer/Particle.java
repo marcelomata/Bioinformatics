@@ -47,7 +47,7 @@ public class Particle {
 	private void draw2(GL2 gl, GLUT glut, float x, float y, float z, Color color) {
 		gl.glTranslatef(x, y, z);
 		gl.glColor3f((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255);
-		glut.glutSolidSphere(diameter*3, 10, 10);
+		glut.glutSolidSphere(diameter*1000, 10, 10);
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {

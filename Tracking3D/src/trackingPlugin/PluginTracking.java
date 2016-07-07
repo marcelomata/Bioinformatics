@@ -22,7 +22,7 @@ public class PluginTracking implements PlugIn {
 			imp = open.openImage(image.getAbsolutePath());
 			tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
 		} else {
-			tracking = new TrackingSPT(new ObjectActionSPT4D(arg));
+			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, "man_seg"));
 		}
 		
 		tracking.run();

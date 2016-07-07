@@ -17,6 +17,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	private boolean frameByFrame;
 	private boolean readFromDirectory;
 	private File directory;
+	private String fileName;
 	private ImagePlus file;
 	private int numberOfSlices; 
 	private int currentFrame;
@@ -35,8 +36,9 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	 * 
 	 * @param imp It has to be a 4D image (3D+t)
 	 */
-	public ObjectActionSPT4D(String folder) {
+	public ObjectActionSPT4D(String folder, String fileName) {
 		init();
+		this.fileName = fileName;
 		this.directory = new File(folder);
 		loadFrames3D(folder);
 	}
@@ -123,10 +125,10 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	}
 	
 	public ImageHandler getImageSeg(int t) {
-	 	String fileName = directory.getAbsolutePath()+"/"+directory.getName()+"-"+t+".tif";
-        ImagePlus plus = IJ.openImage(fileName);
+	 	String fname = directory.getAbsolutePath()+"/"+fileName+IJ.pad(t-1, 2)+".tif";
+        ImagePlus plus = IJ.openImage(fname);
         if (plus == null) {
-            System.out.println("No image " + fileName);
+            System.out.println("No image " + fname);
             return null;
         }
 
