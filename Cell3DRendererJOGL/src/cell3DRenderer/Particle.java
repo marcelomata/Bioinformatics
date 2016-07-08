@@ -21,12 +21,20 @@ public class Particle {
 		this.diameter = 3;
 		if(obj != null) {
 			this.position = obj.getCenterAsPoint();
-			if(!Double.isNaN(object.getDistCenterMax())) {
-				this.diameter = object.getDistCenterMax();
+			if(!Double.isNaN(getMaxAxisBoundBox(object))) {
+				this.diameter = getMaxAxisBoundBox(object);
 			}
 		}
 	}
 	
+	private double getMaxAxisBoundBox(Object3D object) {
+		double x = object.getXmax() - object.getXmin();
+		double y = object.getYmax() - object.getYmin();
+		double z = object.getZmax() - object.getZmin();
+		double ret = (x > y ? (x > z ? x : z) : (y > z ? y : z) / 8);
+		return ret > 20 ? 20 : ret;
+	}
+
 	public Point3D getPosition() {
 		return position;
 	}
@@ -47,7 +55,7 @@ public class Particle {
 	private void draw2(GL2 gl, GLUT glut, float x, float y, float z, Color color) {
 		gl.glTranslatef(x, y, z);
 		gl.glColor3f((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255);
-		glut.glutSolidSphere(diameter*1000, 10, 10);
+		glut.glutSolidSphere(diameter, 10, 10);
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {

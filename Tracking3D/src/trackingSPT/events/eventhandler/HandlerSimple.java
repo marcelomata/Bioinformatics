@@ -4,6 +4,7 @@ package trackingSPT.events.eventhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import mcib3d.geom.Object3D;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.math.CostMatrix;
@@ -15,7 +16,7 @@ import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class HandlerSimple extends Handler {
 	
-	private static double DISTANCE = 8;
+	private static double DISTANCE = 1;
 
 	public HandlerSimple(TrackingContextSPT context) {
 		super(context);
@@ -51,12 +52,20 @@ public class HandlerSimple extends Handler {
 			obj2 = event.getObjectTarget();
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 			//if the closest is near so a merge sould happened
-			if(distance < (obj1.getObject().getDistCenterMax()*DISTANCE)) {
+			if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
 				context.addMissed(obj1);
 			} else {
 				result.finishObjectTracking(obj1);
 			}
 		}
+	}
+
+	private double getMaxAxisBoundBox(Object3D object) {
+		double x = object.getXmax() - object.getXmin();
+		double y = object.getYmax() - object.getYmin();
+		double z = object.getZmax() - object.getZmin();
+		double ret = (x > y ? (x > z ? x : z) : (y > z ? y : z) / 8);
+		return ret > 20 ? 20 : ret;
 	}
 
 	private void handleSplitting(List<Event> splittings, TrackingResult3DSPT result) {
@@ -102,7 +111,6 @@ public class HandlerSimple extends Handler {
 			} else {
 				result.addNewObject(obj2);
 			}
-			
 		}
 	}
 
@@ -114,7 +122,7 @@ public class HandlerSimple extends Handler {
 			ObjectTree3D obj1 = temp.getObjectSource();
 			ObjectTree3D obj2 = temp.getObjectTarget();
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			double comp = obj1.getObject().getDistCenterMax();
+			double comp = getDistCenterMax(obj1.getObject());
 			comp = Double.isNaN(comp) ? DISTANCE : comp; 
 			if(distance < (comp*DISTANCE)) {
 				result.addNewObjectId(obj1.getId(), obj2);
@@ -127,6 +135,13 @@ public class HandlerSimple extends Handler {
 		}
 	}
 	
+	private double getDistCenterMax(Object3D object) {
+		double x = object.getXmax() - object.getXmin();
+		double y = object.getYmax() - object.getYmin();
+		double z = object.getZmax() - object.getZmin();
+		return x > y ? (x > z ? x : z) : (y > z ? y : z);
+	}
+
 	private void reconnect(List<MissedObject> misses, List<Event> splittings, TrackingResult3DSPT resultTracking) {
 		int numSplittings = splittings.size();
 		int numMisses = misses.size();
@@ -162,7 +177,7 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (obj1.getObject().getDistCenterMax()*DISTANCE)) {
+					if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
 						resultTracking.addNewObjectId(obj2.getId(), obj1);
 						obj1.setParent(obj2);
 						obj2.addChild(obj1);
@@ -190,7 +205,7 @@ public class HandlerSimple extends Handler {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (obj1.getObject().getDistCenterMax()*DISTANCE)) {
+					if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
 						resultTracking.addNewObjectId(obj1.getId(), obj2);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);

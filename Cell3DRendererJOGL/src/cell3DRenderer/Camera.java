@@ -129,6 +129,8 @@ public class Camera {
 		zoom = (float) z;
 		cameraPosition.setY(-((Math.abs(maxPoint.getY()-minPoint.getY())/2)+minPoint.getY()));
 		cameraPosition.setX(-((Math.abs(maxPoint.getX()-minPoint.getX())/2)+minPoint.getX()));
+		
+//		this.initialPosition = new Point3D(-100, -120, zoom);
 	}
 
 	public double getFieldOfViewH() {
