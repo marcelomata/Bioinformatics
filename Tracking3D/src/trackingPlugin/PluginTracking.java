@@ -22,7 +22,7 @@ public class PluginTracking implements PlugIn {
 			imp = open.openImage(image.getAbsolutePath());
 			tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
 		} else {
-			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, "man_seg"));
+			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, "mask"));
 		}
 		
 		tracking.run();
@@ -32,7 +32,7 @@ public class PluginTracking implements PlugIn {
 		gen.computeColorChallenge(1);
 //		gen.challengeFormat("/home/marcelodmo/Documents/data/simulated_15f_res_track.txt", 0);
 //		gen.challengeFormat("/home/marcelodmo/Documents/data/droso/drosoSeg-1-small-3_res_track.txt", 0);
-		gen.challengeFormat("/home/marcelodmo/Documents/data/simulated_15f/simulated_15f_res_track.txt", 0);
+		gen.challengeFormat("/home/marcelodmo/Documents/data/results/"+image.getParentFile().getName()+"_"+image.getName()+".txt", 0);
 		System.out.println(gen.getRoots().size());
 		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
 //		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult(null));

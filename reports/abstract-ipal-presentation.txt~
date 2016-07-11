@@ -14,6 +14,7 @@ Currently intern at Bioinformatics Institute - A*STAR, Singapore, under the supe
 
 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+Version 1
 
 The understanding of many biological processes requires tracking of particles in a sequence of frames. This task has some features that hindering achieve good results, like complex dynamics of the objects, temporarily merging that leads to split after, cell division, noisy and blurry images. This problem is usually modeled as a dense directed acyclic graph or an optical flow problem. 
 
@@ -24,3 +25,21 @@ The two first approaches evaluate their results using biomedical datasets. In th
 We propose a generic framework that provides an easy interface. It can be used to implement different strategies and algorithms, using the same structure. To solve the problem, we propose a strategy similar to the first approach cited before. But we focused on events detection. This leads to a larger number of features, like colocalization and shape of the particles, improving the accuracy of the solution. Besides that, we adapt our model in order to use the fast algorithm proposed in the last approach cited before. 
 
 We test our algorithm using a benchmark to the comparison of cell tracking algorithms. It compares our algorithm result with the ground truth and gives a quantitative evaluation.
+
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Version 2
+
+The understanding of many biological processes requires tracking of particles in a sequence of frames. Classical methods relies on a perfect segmentation or detection of objects. However, complex dynamics of the objects, crowded objects, noise and blurry images, makes the perfect segmentation not achievable.
+
+We propose a generic framework that provides an easy interface. It can be used to implement different strategies and algorithms, using the same structure. To solve the problem, we propose a strategy focused on events detection. The events are classified in three types: assiciation, merging and splitting. We can detect errors that happened in the segmentation process, like missing detections, merging objects or erroneus splitted objects. 
+
+Our framework is composed by actions and each of them may be divided in more actions. The first action has the responsability to find events. This action uses other actions, each one with the responsability to find a different type of event. The second action has to handle the events found previously, it also uses other actions, each one to handle each type of event. The segmentation algorithm may be an action and be incorporated to the framework. This framework allow to both algorithms communicate between each other and the tracking algorithm improve the result of the segmentation algorithm.
+
+We test our algorithm using a benchmark to the comparison of cell tracking algorithms. It compares our algorithm result with the ground truth and gives a quantitative evaluation.
+
+
+
+
+
