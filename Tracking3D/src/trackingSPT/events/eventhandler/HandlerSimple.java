@@ -12,11 +12,10 @@ import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.MissedObject;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
-import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class HandlerSimple extends Handler {
 	
-	private static double DISTANCE = 1;
+	private static double DISTANCE = 3;
 
 	public HandlerSimple(TrackingContextSPT context) {
 		super(context);
@@ -32,17 +31,15 @@ public class HandlerSimple extends Handler {
 		System.out.println("Splitting Events -> "+splittings.size());
 		System.out.println("Merging Events -> "+mergings.size());
 		
-		TrackingResult3DSPT result = (TrackingResult3DSPT) this.context.getResult();
-		
-		handleAssociations(associations, result);
-		handleSplitting(splittings, result);
-		handleMergings(mergings, result);	
-		result.fillFinishedTrackings();
-		addNullToMisses(context.getMisses());
-		System.out.println(result.getMotionField().isDifferentNumber());
+		handleAssociations(associations);
+		handleSplitting(splittings);
+		handleMergings(mergings);	
+//		result.fillFinishedTrackings();
+//		addNullToMisses(context.getMisses());
+//		System.out.println(result.getMotionField().isDifferentNumber());
 	}
 
-	private void handleMergings(List<Event> mergings, TrackingResult3DSPT result) {
+	private void handleMergings(List<Event> mergings) {
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
 		double distance;
@@ -55,7 +52,7 @@ public class HandlerSimple extends Handler {
 			if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
 				context.addMissed(obj1);
 			} else {
-				result.finishObjectTracking(obj1);
+				context.finishObjectTracking(obj1);
 			}
 		}
 	}
@@ -68,9 +65,9 @@ public class HandlerSimple extends Handler {
 		return ret > 20 ? 20 : ret;
 	}
 
-	private void handleSplitting(List<Event> splittings, TrackingResult3DSPT result) {
+	private void handleSplitting(List<Event> splittings) {
 		List<MissedObject> misses = this.context.getMisses();
-		reconnect(misses, splittings, result);
+		reconnect(misses, splittings);
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
 		ObjectTree3D obj3;
@@ -82,39 +79,39 @@ public class HandlerSimple extends Handler {
 		for (Event event : splittings) {
 			obj1 = event.getObjectSource();
 			obj2 = event.getObjectTarget();
-			if(result.getMotionField().contains(obj1)) {
-				obj3 = result.getMotionField().removeLastObject(obj1.getId());
+			if(context.motionFieldContains(obj1)) {
+				obj3 = context.removeLastObject(obj1.getId());
 
 				distance1 = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 				distance2 = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
 				difference = Math.abs(distance1-distance2);
 				
 				if(difference < distance1*DISTANCE && difference < distance2*DISTANCE) {
-					result.finishObjectTracking(obj1);
-					result.addNewObject(obj2);
-					result.addNewObject(obj3);
+					context.finishObjectTracking(obj1);
+					context.addNewObject(obj2);
+					context.addNewObject(obj3);
 					obj1.addChild(obj2);
 					obj1.addChild(obj3);
 					obj2.setParent(obj1);
 					obj3.setParent(obj1);
 				} else {
 					if(distance1 < distance2) {
-						result.addNewObject(obj3);
+						context.addNewObject(obj3);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);
 					} else {
-						result.addNewObject(obj2);
+						context.addNewObject(obj2);
 						obj1.addChild(obj3);
 						obj3.setParent(obj1);
 					}
 				}
 			} else {
-				result.addNewObject(obj2);
+				context.addNewObject(obj2);
 			}
 		}
 	}
 
-	private void handleAssociations(List<Event> associations, TrackingResult3DSPT result) {
+	private void handleAssociations(List<Event> associations) {
 		Event temp = null;
 		double distance;
 		for (int i = 0; i < associations.size(); i++) {
@@ -125,12 +122,12 @@ public class HandlerSimple extends Handler {
 			double comp = getDistCenterMax(obj1.getObject());
 			comp = Double.isNaN(comp) ? DISTANCE : comp; 
 			if(distance < (comp*DISTANCE)) {
-				result.addNewObjectId(obj1.getId(), obj2);
+				context.addNewObjectId(obj1.getId(), obj2);
 				obj2.setParent(obj1);
 				obj1.addChild(obj2);
 			} else {
-				result.finishObjectTracking(obj1);
-				result.addNewObject(obj2);
+				context.finishObjectTracking(obj1);
+				context.addNewObject(obj2);
 			}
 		}
 	}
@@ -142,7 +139,7 @@ public class HandlerSimple extends Handler {
 		return x > y ? (x > z ? x : z) : (y > z ? y : z);
 	}
 
-	private void reconnect(List<MissedObject> misses, List<Event> splittings, TrackingResult3DSPT resultTracking) {
+	private void reconnect(List<MissedObject> misses, List<Event> splittings) {
 		int numSplittings = splittings.size();
 		int numMisses = misses.size();
 		
@@ -178,7 +175,7 @@ public class HandlerSimple extends Handler {
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 					if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
-						resultTracking.addNewObjectId(obj2.getId(), obj1);
+						context.addNewObjectId(obj2.getId(), obj1);
 						obj1.setParent(obj2);
 						obj2.addChild(obj1);
 						missedRemove.add(misses.get(result[i]));
@@ -206,7 +203,7 @@ public class HandlerSimple extends Handler {
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 					if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
-						resultTracking.addNewObjectId(obj1.getId(), obj2);
+						context.addNewObjectId(obj1.getId(), obj2);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);
 						eventsRemove.add(splittings.get(result[i]));
@@ -219,16 +216,4 @@ public class HandlerSimple extends Handler {
 		}
 	}
 
-	private void addNullToMisses(List<MissedObject> misses) {
-		ObjectTree3D obj;
-		ObjectTree3D nullObject;
-		for (MissedObject missedObject : misses) {
-			obj = missedObject.getObject();
-			nullObject = new ObjectTree3D(null, context.getResult().getCurrentFrame());
-			context.addNewObjectId(obj.getId(), nullObject);
-			obj.addChild(nullObject);
-			nullObject.setParent(obj);
-		}
-	}
-	
 }

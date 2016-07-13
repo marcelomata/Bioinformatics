@@ -7,7 +7,17 @@ import mcib3d.geom.Point3D;
 
 public interface ParticlesObjects {
 	
-	Map<Integer,List<Particle>> getObjectsListId();
+	/**
+	 * 
+	 * @return list of the List<Particle> per frame
+	 */
+	List<List<Particle>> getObjectsListFrame();
+	
+	/**
+	 * 
+	 * @return map of the track and the List<Particle> of the particle tracked
+	 */
+	Map<Integer, List<Particle>> getObjectsListTrack();
 	
 	Point3D getMaxPoint();
 	

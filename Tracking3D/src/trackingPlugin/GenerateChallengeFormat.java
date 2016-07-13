@@ -28,7 +28,7 @@ public class GenerateChallengeFormat {
 	}
 	
 	private void loadRoots(TrackingResult3DSPT result) {
-		Map<Integer, List<ObjectTree3D>> objects = result.getMotionField().getFinalResult();
+		Map<Integer, List<ObjectTree3D>> objects = result.getMotionField().getFinalResultByTrack();
 		Set<Integer> objectKeys = objects.keySet();
 		List<ObjectTree3D> objectsList;
 		ObjectTree3D objectTree;
@@ -65,7 +65,7 @@ public class GenerateChallengeFormat {
 		for (ObjectTree3D objectTree3D : children) {
 			obj = objectTree3D.getObject();
 			if(obj != null) {
-				spot = new Spot(obj, objectTree.getFrame(), objectTree.getFrame(), 0, 1);
+				spot = new Spot(obj, objectTree.getId(), objectTree.getFrame(), 0, 1);
 				child = new Node<Spot>(spot, node);
 				node.addChild(child);
 				addChildren(objectTree3D, child);

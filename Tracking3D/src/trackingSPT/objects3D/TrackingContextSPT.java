@@ -110,6 +110,14 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 			this.associationsMap.put(source, newList);
 		}
 	}
+	
+	public List<ObjectTree3D> getListLastObjects() {
+		return this.result.getListLastObjects();
+	}
+	
+	public int getCurrentFrame() {
+		return result.getCurrentFrame();
+	}
 
 	@Override
 	public void addAllLeftTargetObjects(List<ObjectTree3D> leftTargetObjects) {
@@ -150,6 +158,23 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 		
 		//////////////////////////////////////
 		this.eventListMap = new HashMap<EventType, List<Event>>();
+	}
+
+	//Handler
+	public void finishObjectTracking(ObjectTree3D obj) {
+		result.finishObjectTracking(obj);
+	}
+
+	public void addNewObject(ObjectTree3D obj) {
+		result.addNewObject(obj);
+	}
+
+	public boolean motionFieldContains(ObjectTree3D obj1) {
+		return result.getMotionField().contains(obj1);
+	}
+
+	public ObjectTree3D removeLastObject(Integer id) {
+		return result.getMotionField().removeLastObject(id);
 	}
 	
 }

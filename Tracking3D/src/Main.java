@@ -7,9 +7,11 @@ public class Main {
 //		tracking.run("/home/marcelodmo/Documents/data/n3dh/Stack-filt-seg-01.tif");
 		
 //		tracking.run("/home/marcelodmo/Documents/data/Seg-1-50-smaller.tif");
-//		tracking.run("/home/marcelodmo/Documents/data/simulated_15f");
-//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_GT/SEG/");
-		tracking.run("/home/marcelodmo/Documents/data/Challenge/N3D-CHO-2/N3DH-CHO-training/01_SEG_50/");
+//		tracking.run("/home/marcelodmo/Documents/data/simulated_15f/");
+//		tracking.run("/home/marcelodmo/Documents/track/test/Seg-1.tif");
+		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_GT/SEG/");
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N3D-CHO-2/N3DH-CHO-training/01_SEG_60/");
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/Raw1-amal/Seg/");
 //		tracking.run("/home/marcelodmo/Documents/data/simulated_15f.tif");
 //		tracking.run("/home/marcelodmo/Documents/data/droso/drosoSeg-1.tif");
 //		tracking.run("/home/marcelodmo/Documents/data/droso/drosoSeg-1-small.tif");

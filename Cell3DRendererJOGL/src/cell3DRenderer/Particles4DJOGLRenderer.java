@@ -13,10 +13,8 @@ import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 import javax.media.opengl.GL2;
@@ -59,9 +57,10 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private int mouseX = CANVAS_WIDTH/2;
 	private int mouseY = CANVAS_HEIGHT/2;
 	
-	private Map<Integer, List<Particle>> objects4D;
-	private Map<Integer, Color> particleColor;
-	private List<Integer>  colorUsed;
+	private List<List<Particle>> objects4DPerFrame;
+	private Map<Integer, List<Particle>> objects4DPerTrack;
+	
+	private boolean drawTrack = false;
 	
 //	private MovementAnimatorThread movementAnimatorThread;
 	private int maxTime;
@@ -73,10 +72,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private Camera camera;
 
 	public Particles4DJOGLRenderer(ParticlesObjects objects) {
-		this.objects4D = objects.getObjectsListId();
+		this.objects4DPerFrame = objects.getObjectsListFrame();
+		this.objects4DPerTrack = objects.getObjectsListTrack();
 		this.camera = new Camera();
-		this.particleColor = new HashMap<Integer, Color>();
-		this.colorUsed = new ArrayList<Integer>();
 		this.maxPoint = objects.getMaxPoint();
 		this.minPoint = objects.getMinPoint();
 		this.currentTime = 0;
@@ -85,27 +83,10 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	}
 	
 	private void setMaxTimePosition() {
-		Set<Integer> keys = objects4D.keySet();
-		int max = 0;
-		Random random = new Random();
-		Color color;
-		float r;
-		float g;
-		float b;
+		Set<Integer> keys = objects4DPerTrack.keySet();
+		
 		maxTrack = keys.size();
-		for (Integer integer : keys) {
-			max = objects4D.get(integer).size();
-			if(max > maxTime) {
-				maxTime = max;
-			}
-			
-			r = random.nextFloat();
-			g = random.nextFloat();
-			b = random.nextFloat();
-			color = new Color(r, g, b);
-			colorUsed.add(color.getRGB());
-			particleColor.put(integer, color);
-		}
+		maxTime = objects4DPerFrame.size();
 		
 		camera.initPosition(maxPoint, minPoint);
 	}
@@ -133,7 +114,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		gl.glViewport(0, 0, width, height);
 		gl.glMatrixMode(GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(camera.getFieldOfViewV(), aspect, 0.1, 1000.0);
+		glu.gluPerspective(camera.getFieldOfViewV(), aspect, 0.1, 1500.0);
 			 
 		gl.glMatrixMode(GL_MODELVIEW);
 		gl.glLoadIdentity();
@@ -288,49 +269,53 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	List<Object3D> parents = new ArrayList<Object3D>();
 	boolean canprint = true;
 	private void drawTime(GL2 gl) {
-		Set<Integer> keys = objects4D.keySet();
-		Particle particle;
-		Particle particle2;
-		Particle parent;
-		Object3D parentObj;
-		List<Particle> particles;
 		count = 0;
 		division = 0;
 		parents.clear();
-		for (Integer track : keys) {
-			particles = objects4D.get(track);
-//			System.out.print(particles.size()+" ");
-			if(particles.size() > currentTime) {
-				particle = particles.get(currentTime);
-				if(!particle.isHidden()) {
-					particle.draw(gl, glut, particleColor.get(track));
-//					particle.draw(gl, glut, Color.WHITE);
-					parent = particle.getParent();
-					if (parent != null) {
-						parentObj = parent.getObject();
-						if(parents.contains(parentObj)) {
-							division++;
-						} else {
-							parents.add(parentObj);
-						}
-					}
-					count++;
+		
+		List<Particle> particles = objects4DPerFrame.get(currentTime);
+		Object3D parentObj;
+		Particle parent;
+		for (Particle particle : particles) {
+			if(!particle.isHidden()) {
+				particle.draw(gl, glut);
+				
+				if(drawTrack) {
+					drawTrack(gl, particle.getTrack());
+				} else {
+					drawTrack(gl, currentTrack);
 				}
 				
-				if(track == currentTrack) {
-					for (int i = 1; i < particles.size(); i++) {
-						particle2 = particles.get(i);
-						if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
-							drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particleColor.get(track));
-						}
+				parent = particle.getParent();
+				if (parent != null) {
+					parentObj = parent.getObject();
+					if(parents.contains(parentObj)) {
+						division++;
+					} else {
+						parents.add(parentObj);
 					}
 				}
+				count++;
 			}
 		}
+		
 		if(canprint) {
 //			System.out.println();
 			System.out.println("Frame "+currentTime+" - Particles "+count+" - Divisions "+division+" - Parents "+parents.size());
 			canprint = false;
+		}
+	}
+	
+	private void drawTrack(GL2 gl, int track) {
+		Particle particle2;
+		List<Particle> particles = objects4DPerTrack.get(track);
+		if(particles != null) {
+			for (int i = 1; i < particles.size(); i++) {
+				particle2 = particles.get(i);
+				if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+					drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particle2.getColor());
+				}
+			}
 		}
 	}
 	
@@ -382,7 +367,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				canprint = true;
 				break;
 			case KeyEvent.VK_F:
-				currentTime = (currentTime+1) >= maxTime-2 ? maxTime-2 : currentTime + 1;
+				currentTime = currentTime >= maxTime-1 ? maxTime-1 : currentTime + 1;
 				canprint = true;
 				break;
 			case KeyEvent.VK_X:
@@ -402,6 +387,9 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 				break;
 			case KeyEvent.VK_D:
 				currentTrack = currentTrack > 0 ? currentTrack - 1 : 0;
+				break;
+			case KeyEvent.VK_T:
+				drawTrack = !drawTrack;
 				break;
 		}
 	}

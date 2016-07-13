@@ -15,7 +15,6 @@ import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
-import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class AssociationMinDistance extends AssociationSeeker {
 	
@@ -30,9 +29,8 @@ public class AssociationMinDistance extends AssociationSeeker {
 	@Override
 	public void execute() {
 		Objects3DPopulation object3DTPlus1 = this.context.getObjectNextFrame();
-		TrackingResult3DSPT result = (TrackingResult3DSPT) this.context.getResult();
 		
-		List<ObjectTree3D> leftSourceObject3DList = result.getListLastObjects();
+		List<ObjectTree3D> leftSourceObject3DList = context.getListLastObjects();
 		
 		System.out.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
 		
@@ -42,7 +40,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 		
 		
 		for (Object3D object3d : object3DListTarget) {
-			leftTargetObject3DList.add(new ObjectTree3D(object3d, result.getCurrentFrame()));
+			leftTargetObject3DList.add(new ObjectTree3D(object3d, context.getCurrentFrame()));
 		}
 		
 		findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix);
@@ -61,7 +59,6 @@ public class AssociationMinDistance extends AssociationSeeker {
 		EventMapItem item = new EventMapItem(EventType.ASSOCIATION);
 		item.addEventList(events);
 		context.addEventItem(item);
-		
 	}
 
 	private void findEvents(CostMatrix matrix, List<ObjectTree3D> source, List<ObjectTree3D> target, List<Event> events) {

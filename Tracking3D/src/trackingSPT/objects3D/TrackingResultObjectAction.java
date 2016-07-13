@@ -1,7 +1,10 @@
 package trackingSPT.objects3D;
 
+import java.util.List;
+
 import mcib3d.geom.Point3D;
 import trackingInterface.ObjectAction;
+import trackingSPT.MotionField;
 
 public abstract class TrackingResultObjectAction implements ObjectAction {
 	
@@ -23,5 +26,14 @@ public abstract class TrackingResultObjectAction implements ObjectAction {
 	public abstract Point3D getMaxPoint();
 	
 	public abstract Point3D getMinPoint();
+	
+	public abstract List<ObjectTree3D> getListLastObjects();
+	
+	public abstract void finishObjectTracking(ObjectTree3D obj);
+	
+	public abstract void addNewObject(ObjectTree3D obj);
+
+	public abstract MotionField getMotionField();
+	
 	
 }

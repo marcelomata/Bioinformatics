@@ -15,8 +15,10 @@ public class Particle {
 	private Particle parent;
 	private Point3D position;
 	private double diameter;
+	private int track;
+	private Color color;
 	
-	public Particle(Object3D obj) {
+	public Particle(Object3D obj, int track, Color color) {
 		this.object = obj;
 		this.diameter = 3;
 		if(obj != null) {
@@ -25,6 +27,8 @@ public class Particle {
 				this.diameter = getMaxAxisBoundBox(object);
 			}
 		}
+		this.track = track;
+		this.color = color;
 	}
 	
 	private double getMaxAxisBoundBox(Object3D object) {
@@ -39,20 +43,20 @@ public class Particle {
 		return position;
 	}
 	
-	public void draw(GL2 gl, GLUT glut, Color color) {
+	public void draw(GL2 gl, GLUT glut) {
 		gl.glPushMatrix();
 		float x = (float) position.getX();
 		float y = (float) position.getY();
 		float z = (float) position.getZ();
-		draw2(gl, glut, x, y, z, color);
+		draw2(gl, glut, x, y, z);
 		gl.glPopMatrix();
 		if(parent != null) {
-			parent.draw(gl, glut, Color.WHITE);
+			parent.draw(gl, glut);
 			drawLine(gl, position, parent.getPosition(), color);
 		}
 	}
 	
-	private void draw2(GL2 gl, GLUT glut, float x, float y, float z, Color color) {
+	private void draw2(GL2 gl, GLUT glut, float x, float y, float z) {
 		gl.glTranslatef(x, y, z);
 		gl.glColor3f((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255);
 		glut.glutSolidSphere(diameter, 10, 10);
@@ -87,5 +91,13 @@ public class Particle {
 	
 	public Object3D getObject() {
 		return object;
+	}
+	
+	public int getTrack() {
+		return track;
+	}
+
+	public Color getColor() {
+		return color;
 	}
 }

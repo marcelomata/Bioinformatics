@@ -8,7 +8,7 @@ public class Camera {
 	
 	private static final int CAMERA_ROTATE_STEP_DEGREES  = 2;
 	
-	private static final int MIN_ZOOM = -980;
+	private static final int MIN_ZOOM = -1380;
 	private static final int MAX_ZOOM = -1;
 	
 	private static final float DEFAULT_CAMERA_ANGLE_X = 0.0f;

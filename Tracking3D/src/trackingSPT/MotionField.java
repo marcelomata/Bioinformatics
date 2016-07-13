@@ -25,24 +25,24 @@ public class MotionField {
 		return mapObjects;
 	}
 	
-	public int getSize() {
-		Set<Integer> keys = mapObjects.keySet();
-		return mapObjects.get(keys.iterator().next()).size();
+	public int getNumberOfTracks() {
+		return mapObjects.keySet().size();
 	}
 	
-	public void addNewObject(ObjectTree3D object, int frame) {
+	public void addNewObject(ObjectTree3D object) {
 		List<ObjectTree3D> list = new ArrayList<ObjectTree3D>();
 		object.setId(id);
-		ObjectTree3D obj;
+//		ObjectTree3D obj;
 		if(numberMaxPerId == 0) {
 			numberMaxPerId++;
-		} else {
-			for (int i = 0; i < numberMaxPerId-1; i++) {
-				obj = new ObjectTree3D(null, frame);
-				obj.setId(id);
-				list.add(obj);
-			}
-		}
+		} 
+//		else {
+//			for (int i = 0; i < numberMaxPerId-1; i++) {
+//				obj = new ObjectTree3D(null, frame);
+//				obj.setId(id);
+//				list.add(obj);
+//			}
+//		}
 		list.add(object);
 		mapObjects.put(id, list);
 		id++;
@@ -75,9 +75,40 @@ public class MotionField {
 		return result;
 	}
 	
+	public List<ObjectTree3D> getListObjectsFrame(int frame) {
+		List<ObjectTree3D> result = new ArrayList<ObjectTree3D>();
+		List<ObjectTree3D> temp = null;
+		int size = 0;
+		Set<Integer> keySet = mapObjects.keySet();
+		for (Integer integer : keySet) {
+			temp = mapObjects.get(integer);
+			size = temp.size();
+			if(size > 0) {
+				for (ObjectTree3D t : temp) {
+					if(t.getFrame() == frame && !t.isMissed()) {
+						result.add(t);
+					}
+				}
+			}
+		}
+		return result;
+	}
+	
 	public ObjectTree3D removeLastObject(Integer idObject) {
 		List<ObjectTree3D> temp = mapObjects.get(idObject);
 		return temp.remove(temp.size()-1);
+	}
+	
+	public ObjectTree3D removeObjectFrame(Integer idObject, int frame) {
+		List<ObjectTree3D> temp = mapObjects.get(idObject);
+		for (ObjectTree3D objectTree3D : temp) {
+			if(objectTree3D.getFrame() == frame) {
+				if(temp.remove(objectTree3D)) {
+					return objectTree3D;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public ObjectTree3D getLastObject(Integer idObject) {
@@ -85,17 +116,36 @@ public class MotionField {
 		return temp.get(temp.size()-1);
 	}
 
-	public void finishObject(ObjectTree3D obj, int frame) {
+	public ObjectTree3D getObjectFrame(Integer idObject, int frame) {
+		List<ObjectTree3D> temp = mapObjects.get(idObject);
+		for (ObjectTree3D objectTree3D : temp) {
+			if(objectTree3D.getFrame() == frame) {
+				return objectTree3D;
+			}
+		}
+		return null;
+	}
+	
+	public void finishObject(ObjectTree3D obj) {
 		List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
-		ObjectTree3D nullObj = new ObjectTree3D(null, frame);
-		nullObj.setId(obj.getId());
-		nullObj.setParent(obj);
-		temp.add(nullObj);
+//		ObjectTree3D nullObj = new ObjectTree3D(null, frame);
+//		nullObj.setId(obj.getId());
+//		nullObj.setParent(obj);
+//		temp.add(nullObj);
 		mapFinishedObjects.put(obj.getId(), temp);
 	}
 	
-	public Map<Integer, List<ObjectTree3D>> getFinalResult() {
+	public Map<Integer, List<ObjectTree3D>> getFinalResultByTrack() {
 		Map<Integer, List<ObjectTree3D>> result = new HashMap<Integer, List<ObjectTree3D>>();
+		Set<Integer> objectKeys = mapObjects.keySet();
+		fillResultMap(result, mapObjects, objectKeys);
+		objectKeys = mapFinishedObjects.keySet();
+		fillResultMap(result, mapFinishedObjects, objectKeys);
+		return result;
+	}
+	
+	public List<List<ObjectTree3D>> getFinalResultByFrame() {
+		List<List<ObjectTree3D>> result = new ArrayList<List<ObjectTree3D>>();
 		Set<Integer> objectKeys = mapObjects.keySet();
 		fillResultMap(result, mapObjects, objectKeys);
 		objectKeys = mapFinishedObjects.keySet();
@@ -115,57 +165,74 @@ public class MotionField {
 			result.put(integer, trackObject3DList);
 		}
 	}
-
-	public void addVoidObjectFinishedTrack(int frame) {
-		Set<Integer> objectKeys = mapFinishedObjects.keySet();
-		ObjectTree3D nullObject;
-		ObjectTree3D obj;
-		List<ObjectTree3D> list;
+	
+	private void fillResultMap(List<List<ObjectTree3D>> result, Map<Integer, List<ObjectTree3D>> mapTemporalObjects, Set<Integer> objectKeys) {
+		List<ObjectTree3D> resultsByTrack;
+		int frame;
 		for (Integer integer : objectKeys) {
-			nullObject = new ObjectTree3D(null, frame);
-			nullObject.setId(integer);
-			list = mapFinishedObjects.get(integer);
-			obj = list.get(list.size()-1);
-			obj.addChild(nullObject);
-			nullObject.setParent(obj);
-			list.add(nullObject);
+			resultsByTrack = mapTemporalObjects.get(integer);
+			for (ObjectTree3D objectTracked : resultsByTrack) {
+				frame = objectTracked.getFrame();
+				if(frame > result.size()-1) {
+					for (int i = result.size(); i <= frame; i++) {
+						result.add(new ArrayList<ObjectTree3D>());
+					}
+				}
+				result.get(frame).add(objectTracked);
+			}
 		}
 	}
 
-	public boolean isDifferentNumber() {
-		Set<Integer> keys = mapObjects.keySet();
-		List<ObjectTree3D> list; 
-		int number = 0;
-		boolean first = true;
-		int count = 0;
-		for (Integer key : keys) {
-			if(key==65)count++;
-			list = mapObjects.get(key);
-			if(first) {
-				number = list.size();
-				first = false;
-			} else if(number != list.size()) {
-				System.out.println("number - "+count);
-				return true;
-			}
-		}
-		
-		keys = mapFinishedObjects.keySet();
-		first = true;
-		for (Integer key : keys) {
-			if(key==65)count++;
-			list = mapFinishedObjects.get(key);
-			if(first) {
-				number = list.size();
-			} else if(number != list.size()) {
-				System.out.println("number - "+count);
-				return true;
-			}
-		}
-		System.out.println("number - "+count);
-		
-		return false;
-	}
+//	public void addVoidObjectFinishedTrack(int frame) {
+//		Set<Integer> objectKeys = mapFinishedObjects.keySet();
+//		ObjectTree3D nullObject;
+//		ObjectTree3D obj;
+//		List<ObjectTree3D> list;
+//		for (Integer integer : objectKeys) {
+//			nullObject = new ObjectTree3D(null, frame);
+//			nullObject.setId(integer);
+//			list = mapFinishedObjects.get(integer);
+//			obj = list.get(list.size()-1);
+//			obj.addChild(nullObject);
+//			nullObject.setParent(obj);
+//			list.add(nullObject);
+//		}
+//	}
+
+//	public boolean isDifferentNumber() {
+//		Set<Integer> keys = mapObjects.keySet();
+//		List<ObjectTree3D> list; 
+//		int number = 0;
+//		boolean first = true;
+//		int count = 0;
+//		for (Integer key : keys) {
+//			if(key==65)count++;
+//			list = mapObjects.get(key);
+//			if(first) {
+//				number = list.size();
+//				first = false;
+//			} else if(number != list.size()) {
+//				System.out.println("number - "+count);
+//				return true;
+//			}
+//		}
+//		
+//		keys = mapFinishedObjects.keySet();
+//		first = true;
+//		for (Integer key : keys) {
+//			if(key==65)count++;
+//			list = mapFinishedObjects.get(key);
+//			if(first) {
+//				number = list.size();
+//			} else if(number != list.size()) {
+//				System.out.println("number - "+count);
+//				return true;
+//			}
+//		}
+//		System.out.println("number - "+count);
+//		
+//		return false;
+//	}
 	
 	public void printSize() {
 		Set<Integer> keys = mapObjects.keySet();

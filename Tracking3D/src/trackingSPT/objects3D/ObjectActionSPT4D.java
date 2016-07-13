@@ -45,7 +45,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	
 	private void init() {
 		this.population3DPlusT = new ArrayList<Objects3DPopulationSPT>();
-		this.currentFrame = 1;
+		this.currentFrame = 0;
 		this.frameByFrame = false;
 		this.readFromDirectory = false;
 	}
@@ -74,14 +74,18 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		this.readFromDirectory = true;
         File fileFolder = new File(folder);
         File []frames = fileFolder.listFiles();
-        numberOfSlices = frames.length;
         ImagePlus timedup;
         Objects3DPopulationSPT populationT;
+        numberOfSlices = 0;
         try {
-	        for (int t = 1; t <= frames.length; t++) {
-	            timedup = getImageSeg(t).getImagePlus();
-	            populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
-	        	population3DPlusT.add(populationT);
+	        for (int t = 1, i = 0; i < frames.length; i++) {
+	        	if(frames[i].getAbsolutePath().contains(".tif")) {
+	        		timedup = getImageSeg(t).getImagePlus();
+		            populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
+		        	population3DPlusT.add(populationT);
+		        	t++;
+		        	numberOfSlices++;
+	        	}
 			}
         } catch(OutOfMemoryError e) {
         	frameByFrame = true;
@@ -126,6 +130,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	
 	public ImageHandler getImageSeg(int t) {
 	 	String fname = directory.getAbsolutePath()+"/"+fileName+IJ.pad(t-1, 2)+".tif";
+//	 	String fname = directory.getAbsolutePath()+"/"+fileName+t+".tif";
         ImagePlus plus = IJ.openImage(fname);
         if (plus == null) {
             System.out.println("No image " + fname);
@@ -151,9 +156,4 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	public TemporalPopulation3D getTemporalPopulation3D() {
 		return new Object3DTracking(this.getLastFrame(), this.getFrame());
 	}
-	
-//	public TemporalPopulation3D getTemporalPopulation(TrackingResultObjectAction trackingResult) {
-//		Object3DTracking objectTracking = new Object3DTracking(this.getLastFrame(), this.getFrame());
-//		return objectTracking;
-//	}
 }

@@ -1,6 +1,7 @@
 package trackingSPT.objects3D;
 
 import java.util.List;
+import java.util.Map;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
@@ -44,7 +45,7 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 		Object3D obj;
 		for (int i = 0; i < population.getNbObjects(); i++) {
 			obj = population.getObject(i);
-			this.motionField.addNewObject(new ObjectTree3D(obj, getCurrentFrame()), getCurrentFrame());
+			this.motionField.addNewObject(new ObjectTree3D(obj, getCurrentFrame()));
 			if(obj != null) {
 				updateBoundBox(obj.getCenterAsPoint());
 			}
@@ -70,19 +71,19 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	}
 
 	public void finishObjectTracking(ObjectTree3D obj1) {
-		motionField.finishObject(obj1, getCurrentFrame());
+		motionField.finishObject(obj1);
 	}
 
 	public void addNewObject(ObjectTree3D obj) {
-		motionField.addNewObject(obj, getCurrentFrame());
+		motionField.addNewObject(obj);
 		if(obj.getObject() != null) {
 			updateBoundBox(obj.getObject().getCenterAsPoint());
 		}
 	}
 
-	public void fillFinishedTrackings() {
-		motionField.addVoidObjectFinishedTrack(getCurrentFrame());
-	}
+//	public void fillFinishedTrackings() {
+//		motionField.addVoidObjectFinishedTrack(getCurrentFrame());
+//	}
 
 	@Override
 	public Point3D getMaxPoint() {
@@ -96,6 +97,22 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 
 	public int getNumberOfFrames() {
 		return objectAction.getSize();
+	}
+
+	/**
+	 * 
+	 * @return map between the track and the list of ObjectTree3D in this track
+	 */
+	public Map<Integer, List<ObjectTree3D>> getFinalResultByTrack() {
+		return motionField.getFinalResultByTrack();
+	}
+	
+	/**
+	 * 
+	 * @return list of List<Particle> in each frame
+	 */
+	public List<List<ObjectTree3D>> getFinalResultByFrame() {
+		return motionField.getFinalResultByFrame();
 	}
 	
 }
