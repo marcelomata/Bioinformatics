@@ -34,6 +34,7 @@ public abstract class TrackingResultObjectAction implements ObjectAction {
 	public abstract void addNewObject(ObjectTree3D obj);
 
 	public abstract MotionField getMotionField();
-	
+
+	public abstract void setObjectMissed(ObjectTree3D objMissed);
 	
 }

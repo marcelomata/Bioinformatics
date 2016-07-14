@@ -175,6 +175,7 @@ public class HandlerSimple extends Handler {
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 					if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
+						context.reconnectMissedObject(obj2.getId());
 						context.addNewObjectId(obj2.getId(), obj1);
 						obj1.setParent(obj2);
 						obj2.addChild(obj1);
@@ -203,6 +204,7 @@ public class HandlerSimple extends Handler {
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 					if(distance < (getMaxAxisBoundBox(obj1.getObject())*DISTANCE)) {
+						context.reconnectMissedObject(obj1.getId());
 						context.addNewObjectId(obj1.getId(), obj2);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);

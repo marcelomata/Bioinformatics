@@ -12,13 +12,13 @@ public class MotionField {
 	
 	private Map<Integer, List<ObjectTree3D>> mapObjects;
 	private Map<Integer, List<ObjectTree3D>> mapFinishedObjects;
-	private int numberMaxPerId;
+	private Map<Integer, List<ObjectTree3D>> mapMissedObjects;
 	private static Integer id = 1;
 	
 	public MotionField() {
 		this.mapObjects = new HashMap<Integer, List<ObjectTree3D>>();
 		this.mapFinishedObjects = new HashMap<Integer, List<ObjectTree3D>>();
-		this.numberMaxPerId = 0;
+		this.mapMissedObjects = new HashMap<Integer, List<ObjectTree3D>>();
 	}
 	
 	public Map<Integer, List<ObjectTree3D>> getMapObjects() {
@@ -30,30 +30,25 @@ public class MotionField {
 	}
 	
 	public void addNewObject(ObjectTree3D object) {
+		System.out.println("Creating object " + id + " - Frame " + object.getFrame());
 		List<ObjectTree3D> list = new ArrayList<ObjectTree3D>();
 		object.setId(id);
-//		ObjectTree3D obj;
-		if(numberMaxPerId == 0) {
-			numberMaxPerId++;
-		} 
-//		else {
-//			for (int i = 0; i < numberMaxPerId-1; i++) {
-//				obj = new ObjectTree3D(null, frame);
-//				obj.setId(id);
-//				list.add(obj);
-//			}
-//		}
 		list.add(object);
 		mapObjects.put(id, list);
 		id++;
 	}
 	
 	public void addNewObjectId(Integer idObject, ObjectTree3D object) {
+		System.out.println("Adding object to track " + idObject + " - Frame " + object.getFrame());
 		object.setId(idObject);
-		mapObjects.get(idObject).add(object);
-		if(mapObjects.get(idObject).size() > numberMaxPerId) {
-			numberMaxPerId = mapObjects.get(idObject).size();
-		}
+		List<ObjectTree3D> list = mapObjects.get(idObject);
+		list.add(object);
+	}
+	
+	public void reconnectMissedObjectId(Integer idObject) {
+		List<ObjectTree3D> list = mapMissedObjects.remove(idObject);
+		System.out.println("Reconnecting object to track " + idObject + " - Frame " + list.get(list.size()-1).getFrame());
+		mapObjects.put(idObject, list);
 	}
 
 	public List<ObjectTree3D> getListLastObjects() {
@@ -96,6 +91,7 @@ public class MotionField {
 	
 	public ObjectTree3D removeLastObject(Integer idObject) {
 		List<ObjectTree3D> temp = mapObjects.get(idObject);
+		System.out.println("Removing last object track " + idObject + " - Frame " + temp.get(temp.size()-1).getFrame());
 		return temp.remove(temp.size()-1);
 	}
 	
@@ -127,11 +123,8 @@ public class MotionField {
 	}
 	
 	public void finishObject(ObjectTree3D obj) {
+		System.out.println("Finishing track " + obj.getId() + " - Frame " + obj.getFrame());
 		List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
-//		ObjectTree3D nullObj = new ObjectTree3D(null, frame);
-//		nullObj.setId(obj.getId());
-//		nullObj.setParent(obj);
-//		temp.add(nullObj);
 		mapFinishedObjects.put(obj.getId(), temp);
 	}
 	
@@ -141,6 +134,8 @@ public class MotionField {
 		fillResultMap(result, mapObjects, objectKeys);
 		objectKeys = mapFinishedObjects.keySet();
 		fillResultMap(result, mapFinishedObjects, objectKeys);
+		objectKeys = mapMissedObjects.keySet();
+		fillResultMap(result, mapMissedObjects, objectKeys);
 		return result;
 	}
 	
@@ -150,6 +145,8 @@ public class MotionField {
 		fillResultMap(result, mapObjects, objectKeys);
 		objectKeys = mapFinishedObjects.keySet();
 		fillResultMap(result, mapFinishedObjects, objectKeys);
+		objectKeys = mapMissedObjects.keySet();
+		fillResultMap(result, mapMissedObjects, objectKeys);
 		return result;
 	}
 
@@ -253,6 +250,12 @@ public class MotionField {
 
 	public boolean contains(ObjectTree3D obj1) {
 		return mapObjects.containsKey(obj1.getId());
+	}
+
+	public void setObjectMissed(ObjectTree3D objMissed) {
+		System.out.println("Putting track " + objMissed.getId() + " - Frame " + objMissed.getFrame()+" as missed");
+		List<ObjectTree3D> temp = mapObjects.remove(objMissed.getId());
+		mapMissedObjects.put(objMissed.getId(), temp);
 	}
 
 }

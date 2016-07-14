@@ -81,10 +81,6 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 		}
 	}
 
-//	public void fillFinishedTrackings() {
-//		motionField.addVoidObjectFinishedTrack(getCurrentFrame());
-//	}
-
 	@Override
 	public Point3D getMaxPoint() {
 		return new Point3D(maxX, maxY, maxZ);
@@ -113,6 +109,11 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	 */
 	public List<List<ObjectTree3D>> getFinalResultByFrame() {
 		return motionField.getFinalResultByFrame();
+	}
+
+	@Override
+	public void setObjectMissed(ObjectTree3D objMissed) {
+		motionField.setObjectMissed(objMissed);
 	}
 	
 }

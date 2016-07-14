@@ -19,6 +19,12 @@ public interface ParticlesObjects {
 	 */
 	Map<Integer, List<Particle>> getObjectsListTrack();
 	
+	/**
+	 * 
+	 * @return the list of particle roots
+	 */
+	List<Particle> getTreeRoots();
+	
 	Point3D getMaxPoint();
 	
 	Point3D getMinPoint();

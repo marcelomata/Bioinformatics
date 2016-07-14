@@ -48,7 +48,7 @@ public class GenerateChallengeFormat {
 				i++;
 			}
 			
-			if(obj != null) {
+			if(obj != null && objectTree.getFrame() == 0) {
 				spot = new Spot(obj, integer, objectTree.getFrame(), 0, 1);
 				node = new Node<Spot>(spot);
 				roots.add(node);
@@ -57,15 +57,15 @@ public class GenerateChallengeFormat {
 		}
 	}
 	
-	private void addChildren(ObjectTree3D objectTree, Node<Spot> node) {
+	private void addChildren(ObjectTree3D objectTreeParent, Node<Spot> node) {
 		Spot spot;
 		Object3D obj;
 		Node<Spot> child;
-		List<ObjectTree3D> children = objectTree.getChildren();
+		List<ObjectTree3D> children = objectTreeParent.getChildren();
 		for (ObjectTree3D objectTree3D : children) {
 			obj = objectTree3D.getObject();
 			if(obj != null) {
-				spot = new Spot(obj, objectTree.getId(), objectTree.getFrame(), 0, 1);
+				spot = new Spot(obj, objectTree3D.getId(), objectTree3D.getFrame(), 0, 1);
 				child = new Node<Spot>(spot, node);
 				node.addChild(child);
 				addChildren(objectTree3D, child);
@@ -139,6 +139,7 @@ public class GenerateChallengeFormat {
                     }
                     if (total >= minLife) {
                         pw.println((root.getData().getObjectColor()) + " " + root.getData().getFrame() + " " + desc.getData().getFrame() + " " + parentlabel);
+                        System.out.println((root.getData().getObjectColor()) + " " + root.getData().getFrame() + " " + desc.getData().getFrame() + " " + parentlabel);
                     }
                     ArrayList<Node<Spot>> children = desc.getChildren();
                     if (!children.isEmpty()) {

@@ -57,6 +57,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
         int[] dim = imp.getDimensions();
         ImagePlus timedup;
         Objects3DPopulationSPT populationT;
+        numberOfSlices = imp.getNFrames();
         try {
 	        for (int t = 0; t < imp.getNFrames(); t++) {
 	        	timedup = dup.run(imp, 1, 1, 1, dim[3], t, t);
@@ -94,7 +95,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	}
 
 	public Objects3DPopulationSPT getLastFrame() {
-		if(currentFrame == 1) {
+		if(currentFrame == 0) {
 			return null;
 		}
 		if(!frameByFrame) {

@@ -131,7 +131,9 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 
 	@Override
 	public void addMissed(ObjectTree3D objMissed) {
+		System.out.println("Adding object track "+objMissed.getId()+" - Frame "+objMissed.getFrame()+" to missed list");
 		this.misses.add(new MissedObject(objMissed, result.getCurrentFrame()));
+		this.result.setObjectMissed(objMissed);
 	}
 
 	@Override
@@ -175,6 +177,10 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 
 	public ObjectTree3D removeLastObject(Integer id) {
 		return result.getMotionField().removeLastObject(id);
+	}
+
+	public void reconnectMissedObject(Integer id) {
+		result.getMotionField().reconnectMissedObjectId(id);
 	}
 	
 }

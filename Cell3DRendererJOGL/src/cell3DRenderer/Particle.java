@@ -1,6 +1,8 @@
 package cell3DRenderer;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.media.opengl.GL2;
 
@@ -11,23 +13,30 @@ import mcib3d.geom.Point3D;
 
 public class Particle {
 	
+	private static final int MAX_DIAMETER = 5;
+	
 	private Object3D object;
 	private Particle parent;
+	private List<Particle> children;
 	private Point3D position;
 	private double diameter;
 	private int track;
+	private int frame;
 	private Color color;
 	
-	public Particle(Object3D obj, int track, Color color) {
+	public Particle(Object3D obj, int track, int frame, Color color) {
 		this.object = obj;
 		this.diameter = 3;
 		if(obj != null) {
 			this.position = obj.getCenterAsPoint();
 			if(!Double.isNaN(getMaxAxisBoundBox(object))) {
 				this.diameter = getMaxAxisBoundBox(object);
+				this.diameter = diameter > MAX_DIAMETER ? MAX_DIAMETER : diameter;
 			}
 		}
+		this.children = new ArrayList<Particle>();
 		this.track = track;
+		this.frame = frame;
 		this.color = color;
 	}
 	
@@ -93,11 +102,23 @@ public class Particle {
 		return object;
 	}
 	
+	public List<Particle> getChildren() {
+		return children;
+	}
+	
+	public void addChild(Particle child) {
+		this.children.add(child);
+	}
+	
 	public int getTrack() {
 		return track;
 	}
 
 	public Color getColor() {
 		return color;
+	}
+	
+	public int getFrame() {
+		return frame;
 	}
 }
