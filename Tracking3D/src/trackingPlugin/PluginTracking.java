@@ -23,21 +23,23 @@ public class PluginTracking implements PlugIn {
 			tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
 		} else {
 //			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, image.getName()+"-"));
-			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, "man_seg"));
+			tracking = new TrackingSPT(new ObjectActionSPT4D(image.getAbsolutePath()+"/01_GT/SEG/", "man_seg"));
 		}
 		
 		tracking.run();
 		
-		System.out.println("Rendering");
-		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult());
+		System.out.println("Generating Challenge Format");
+		File dirSeg = new File(image.getAbsolutePath()+"/01_GT/SEG/");
+		File dirRes = new File(image.getAbsolutePath()+"/01_RES/TRACK/");
+		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirRes);
 		gen.computeColorChallenge(1);
-//		gen.challengeFormat("/home/marcelodmo/Documents/data/simulated_15f_res_track.txt", 0);
-//		gen.challengeFormat("/home/marcelodmo/Documents/data/droso/drosoSeg-1-small-3_res_track.txt", 0);
-		gen.challengeFormat("/home/marcelodmo/Documents/data/results/"+image.getParentFile().getName()+"_"+image.getName()+".txt", 0);
+		gen.challengeFormat(0);
+		gen.computeColorChallenge(0);
+		gen.saveColoredChallenge(2, 0, 0);
+		gen.saveColored(2, 0);
+		System.out.println("Rendering");
 		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
-//		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult(null));
 		renderer.run();
-		
 		
 	}
 }

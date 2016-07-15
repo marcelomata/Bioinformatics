@@ -4,11 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
-import mcib3d.image3d.ImageHandler;
+import trackingPlugin.ImageJStatic;
 import trackingSPT.mcib3DObjects.Objects3DPopulationSPT;
 
 public class ObjectActionSPT4D implements MovieObjectAction {
@@ -81,7 +80,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
         try {
 	        for (int t = 1, i = 0; i < frames.length; i++) {
 	        	if(frames[i].getAbsolutePath().contains(".tif")) {
-	        		timedup = getImageSeg(t).getImagePlus();
+	        		timedup =  ImageJStatic.getImageSeg(directory, fileName, t).getImagePlus();
 		            populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
 		        	population3DPlusT.add(populationT);
 		        	t++;
@@ -119,7 +118,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		 Duplicator dup = new Duplicator();
 		 ImagePlus timedup;
 		if(readFromDirectory) {
-	 		timedup = getImageSeg(t).getImagePlus();
+	 		timedup = ImageJStatic.getImageSeg(directory, fileName, t).getImagePlus();
 	 		populationT =  new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
 		} else {
 			int[] dim = file.getDimensions();
@@ -128,18 +127,6 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		}
 		return populationT;
 	}
-	
-	public ImageHandler getImageSeg(int t) {
-	 	String fname = directory.getAbsolutePath()+"/"+fileName+IJ.pad(t-1, 2)+".tif";
-//	 	String fname = directory.getAbsolutePath()+"/"+fileName+t+".tif";
-        ImagePlus plus = IJ.openImage(fname);
-        if (plus == null) {
-            System.out.println("No image " + fname);
-            return null;
-        }
-
-        return ImageHandler.wrap(plus);
-    }
 	
 	@Override
 	public void nextFrame() {

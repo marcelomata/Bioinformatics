@@ -1,5 +1,6 @@
 package trackingPlugin;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -12,18 +13,33 @@ import java.util.logging.Logger;
 import amal.tracking.Node;
 import amal.tracking.Spot;
 import amal.tracking.Tracking;
+import ij.IJ;
+import ij.ImagePlus;
 import mcib3d.geom.Object3D;
+import mcib3d.geom.ObjectCreator3D;
+import mcib3d.geom.Objects3DPopulation;
+import mcib3d.image3d.ImageHandler;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class GenerateChallengeFormat {
 	
-	private final List<Node<Spot>> roots;
-	private final TrackingResult3DSPT result;
+	private static final String FILE_NAME_RESULT_RES = "mask";
+	private static final String FILE_NAME_RESULT_SEG = "man_seg";
+
+	private List<Node<Spot>> roots;
+	private int numberOfFrames;
+//	private TrackingResult3DSPT result;
 	
-	public GenerateChallengeFormat(TrackingResult3DSPT result) {
+	private File dirSeg;
+	private File dirRes;
+	
+	public GenerateChallengeFormat(TrackingResult3DSPT result, File dirSeg, File dirRes) {
 		this.roots = new ArrayList<Node<Spot>>();
-		this.result = result;
+//		this.result = result;
+		this.dirSeg = dirSeg;
+		this.dirRes = dirRes;
+		this.numberOfFrames = result.getNumberOfFrames();
 		loadRoots(result);
 	}
 	
@@ -110,10 +126,10 @@ public class GenerateChallengeFormat {
         }
     }
 	
-	public void challengeFormat(String filename, int minLife) {
+	public void challengeFormat(int minLife) {
         PrintWriter pw = null;
         try {
-            pw = new PrintWriter(filename);
+            pw = new PrintWriter(dirSeg.getAbsolutePath()+"/res_track.txt");
             System.out.println("Analysing splitting events...");
             ArrayList<Node<Spot>> tmp = new ArrayList<Node<Spot>>();
             for (Node<Spot> root : roots) {
@@ -134,7 +150,7 @@ public class GenerateChallengeFormat {
                     }
                     int total = desc.getData().getFrame() - root.getData().getFrame();
                     // case nb frames not reached yet 
-                    if (desc.getData().getFrame() >= result.getNumberOfFrames() - 1) {
+                    if (desc.getData().getFrame() >= numberOfFrames - 1) {
                         total = minLife + 1;
                     }
                     if (total >= minLife) {
@@ -157,6 +173,160 @@ public class GenerateChallengeFormat {
                 pw.close();
             }
         }
+    }
+	
+	/**
+     * Colours all the detections belonging to the same tree with the same
+     * colour
+     *
+     * @param colorPath: the base path of the new images to be generated where
+     *                   the objects are differently-coloured
+     * @param pad
+     * @param start      the first index to use, usually 1
+     * @param minLife
+     */
+    public void saveColoredChallenge(int pad, int start, int minLife) {
+        System.out.println("Changing colors ...");
+
+        // Retrieve the paths to the segmented images
+        // String[] paths = getSegPaths(NbPad, first);
+        ImageHandler seg = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), FILE_NAME_RESULT_SEG, 0, 2, 1);
+
+        // Loop through the frames in which the colour of the objects will be changed
+        for (int f = 0; f < numberOfFrames; f++) {
+            // The object responsible of creating the new 3D image where the cell's detections
+            // will be coloured according to the colour of the first occurrence of the cell
+            ObjectCreator3D creator = new ObjectCreator3D(seg.sizeX, seg.sizeY, seg.sizeZ);
+//            creator.setResolution(dataset.getCalXY(), dataset.getCalZ(), "um");
+            creator.setResolution(1, 1, "um");
+
+            ArrayList<Node<Spot>> list = getNodesInFrame(f);
+            double coeff = 1.2;
+            for (Node<Spot> node : list) {
+                //compute timelife
+                int total = node.getLastDescendant().getData().getFrame() - node.getAncestor().getData().getFrame();
+                if (node.getLastDescendant().getData().getFrame() <= minLife) {
+                    total = minLife + 1;
+                }
+                if (numberOfFrames - node.getLastDescendant().getData().getFrame() <= minLife) {
+                    total = minLife + 1;
+                }
+                Spot spot = node.getData();
+                if (total >= minLife) {
+                    //System.out.println("creating spot "+spot);
+                    double rad = coeff * spot.getRadius();
+                    creator.createEllipsoidUnit(spot.getPosX(), spot.getPosY(), spot.getPosZ(), rad, rad, rad, spot.getObjectColor(), false);
+                }
+            }
+
+            // Create the new image containing the differently-coloured objects
+            // Save the image under the specified folder
+            IJ.saveAsTiff(new ImagePlus("Res", creator.getStack()), dirRes.getAbsolutePath() + "/" + FILE_NAME_RESULT_RES + IJ.pad(f + start, pad) + ".tif");
+        }
+
+        System.out.println("End changing colors.");
+    }
+    
+    /**
+     * Colours all the detections belonging to the same tree with the same
+     * colour
+     *
+     * @param colorPath: the base path of the new images to be generated where
+     *                   the objects are differently-coloured
+     */
+    public void saveColored(int pad, int start) {
+        System.out.println("Changing colors ...");
+
+        // Retrieve the paths to the segmented images
+        // String[] paths = getSegPaths(NbPad, first);
+
+        // Loop through the frames in which the colour of the objects will be changed
+        for (int i = 0; i < numberOfFrames; i++) {
+            // Open the segmented image located at the specified path
+            ImagePlus im = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), FILE_NAME_RESULT_SEG, 0, 2, i).getImagePlus();
+
+            // Extract the objects contained in the segmented image
+            Objects3DPopulation frame = new Objects3DPopulation(im);
+
+            // The object responsible of creating the new 3D image where the cell's detections
+            // will be coloured according to the colour of the first occurrence of the cell
+            ObjectCreator3D creator = new ObjectCreator3D(im.getImageStack());
+
+            // Extract the nodes containing the spots belonging to the current frame
+            ArrayList<Node<Spot>> nodesInFrame = getNodesInFrame(i);
+
+            // Extract these spots' values and store them in a new list
+            ArrayList<Integer> values = new ArrayList<Integer>();
+
+            for (Node<Spot> nodesInFrame1 : nodesInFrame) {
+                values.add(nodesInFrame1.getData().value());
+            }
+
+            // Loop through the objects present in the current frame
+            for (int j = 0; j < frame.getNbObjects(); j++) {
+
+                // Retrieve the value of the current object
+                int value = frame.getObject(j).getValue();
+
+                // Look for the index of the object's value in the list containing the values of the
+                // spots belonging to the current frame
+                int index = values.indexOf(value);
+
+                // If we find in the tree the spot modelling the current object (the algorithm
+                // may delete some detections when they are likely false positives )
+                if (index != -1) {
+
+                    // Retrieve the correspondent spot
+                    Spot spot = nodesInFrame.get(index).getData();
+
+                    // Sets the object's value to the spot's color
+                    // The value of the object determines its colour
+                    if (spot.getState() != Spot.FAKE) {
+                        frame.getObject(j).setValue(spot.getObjectColor());
+                    } else {
+                        frame.getObject(j).setValue(0);
+                        System.out.println("fake " + frame.getObject(j) + " in frame " + i);
+                    }
+                    // Draw the object with its new value (if it has changed) in the new image
+                    creator.drawObject(frame.getObject(j));
+                }
+
+            }
+            // Create the new image containing the differently-coloured objects
+            ImagePlus res = new ImagePlus("Res", creator.getStack());
+
+            // Save the image under the specified folder
+            IJ.saveAsTiff(res, dirRes.getAbsolutePath() + "/" + FILE_NAME_RESULT_RES + IJ.pad(i + start, pad) + ".tif");
+        }
+
+        System.out.println("End changing colors.");
+    }
+    
+    private ArrayList<Node<Spot>> getNodesInFrame(Node<Spot> root, int frame) {
+        ArrayList<Node<Spot>> nodesInFrame = new ArrayList<Node<Spot>>();
+
+        if (root.getData().getFrame() < frame) {
+            ArrayList<Node<Spot>> children = root.getChildren();
+            for (Node<Spot> child : children) {
+                nodesInFrame.addAll(getNodesInFrame(child, frame));
+            }
+        } else if (root.getData().getFrame() == frame) {
+            nodesInFrame.add(root);
+        }
+
+        return nodesInFrame;
+    }
+
+    private ArrayList<Node<Spot>> getNodesInFrame(int frame) {
+
+        ArrayList<Node<Spot>> nodesInFrame = new ArrayList<Node<Spot>>();
+
+        for (Node<Spot> root : roots) {
+            nodesInFrame.addAll(getNodesInFrame(root, frame));
+        }
+
+        return nodesInFrame;
+
     }
 
 }
