@@ -39,7 +39,7 @@ public class MotionField {
 	}
 	
 	public void addNewObjectId(Integer idObject, ObjectTree3D object) {
-		System.out.println("Adding object to track " + idObject + " - Frame " + object.getFrame());
+		System.out.println("Adding object to track " + idObject + " - Frame " + object.getFrame() + " - Object Value "+object.getObject().getValue());
 		object.setId(idObject);
 		List<ObjectTree3D> list = mapObjects.get(idObject);
 		list.add(object);

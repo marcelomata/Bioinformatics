@@ -76,4 +76,8 @@ public class ObjectTree3D implements ObjectAction {
 	public int getFrame() {
 		return frame;
 	}
+
+	public void removeChildren() {
+		this.children.clear();
+	}
 }

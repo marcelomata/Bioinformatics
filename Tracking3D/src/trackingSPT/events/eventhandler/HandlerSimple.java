@@ -88,12 +88,13 @@ public class HandlerSimple extends Handler {
 				
 				if(difference < distance1*DISTANCE && difference < distance2*DISTANCE) {
 					context.finishObjectTracking(obj1);
-					context.addNewObject(obj2);
-					context.addNewObject(obj3);
+					obj1.removeChildren();
 					obj1.addChild(obj2);
 					obj1.addChild(obj3);
 					obj2.setParent(obj1);
 					obj3.setParent(obj1);
+					context.addNewObject(obj2);
+					context.addNewObject(obj3);
 				} else {
 					if(distance1 < distance2) {
 						context.addNewObject(obj3);
