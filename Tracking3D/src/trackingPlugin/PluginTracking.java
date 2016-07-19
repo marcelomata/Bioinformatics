@@ -12,6 +12,12 @@ import trackingSPT.objects3D.TrackingResult3DSPT;
 
 public class PluginTracking implements PlugIn {
 	
+	private File dirRes;
+	
+	public PluginTracking(String resultDirectory) {
+		this.dirRes = new File(resultDirectory);
+	}
+	
 	@Override
 	public void run(String arg) {
 		File image = new File(arg);
@@ -23,14 +29,13 @@ public class PluginTracking implements PlugIn {
 			tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
 		} else {
 //			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, image.getName()+"-"));
-			tracking = new TrackingSPT(new ObjectActionSPT4D(image.getAbsolutePath()+"/01_GT/SEG/", "man_seg"));
+			tracking = new TrackingSPT(new ObjectActionSPT4D(image.getAbsolutePath()+"/SEG/", "man_seg"));
 		}
 		
 		tracking.run();
 		
 		System.out.println("Generating Challenge Format");
-		File dirSeg = new File(image.getAbsolutePath()+"/01_GT/SEG/");
-		File dirRes = new File(image.getAbsolutePath()+"/01_RES/TRACK/");
+		File dirSeg = new File(image.getAbsolutePath()+"/SEG/");
 		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirRes);
 		gen.computeColorChallenge(1);
 		gen.challengeFormat(0);

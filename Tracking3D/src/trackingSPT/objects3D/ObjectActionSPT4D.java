@@ -2,10 +2,14 @@ package trackingSPT.objects3D;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
+import ij.util.ArrayUtil;
 import mcib3d.geom.Objects3DPopulation;
 import trackingPlugin.ImageJStatic;
 import trackingSPT.mcib3DObjects.Objects3DPopulationSPT;
@@ -74,15 +78,20 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		this.readFromDirectory = true;
         File fileFolder = new File(folder);
         File []frames = fileFolder.listFiles();
+        List<File> framesList = Arrays.asList(frames);
+        Collections.sort(framesList);
+        frames = framesList.toArray(new File[framesList.size()]);
         ImagePlus timedup;
         Objects3DPopulationSPT populationT;
         numberOfSlices = 0;
         try {
-	        for (int t = 1, i = 0; i < frames.length; i++) {
+	        for (int t = 0, i = 0; i < frames.length; i++) {
 	        	if(frames[i].getAbsolutePath().contains(".tif")) {
+	        		fileName = frames[i].getName();
 	        		timedup =  ImageJStatic.getImageSeg(directory, fileName, t).getImagePlus();
 		            populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
 		        	population3DPlusT.add(populationT);
+		        	System.out.println("Number objects frame "+t+" -> "+populationT.getObject3D().getNbObjects());
 		        	t++;
 		        	numberOfSlices++;
 	        	}

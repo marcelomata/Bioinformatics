@@ -52,14 +52,16 @@ public class SplittingSimple extends EventSeekerAction {
 			int []result = lapSolver.execute();
 			Event event;
 			for (int i = 0; i < result.length; i++) {
-				event = new Event(EventCause.EXCEEDED);
-				// The order was changed because the list of left target is smaller
-				obj1 = matrix.getTarget(result[i]);
-				obj2 = matrix.getSource(i);
-				event.setObjectSource(obj1);
-				event.setObjectTarget(obj2);
-				event.setEventType(EventType.SPLITTING);
-				events.add(event);
+				if(result[i] != -1) { 
+					event = new Event(EventCause.EXCEEDED);
+					// The order was changed because the list of left target is smaller
+					obj1 = matrix.getTarget(result[i]);
+					obj2 = matrix.getSource(i);
+					event.setObjectSource(obj1);
+					event.setObjectTarget(obj2);
+					event.setEventType(EventType.SPLITTING);
+					events.add(event);
+				}
 			}
 		}
 		

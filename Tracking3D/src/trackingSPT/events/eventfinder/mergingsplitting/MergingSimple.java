@@ -58,13 +58,15 @@ public class MergingSimple extends EventSeekerAction {
 			int []result = lapSolver.execute();
 			Event event;
 			for (int i = 0; i < result.length; i++) {
-				event = new Event(EventCause.MISSED);
-				obj1 = matrix.getSource(i);
-				obj2 = matrix.getTarget(result[i]);
-				event.setObjectSource(obj1);
-				event.setObjectTarget(obj2);
-				event.setEventType(EventType.MERGING);
-				events.add(event);
+				if(result[i] != -1) {
+					event = new Event(EventCause.MISSED);
+					obj1 = matrix.getSource(i);
+					obj2 = matrix.getTarget(result[i]);
+					event.setObjectSource(obj1);
+					event.setObjectTarget(obj2);
+					event.setEventType(EventType.MERGING);
+					events.add(event);
+				}
 			}
 		}
 		

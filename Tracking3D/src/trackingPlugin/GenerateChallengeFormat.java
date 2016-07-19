@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -67,7 +69,8 @@ public class GenerateChallengeFormat {
 				i++;
 			}
 			
-			if(obj != null && objectTree.getFrame() == 0) {
+			if(obj != null) {
+//			if(obj != null && objectTree.getFrame() == 0) {
 				for (int j = objectTree.getFrame(); j <= objectTree.getFrame(); j++) {
 					nodesPerFrame.add(new ArrayList<Node<Spot>>());
 				}
@@ -205,7 +208,19 @@ public class GenerateChallengeFormat {
 
         // Retrieve the paths to the segmented images
         // String[] paths = getSegPaths(NbPad, first);
-        ImageHandler seg = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), FILE_NAME_RESULT_SEG, 0, 2, 1);
+        File fileFolder = new File(dirSeg.getAbsolutePath());
+        String []frames = fileFolder.list();
+        List<String> framesList = Arrays.asList(frames);
+        Collections.sort(framesList);
+        frames = framesList.toArray(new String[framesList.size()]);
+        String fileName = frames[0];
+        int i = 1;
+        while(!(i >= frames.length || fileName.contains(".tif"))) {
+        	fileName = frames[i];
+        	i++;
+        }
+//        ImageHandler seg = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), FILE_NAME_RESULT_SEG, 0, 2, 1);
+        ImageHandler seg = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), fileName, 0, 2, 1);
 
         // Loop through the frames in which the colour of the objects will be changed
         for (int f = 0; f < numberOfFrames; f++) {
@@ -254,81 +269,96 @@ public class GenerateChallengeFormat {
 
         // Retrieve the paths to the segmented images
         // String[] paths = getSegPaths(NbPad, first);
+        File fileFolder = new File(dirSeg.getAbsolutePath());
+        String []frames = fileFolder.list();
+        List<String> framesList = Arrays.asList(frames);
+        Collections.sort(framesList);
+        frames = framesList.toArray(new String[framesList.size()]);
+        int k = 0;
+        String fileName = frames[k];
+        while(!(k >= frames.length || frames[k].contains(".tif"))) {
+        	k++;
+        }
 
         // Loop through the frames in which the colour of the objects will be changed
-        for (int i = 0; i < numberOfFrames; i++) {
-            // Open the segmented image located at the specified path
-            ImagePlus im = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), FILE_NAME_RESULT_SEG, 0, 2, i).getImagePlus();
-
-            // Extract the objects contained in the segmented image
-            Objects3DPopulation frame = new Objects3DPopulation(im);
-
-            // The object responsible of creating the new 3D image where the cell's detections
-            // will be coloured according to the colour of the first occurrence of the cell
-            ObjectCreator3D creator = new ObjectCreator3D(im.getImageStack());
-
-            // Extract the nodes containing the spots belonging to the current frame
-            List<Node<Spot>> nodesInFrame = getNodesInFrame(i);
-            printValuesNodes(nodesInFrame);
-            printValuesObj3D(frame.getObjectsList());
-
-            // Extract these spots' values and store them in a new list
-            ArrayList<Integer> values = new ArrayList<Integer>();
-
-            for (Node<Spot> nodesInFrame1 : nodesInFrame) {
-                values.add(nodesInFrame1.getData().value());
-            }
-
-            System.out.println("Is consistent - "+checkConsistenceBetweenLists(nodesInFrame, frame.getObjectsList()));
-            
-            // Loop through the objects present in the current frame
-//            System.out.println("size values == size frame objects - "+(values.size()==frame.getNbObjects()));
-            for (int j = 0; j < frame.getNbObjects(); j++) {
-
-                // Retrieve the value of the current object
-                int value = frame.getObject(j).getValue();
-//                if(i >= 8) {
-//                	System.out.println("Value of the object "+value);
-//                }
-
-                // Look for the index of the object's value in the list containing the values of the
-                // spots belonging to the current frame
-                int index = values.indexOf(value);
-
-                // If we find in the tree the spot modelling the current object (the algorithm
-                // may delete some detections when they are likely false positives )
-                if (index != -1) {
-
-                    // Retrieve the correspondent spot
-                    Spot spot = nodesInFrame.get(index).getData();
-
-                    // Sets the object's value to the spot's color
-                    // The value of the object determines its colour
-                    if (spot.getState() != Spot.FAKE) {
-                        frame.getObject(j).setValue(spot.getObjectColor()+1);
-//                        if(i >= 8) {
-                        	System.out.println("Frame "+i+" - Indice "+index+" - Object value "+spot.value()+" - ID "+nodesInFrame.get(index).getData().getID()+
-                        			" - Object color "+spot.getObjectColor()+" - Position X "+spot.getPosX()+", Y "+spot.getPosY()+", Z "+spot.getPosX());
-//                        }
-                    } else {
-                        frame.getObject(j).setValue(0);
-                        System.out.println("fake " + frame.getObject(j) + " in frame " + i);
-                    }
-                    // Draw the object with its new value (if it has changed) in the new image
-                    creator.drawObject(frame.getObject(j));
-                } else {
-                	System.out.println("index == -1");
-                }
-
-            }
-            // Create the new image containing the differently-coloured objects
-            ImagePlus res = new ImagePlus("Res", creator.getStack());
-
-            // Save the image under the specified folder
-            IJ.saveAsTiff(res, dirRes.getAbsolutePath() + "/" + FILE_NAME_RESULT_RES + IJ.pad(i + start, pad) + ".tif");
-//            if(i >= 8) {
-            	System.out.println();
-//            }
+        for (int i = 0; k < frames.length; k++) {
+        	fileName = frames[k];
+        	if(fileName.contains(".tif")) {
+	            // Open the segmented image located at the specified path
+	//            ImagePlus im = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), FILE_NAME_RESULT_SEG, 0, 2, i).getImagePlus();
+	            ImagePlus im = ImageJStatic.getImageSeg(dirSeg.getAbsolutePath(), fileName, 0, 2, i).getImagePlus();
+	
+	            // Extract the objects contained in the segmented image
+	            Objects3DPopulation frame = new Objects3DPopulation(im);
+	
+	            // The object responsible of creating the new 3D image where the cell's detections
+	            // will be coloured according to the colour of the first occurrence of the cell
+	            ObjectCreator3D creator = new ObjectCreator3D(im.getImageStack());
+	
+	            // Extract the nodes containing the spots belonging to the current frame
+	            List<Node<Spot>> nodesInFrame = getNodesInFrame(i);
+	            printValuesNodes(nodesInFrame);
+	            printValuesObj3D(frame.getObjectsList());
+	
+	            // Extract these spots' values and store them in a new list
+	            ArrayList<Integer> values = new ArrayList<Integer>();
+	
+	            for (Node<Spot> nodesInFrame1 : nodesInFrame) {
+	                values.add(nodesInFrame1.getData().value());
+	            }
+	
+	            System.out.println("Is consistent - "+checkConsistenceBetweenLists(nodesInFrame, frame.getObjectsList()));
+	            
+	            // Loop through the objects present in the current frame
+	//            System.out.println("size values == size frame objects - "+(values.size()==frame.getNbObjects()));
+	            for (int j = 0; j < frame.getNbObjects(); j++) {
+	
+	                // Retrieve the value of the current object
+	                int value = frame.getObject(j).getValue();
+	//                if(i >= 8) {
+	//                	System.out.println("Value of the object "+value);
+	//                }
+	
+	                // Look for the index of the object's value in the list containing the values of the
+	                // spots belonging to the current frame
+	                int index = values.indexOf(value);
+	
+	                // If we find in the tree the spot modelling the current object (the algorithm
+	                // may delete some detections when they are likely false positives )
+	                if (index != -1) {
+	
+	                    // Retrieve the correspondent spot
+	                    Spot spot = nodesInFrame.get(index).getData();
+	
+	                    // Sets the object's value to the spot's color
+	                    // The value of the object determines its colour
+	                    if (spot.getState() != Spot.FAKE) {
+	                        frame.getObject(j).setValue(spot.getObjectColor()+1);
+	//                        if(i >= 8) {
+	                        	System.out.println("Frame "+i+" - Indice "+index+" - Object value "+spot.value()+" - ID "+nodesInFrame.get(index).getData().getID()+
+	                        			" - Object color "+spot.getObjectColor()+" - Position X "+spot.getPosX()+", Y "+spot.getPosY()+", Z "+spot.getPosX());
+	//                        }
+	                    } else {
+	                        frame.getObject(j).setValue(0);
+	                        System.out.println("fake " + frame.getObject(j) + " in frame " + i);
+	                    }
+	                    // Draw the object with its new value (if it has changed) in the new image
+	                    creator.drawObject(frame.getObject(j));
+	                } else {
+	                	System.out.println("index == -1");
+	                }
+	
+	            }
+	            // Create the new image containing the differently-coloured objects
+	            ImagePlus res = new ImagePlus("Res", creator.getStack());
+	
+	            // Save the image under the specified folder
+	            IJ.saveAsTiff(res, dirRes.getAbsolutePath() + "/" + FILE_NAME_RESULT_RES + IJ.pad(i + start, pad) + ".tif");
+	//            if(i >= 8) {
+	            	System.out.println();
+	//            }	
+            	i++;
+        	}
         }
 
         System.out.println("End changing colors.");
