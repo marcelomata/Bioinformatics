@@ -15,7 +15,8 @@ import trackingSPT.objects3D.TrackingContextSPT;
 
 public class HandlerSimple extends Handler {
 	
-	private static double DISTANCE = 3;
+//	private static double DISTANCE = 3;
+	private static double DISTANCE = 6;
 
 	public HandlerSimple(TrackingContextSPT context) {
 		super(context);
@@ -100,10 +101,12 @@ public class HandlerSimple extends Handler {
 						context.addNewObject(obj3);
 						obj1.addChild(obj2);
 						obj2.setParent(obj1);
+						context.addNewObjectId(obj1.getId(), obj2);
 					} else {
 						context.addNewObject(obj2);
 						obj1.addChild(obj3);
 						obj3.setParent(obj1);
+						context.addNewObjectId(obj1.getId(), obj3);
 					}
 				}
 			} else {

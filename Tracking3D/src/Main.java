@@ -3,15 +3,34 @@ import trackingPlugin.PluginTracking;
 public class Main {
 	
 	public static void main(String[] args) {
-		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/02_RES/TRACK/");
+		
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_RES/TRACK/");
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/02_RES/TRACK/");
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/03_RES/TRACK/");
+		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/04_RES/TRACK/");
+		
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_GT");
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/02_GT");
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/03_GT");
+		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/04_GT");
+		
+		///////////////////////////////////////////////////////
+		
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DL-HeLa/01_RES/TRACK/");
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DL-HeLa/02_RES/TRACK/");
+
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DL-HeLa/01_GT");
+//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DL-HeLa/02_GT");
+		
+		///////////////////////////////////////////////////////
+		
 //		tracking.run("/home/marcelodmo/Documents/data/n3dh/Stack-filt-seg-01.tif");
 		
 //		tracking.run("/home/marcelodmo/Documents/data/Seg-1-50-smaller.tif");
 //		tracking.run("/home/marcelodmo/Documents/data/simulated_15f/");
 //		tracking.run("/home/marcelodmo/Documents/track/test/Seg-1.tif");
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_GT/SEG/");
-//		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_GT");
-		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/02_GT");
+
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-GOWT1-mini/");
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-GOWT1/");
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N3D-CHO-2/N3DH-CHO-training/01_SEG_60/");

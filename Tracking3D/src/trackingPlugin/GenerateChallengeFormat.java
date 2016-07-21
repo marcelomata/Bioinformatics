@@ -27,12 +27,10 @@ import trackingSPT.objects3D.TrackingResult3DSPT;
 public class GenerateChallengeFormat {
 	
 	private static final String FILE_NAME_RESULT_RES = "mask";
-	private static final String FILE_NAME_RESULT_SEG = "man_seg";
 
 	private List<Node<Spot>> roots;
 	private List<List<Node<Spot>>> nodesPerFrame;
 	private int numberOfFrames;
-//	private TrackingResult3DSPT result;
 	
 	private File dirSeg;
 	private File dirRes;
@@ -40,7 +38,6 @@ public class GenerateChallengeFormat {
 	public GenerateChallengeFormat(TrackingResult3DSPT result, File dirSeg, File dirRes) {
 		this.roots = new ArrayList<Node<Spot>>();
 		this.nodesPerFrame = new ArrayList<List<Node<Spot>>>();
-//		this.result = result;
 		this.dirSeg = dirSeg;
 		this.dirRes = dirRes;
 		this.numberOfFrames = result.getNumberOfFrames();
@@ -69,8 +66,7 @@ public class GenerateChallengeFormat {
 				i++;
 			}
 			
-			if(obj != null) {
-//			if(obj != null && objectTree.getFrame() == 0) {
+			if(obj != null && objectTree.getParent() == null) {
 				for (int j = objectTree.getFrame(); j <= objectTree.getFrame(); j++) {
 					nodesPerFrame.add(new ArrayList<Node<Spot>>());
 				}
@@ -315,10 +311,7 @@ public class GenerateChallengeFormat {
 	
 	                // Retrieve the value of the current object
 	                int value = frame.getObject(j).getValue();
-	//                if(i >= 8) {
-	//                	System.out.println("Value of the object "+value);
-	//                }
-	
+
 	                // Look for the index of the object's value in the list containing the values of the
 	                // spots belonging to the current frame
 	                int index = values.indexOf(value);
@@ -334,10 +327,8 @@ public class GenerateChallengeFormat {
 	                    // The value of the object determines its colour
 	                    if (spot.getState() != Spot.FAKE) {
 	                        frame.getObject(j).setValue(spot.getObjectColor()+1);
-	//                        if(i >= 8) {
 	                        	System.out.println("Frame "+i+" - Indice "+index+" - Object value "+spot.value()+" - ID "+nodesInFrame.get(index).getData().getID()+
 	                        			" - Object color "+spot.getObjectColor()+" - Position X "+spot.getPosX()+", Y "+spot.getPosY()+", Z "+spot.getPosX());
-	//                        }
 	                    } else {
 	                        frame.getObject(j).setValue(0);
 	                        System.out.println("fake " + frame.getObject(j) + " in frame " + i);
@@ -354,9 +345,7 @@ public class GenerateChallengeFormat {
 	
 	            // Save the image under the specified folder
 	            IJ.saveAsTiff(res, dirRes.getAbsolutePath() + "/" + FILE_NAME_RESULT_RES + IJ.pad(i + start, pad) + ".tif");
-	//            if(i >= 8) {
-	            	System.out.println();
-	//            }	
+	            System.out.println();
             	i++;
         	}
         }
@@ -391,32 +380,8 @@ public class GenerateChallengeFormat {
     	return false;
 	}
 
-	private ArrayList<Node<Spot>> getNodesInFrame(Node<Spot> root, int frame) {
-        ArrayList<Node<Spot>> nodesInFrame = new ArrayList<Node<Spot>>();
-
-        if (root.getData().getFrame() < frame) {
-            ArrayList<Node<Spot>> children = root.getChildren();
-            for (Node<Spot> child : children) {
-                nodesInFrame.addAll(getNodesInFrame(child, frame));
-            }
-        } else if (root.getData().getFrame() == frame) {
-            nodesInFrame.add(root);
-        }
-
-        return nodesInFrame;
-    }
-
     private List<Node<Spot>> getNodesInFrame(int frame) {
-
-//        ArrayList<Node<Spot>> nodesInFrame = new ArrayList<Node<Spot>>();
-//
-//        for (Node<Spot> root : roots) {
-//            nodesInFrame.addAll(getNodesInFrame(root, frame));
-//        }
-//
-//        return nodesInFrame;
     	return nodesPerFrame.get(frame);
-
     }
 
 }
