@@ -1,9 +1,9 @@
 package trackingSPT.mcib3DObjects;
 
 import mcib3d.geom.Objects3DPopulation;
-import trackingInterface.ObjectAction;
+import trackingInterface.Frame;
 
-public class Objects3DPopulationSPT implements ObjectAction {
+public class Objects3DPopulationSPT implements Frame {
 	
 	private Objects3DPopulation object3D;
 	

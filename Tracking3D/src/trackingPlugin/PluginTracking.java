@@ -23,19 +23,19 @@ public class PluginTracking implements PlugIn {
 		File image = new File(arg);
 		ImagePlus imp = null;
 		TrackingStrategy tracking;
+		File dirSeg = new File(image.getAbsolutePath()+"/SEG/");
+		File dirTrack = new File(image.getAbsolutePath()+"/TRACK/");
 		if(image.isFile()) {
 			Opener open = new Opener();
 			imp = open.openImage(image.getAbsolutePath());
-			tracking = new TrackingSPT(new ObjectActionSPT4D(imp));
+			tracking = new TrackingSPT(dirSeg, dirTrack);
 		} else {
-//			tracking = new TrackingSPT(new ObjectActionSPT4D(arg, image.getName()+"-"));
-			tracking = new TrackingSPT(new ObjectActionSPT4D(image.getAbsolutePath()+"/SEG/", "man_seg"));
+			tracking = new TrackingSPT(dirSeg, dirTrack);
 		}
 		
 		tracking.run();
 		
 		System.out.println("Generating Challenge Format");
-		File dirSeg = new File(image.getAbsolutePath()+"/SEG/");
 		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirRes);
 		gen.computeColorChallenge(1);
 		gen.challengeFormat(0);

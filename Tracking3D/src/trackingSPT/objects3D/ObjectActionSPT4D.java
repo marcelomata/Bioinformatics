@@ -3,14 +3,13 @@ package trackingSPT.objects3D;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
-import ij.util.ArrayUtil;
 import mcib3d.geom.Objects3DPopulation;
+import trackingInterface.Frame;
 import trackingPlugin.ImageJStatic;
 import trackingSPT.mcib3DObjects.Objects3DPopulationSPT;
 
@@ -25,15 +24,15 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	private int numberOfSlices; 
 	private int currentFrame;
 	
-	/**
-	 * 
-	 * @param imp It has to be a 4D image (3D+t)
-	 */
-	public ObjectActionSPT4D(ImagePlus imp) {
-		init();
-		this.file = imp;
-		loadFrames3D(imp);
-	}
+//	/**
+//	 * 
+//	 * @param imp It has to be a 4D image (3D+t)
+//	 */
+//	public ObjectActionSPT4D(ImagePlus imp) {
+//		init();
+//		this.file = imp;
+//		loadFrames3D(imp);
+//	}
 	
 	/**
 	 * 
@@ -114,7 +113,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	}
 
 	@Override
-	public Objects3DPopulationSPT getFrame() {
+	public Frame getFrame() {
 		if(!frameByFrame) {
 			return population3DPlusT.get(currentFrame);
 		} else {

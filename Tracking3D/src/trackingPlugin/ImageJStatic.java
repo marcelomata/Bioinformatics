@@ -49,5 +49,16 @@ public class ImageJStatic {
 
         return ImageHandler.wrap(plus);
     }
+	
+	public static ImageHandler getImageRaw(File directory, String fileName, int t) {
+	 	String fname = directory.getAbsolutePath()+"/"+fileName;
+        ImagePlus plus = IJ.openImage(fname);
+        if (plus == null) {
+            System.out.println("No image " + fname);
+            return null;
+        }
+
+        return ImageHandler.wrap(plus);
+    }
 
 }

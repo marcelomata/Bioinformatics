@@ -5,9 +5,8 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Point3D;
-import trackingInterface.ObjectAction;
 
-public class ObjectTree3D implements ObjectAction {
+public class ObjectTree3D {
 	
 	private Object3D object;
 	private ObjectTree3D parent;

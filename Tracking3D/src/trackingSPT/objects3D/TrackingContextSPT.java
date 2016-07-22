@@ -1,5 +1,6 @@
 package trackingSPT.objects3D;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,11 +13,14 @@ import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.events.eventfinder.EventSeekerObjInterface;
 import trackingSPT.events.eventhandler.HandlerObject;
+import trackingSPT.segmentation.SegmentationObject;
 
-public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObject {
+public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInterface, HandlerObject {
 	
 	private TemporalPopulation3D temporalPopulation;
 	private List<MissedObject> misses;
+	private File rawDataDir;
+	private File segmentedDataDir;
 
 	/////////////////
 	//ObjectActionSPT
@@ -31,9 +35,11 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 	//////////////////////////////////////
 	private Map<EventType, List<Event>> eventListMap;
 	
-	public TrackingContextSPT(TrackingResult3DSPT result) {
+	public TrackingContextSPT(TrackingResult3DSPT result, File segmentedDataDir, File rawDataDir) {
 		this.result = result;
 		this.misses = new ArrayList<MissedObject>();
+		this.segmentedDataDir = segmentedDataDir;
+		this.rawDataDir = rawDataDir;
 		
 		clear();
 	}
@@ -181,6 +187,16 @@ public class TrackingContextSPT implements EventSeekerObjInterface, HandlerObjec
 
 	public void reconnectMissedObject(Integer id) {
 		result.getMotionField().reconnectMissedObjectId(id);
+	}
+
+	@Override
+	public File getRawDataDir() {
+		return this.rawDataDir;
+	}
+
+	@Override
+	public File getSegmentedDataDir() {
+		return this.segmentedDataDir;
 	}
 	
 }

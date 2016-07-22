@@ -1,12 +1,11 @@
 package trackingSPT.objects3D;
 
-import trackingInterface.ObjectAction;
-import trackingSPT.mcib3DObjects.Objects3DPopulationSPT;
+import trackingInterface.Frame;
 
-public interface TemporalPopulation3D extends ObjectAction {
+public interface TemporalPopulation3D {
 	
-	public abstract Objects3DPopulationSPT getObjectT();
+	public abstract Frame getObjectT();
 	
-	public abstract Objects3DPopulationSPT getObjectTPlus1();
+	public abstract Frame getObjectTPlus1();
 	
 }

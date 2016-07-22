@@ -3,10 +3,9 @@ package trackingSPT.objects3D;
 import java.util.List;
 
 import mcib3d.geom.Point3D;
-import trackingInterface.ObjectAction;
 import trackingSPT.MotionField;
 
-public abstract class TrackingResultObjectAction implements ObjectAction {
+public abstract class TrackingResultObjectAction {
 	
 	protected MovieObjectAction objectAction;
 	

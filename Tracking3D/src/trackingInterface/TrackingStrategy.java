@@ -1,5 +1,7 @@
 package trackingInterface;
 
+import java.io.File;
+
 import trackingSPT.TrackingAction;
 import trackingSPT.objects3D.MovieObjectAction;
 import trackingSPT.objects3D.TrackingResultObjectAction;
@@ -13,13 +15,13 @@ public abstract class TrackingStrategy extends Strategy {
 	
 	protected TrackingResultObjectAction result;
 	
-	public TrackingStrategy(MovieObjectAction movie) {
+	public TrackingStrategy(File segmentedDataDir, File rawDataDir) {
 		super();
-		init(movie);
+		init(segmentedDataDir, rawDataDir);
 		build();
 	}
 	
-	public abstract void init(MovieObjectAction movie);
+	public abstract void init(File segmentedDataDir, File rawDataDir);
 	
 	public abstract void build();
 	

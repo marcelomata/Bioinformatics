@@ -3,10 +3,9 @@ package trackingSPT.events.eventfinder.mergingsplitting;
 import java.util.List;
 import java.util.Map;
 
-import trackingInterface.ObjectAction;
 import trackingSPT.objects3D.ObjectTree3D;
 
-public interface SplittingMergingObj extends ObjectAction {
+public interface SplittingMergingObj {
 	
 	public abstract List<ObjectTree3D> getLeftTargetObjects();
 	

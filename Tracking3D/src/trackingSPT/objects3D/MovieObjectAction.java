@@ -1,10 +1,10 @@
 package trackingSPT.objects3D;
 
-import trackingInterface.ObjectAction;
+import trackingInterface.Frame;
 
 public interface MovieObjectAction {
 	
-	ObjectAction getFrame();
+	Frame getFrame();
 	
 	void nextFrame();
 	

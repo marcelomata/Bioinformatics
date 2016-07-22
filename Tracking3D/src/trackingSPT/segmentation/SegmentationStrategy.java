@@ -2,38 +2,37 @@ package trackingSPT.segmentation;
 
 import trackingInterface.Action;
 import trackingInterface.Strategy;
-import trackingSPT.events.eventfinder.association.AssociationMinDistance;
-import trackingSPT.events.eventfinder.mergingsplitting.MergingSimple;
-import trackingSPT.events.eventfinder.mergingsplitting.SplittingSimple;
 import trackingSPT.objects3D.TrackingContextSPT;
 
 public class SegmentationStrategy extends Strategy {
 	
+	private TrackingContextSPT context;
 
 	public SegmentationStrategy(TrackingContextSPT trackingContext) {
 		super();
+		this.context = trackingContext;
 		build();
 	}
 	
 	public void build() {
-//		addEventSeekerAction(new AssociationMinDistance(context));
-//		addEventSeekerAction(new SplittingSimple(context));
-//		addEventSeekerAction(new MergingSimple(context));
+		addEventSegmentationAction(new FilteringAction(context));
+		addEventSegmentationAction(new MathMorphologyAction(context));
+		addEventSegmentationAction(new Segmentation3D(context));
 	}
 	
 	public void run() {
-//		EventSeekerAction current = (EventSeekerAction) nextAction();
-//		current.execute();
-//		
-//		current = (EventSeekerAction) nextAction();
-//		current.execute();
-//		
-//		current = (EventSeekerAction) nextAction();
-//		current.execute();
+		SegmentationAction current = (SegmentationAction) nextAction();
+		current.execute();
+		
+		current = (SegmentationAction) nextAction();
+		current.execute();
+		
+		current = (SegmentationAction) nextAction();
+		current.execute();
 	}
 	
-//	public void addEventSeekerAction(Action action) {
-//		addAction(action);
-//	}
+	public void addEventSegmentationAction(Action action) {
+		addAction(action);
+	}
 
 }

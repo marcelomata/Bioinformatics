@@ -3,10 +3,9 @@ package trackingSPT.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import trackingInterface.ObjectAction;
 import trackingSPT.events.enums.EventType;
 
-public class EventMapItem implements ObjectAction {
+public class EventMapItem {
 
 	private List<Event> eventList;
 	private EventType type;
