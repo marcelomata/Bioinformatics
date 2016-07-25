@@ -35,11 +35,11 @@ public class GenerateChallengeFormat {
 	private File dirSeg;
 	private File dirRes;
 	
-	public GenerateChallengeFormat(TrackingResult3DSPT result, File dirSeg, File dirRes) {
+	public GenerateChallengeFormat(TrackingResult3DSPT result, File dirSeg) {
 		this.roots = new ArrayList<Node<Spot>>();
 		this.nodesPerFrame = new ArrayList<List<Node<Spot>>>();
 		this.dirSeg = dirSeg;
-		this.dirRes = dirRes;
+		this.dirRes = new File("");
 		this.numberOfFrames = result.getNumberOfFrames();
 		loadRoots(result);
 	}

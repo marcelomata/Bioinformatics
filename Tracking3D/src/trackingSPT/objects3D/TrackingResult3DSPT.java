@@ -19,7 +19,7 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	private double minY;
 	private double minZ;
 	
-	public TrackingResult3DSPT(ObjectActionSPT4D inObject) {
+	public TrackingResult3DSPT(MovieObjectAction inObject) {
 		super(inObject);
 		this.maxX = -9999;
 		this.maxY = -9999;
@@ -40,6 +40,9 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	@Override
 	public void init() {
 		this.motionField = new MotionField();
+	}
+	
+	public void initRoots() {
 		Objects3DPopulationSPT populationAdapter = (Objects3DPopulationSPT) this.objectAction.getFrame();
 		Objects3DPopulation population = populationAdapter.getObject3D();
 		Object3D obj;

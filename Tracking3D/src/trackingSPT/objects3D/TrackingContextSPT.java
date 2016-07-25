@@ -2,11 +2,14 @@ package trackingSPT.objects3D;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ij.ImagePlus;
 import mcib3d.geom.Objects3DPopulation;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
@@ -21,10 +24,13 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	private List<MissedObject> misses;
 	private File rawDataDir;
 	private File segmentedDataDir;
+	private File[] framesRawFile;
+	
 
 	/////////////////
 	//ObjectActionSPT
 	private TrackingResultObjectAction result;
+	private MovieObjectAction inObject;
 	
 	/////////////////////////////////////////////
 	//AssociatedObjectList -> SplittingMergingObj
@@ -35,13 +41,26 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	//////////////////////////////////////
 	private Map<EventType, List<Event>> eventListMap;
 	
-	public TrackingContextSPT(TrackingResult3DSPT result, File segmentedDataDir, File rawDataDir) {
-		this.result = result;
+	public TrackingContextSPT(File segmentedDataDir, File rawDataDir) {
+		this.inObject = new ObjectActionSPT4D(segmentedDataDir.getAbsolutePath(), "man_seg", rawDataDir.getAbsolutePath(), "t");
+		this.result = new TrackingResult3DSPT(inObject);
 		this.misses = new ArrayList<MissedObject>();
 		this.segmentedDataDir = segmentedDataDir;
 		this.rawDataDir = rawDataDir;
+		loadRawFiles();
 		
 		clear();
+	}
+	
+	public void setTemporalPopulation() {
+		this.temporalPopulation = this.inObject.getTemporalPopulation3D();
+	}
+
+	private void loadRawFiles() {
+        framesRawFile = rawDataDir.listFiles();
+        List<File> framesList = Arrays.asList(framesRawFile);
+        Collections.sort(framesList);
+        framesRawFile = framesList.toArray(new File[framesList.size()]);
 	}
 
 	///////////////////////
@@ -197,6 +216,30 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	@Override
 	public File getSegmentedDataDir() {
 		return this.segmentedDataDir;
+	}
+
+	public int getFrameTime() {
+		return inObject.getFrameTime();
+	}
+	
+	public int getSize() {
+		return inObject.getSize();
+	}
+
+	public void nextFrame() {
+		inObject.nextFrame();
+	}
+	
+	public ImagePlus getCurrentRawFrame() {
+		return inObject.getRawFrame();
+	}
+	
+	public ImagePlus getCurrentSegFrame() {
+		return inObject.getSegFrame();
+	}
+
+	public String getSegFileName() {
+		return inObject.getSegFileName();
 	}
 	
 }

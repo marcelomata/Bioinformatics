@@ -9,7 +9,7 @@ public abstract class TrackingResultObjectAction {
 	
 	protected MovieObjectAction objectAction;
 	
-	public TrackingResultObjectAction(ObjectActionSPT4D inObject) {
+	public TrackingResultObjectAction(MovieObjectAction inObject) {
 		this.objectAction = inObject;
 		init();
 	}
