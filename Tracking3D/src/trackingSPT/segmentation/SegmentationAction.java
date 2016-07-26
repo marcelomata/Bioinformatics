@@ -9,11 +9,11 @@ import trackingSPT.objects3D.TrackingContextSPT;
 
 public abstract class SegmentationAction implements Action {
 
-	protected static final double MIN_SIZE = 100;
-	protected static final double MAX_SIZE = 100000;
+	protected static final double MIN_SIZE = 1000;
+	protected static final double MAX_SIZE = 5000;
 	protected static final double THRASHOLD = 30;
 	protected static final double RADIUS = 3;
-	protected static final double THRESHOLD = 50;
+	protected static final double THRESHOLD = 30;
 	protected static final String FILE_NAME = "mask";
 	
 	protected File segmentedDataDir;

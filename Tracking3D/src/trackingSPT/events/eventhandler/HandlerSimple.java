@@ -24,6 +24,10 @@ public class HandlerSimple extends Handler {
 
 	@Override
 	public void execute() {
+		if(context.getCurrentFrame() < 1) {
+			return;
+		}
+		
 		List<Event> associations = this.context.getEventList(EventType.ASSOCIATION);
 		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
 		List<Event> mergings = this.context.getEventList(EventType.MERGING);

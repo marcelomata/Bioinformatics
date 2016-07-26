@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import ij.IJ;
 import ij.ImagePlus;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
@@ -146,7 +147,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		 Duplicator dup = new Duplicator();
 		 ImagePlus timedup;
 		if(readFromDirectory) {
-	 		timedup = ImageJStatic.getImageSeg(directorySeg, fileSegName, t).getImagePlus();
+	 		timedup = ImageJStatic.getImage(directorySeg, fileSegName+IJ.pad(t, 2)+".tif").getImagePlus();
 	 		populationT =  new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
 		} else {
 			int[] dim = file.getDimensions();
@@ -158,7 +159,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	
 	private ImagePlus getTRawFrame(int t) {
 		 ImagePlus timedup;
- 		 timedup = ImageJStatic.getImageSeg(directoryRaw, rawFramesFile[t].getName(), t).getImagePlus();
+ 		 timedup = ImageJStatic.getImage(directoryRaw, rawFramesFile[t].getName()).getImagePlus();
  		 return timedup;
 	}
 	
@@ -185,7 +186,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 
 	public ImagePlus getTSegFrame(int t) {
 		ImagePlus timedup;
-		timedup = ImageJStatic.getImageSeg(directorySeg, fileSegName, t).getImagePlus();
+		timedup = ImageJStatic.getImage(directorySeg, fileSegName+IJ.pad(t, 2)+".tif").getImagePlus();
 		return timedup;
 	}
 	

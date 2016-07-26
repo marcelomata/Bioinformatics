@@ -16,7 +16,7 @@ public class MathMorphologyAction extends SegmentationAction {
 	public void execute() {
 		float radXY = 1;
         float radZ = 0;
-		ImagePlus plus = null;
+		ImagePlus plus = context.getCurrentSegFrame();
 		ImageInt input = ImageInt.wrap(plus);
 		BinaryMorpho.binaryErode(input, radXY, radZ, ThreadUtil.getNbCpus());
 		saveImage(input.getImagePlus(), context.getSegFileName());

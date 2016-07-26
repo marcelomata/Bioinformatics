@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Set;
 
 import ij.ImagePlus;
+import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
+import trackingInterface.Frame;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventType;
@@ -54,6 +56,18 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	
 	public void setTemporalPopulation() {
 		this.temporalPopulation = this.inObject.getTemporalPopulation3D();
+		if(getCurrentFrame() == 0) {
+			loadRoots();
+		}
+	}
+
+	private void loadRoots() {
+		Frame frame = temporalPopulation.getObjectTPlus1();
+		Objects3DPopulation population = frame.getObject3D();
+		List<Object3D> obj3D = population.getObjectsList();
+		for (int i = 0; i < obj3D.size(); i++) {
+			result.addNewObject(new ObjectTree3D(obj3D.get(i), getCurrentFrame()));
+		}
 	}
 
 	private void loadRawFiles() {

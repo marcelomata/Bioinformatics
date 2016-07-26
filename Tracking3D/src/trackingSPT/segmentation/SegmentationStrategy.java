@@ -29,6 +29,8 @@ public class SegmentationStrategy extends Strategy {
 		
 		current = (SegmentationAction) nextAction();
 		current.execute();
+
+		context.setTemporalPopulation();
 	}
 	
 	public void addEventSegmentationAction(Action action) {

@@ -14,7 +14,9 @@ public class EventSeekerTrackingAction extends TrackingAction {
 
 	@Override
 	public void execute() {
-		this.eventSeeker.run();
+		if(context.getCurrentFrame() > 0) {
+			this.eventSeeker.run();
+		}
 	}
 
 }

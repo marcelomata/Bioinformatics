@@ -42,6 +42,7 @@ public class TrackingSPT extends TrackingStrategy {
 			context.nextFrame();
 			System.out.println("################################");
 		}
+		result = context.getResult();
 	}
 
 	@Override

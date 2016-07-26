@@ -37,10 +37,9 @@ public class ImageJStatic {
         return ImageHandler.wrap(plus);
     }
 	
-	public static ImageHandler getImageSeg(File directory, String fileName, int t) {
+	public static ImageHandler getImage(File directory, String fileName) {
+//	 	String fname = directory.getAbsolutePath()+"/"+fileName+IJ.pad(t, 2)+".tif";
 	 	String fname = directory.getAbsolutePath()+"/"+fileName;
-//	 	String fname = directory.getAbsolutePath()+"/"+fileName+IJ.pad(t-1, 2)+".tif";
-//	 	String fname = directory.getAbsolutePath()+"/"+fileName+t+".tif";
         ImagePlus plus = IJ.openImage(fname);
         if (plus == null) {
             System.out.println("No image " + fname);
