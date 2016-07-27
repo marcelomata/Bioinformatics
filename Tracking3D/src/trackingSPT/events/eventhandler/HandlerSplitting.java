@@ -1,10 +1,8 @@
 package trackingSPT.events.eventhandler;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
-import mcib3d.geom.Object3D;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.math.CostMatrix;
@@ -13,63 +11,19 @@ import trackingSPT.objects3D.MissedObject;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
-public class HandlerSimple extends Handler {
+public class HandlerSplitting extends EventHandlerAction {
 	
-//	private static double DISTANCE = 3;
-//	private static double DISTANCE = 6;
-
-	public HandlerSimple(TrackingContextSPT context) {
+	public HandlerSplitting(TrackingContextSPT context) {
 		super(context);
 	}
 
 	@Override
 	public void execute() {
-		if(context.getCurrentFrame() < 1) {
-			return;
-		}
-		
-		List<Event> associations = this.context.getEventList(EventType.ASSOCIATION);
 		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
-		List<Event> mergings = this.context.getEventList(EventType.MERGING);
 		
-		System.out.println("Association Events -> "+associations.size());
 		System.out.println("Splitting Events -> "+splittings.size());
-		System.out.println("Merging Events -> "+mergings.size());
 		
-		System.out.println("Mean of shorter distances -> " + context.getMeanDistanceFrame());
-		
-		handleAssociations(associations);
 		handleSplitting(splittings);
-		handleMergings(mergings);	
-//		result.fillFinishedTrackings();
-//		addNullToMisses(context.getMisses());
-//		System.out.println(result.getMotionField().isDifferentNumber());
-	}
-
-	private void handleMergings(List<Event> mergings) {
-		ObjectTree3D obj1;
-		ObjectTree3D obj2;
-		double distance;
-		//overlap
-		for (Event event : mergings) {
-			obj1 = event.getObjectSource();
-			obj2 = event.getObjectTarget();
-			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			//if the closest is near so a merge sould happened
-			if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
-				context.addMissed(obj1);
-			} else {
-				context.finishObjectTracking(obj1);
-			}
-		}
-	}
-
-	private double getMaxAxisBoundBox(Object3D object) {
-		double x = object.getXmax() - object.getXmin();
-		double y = object.getYmax() - object.getYmin();
-		double z = object.getZmax() - object.getZmin();
-		double ret = (x > y ? (x > z ? x : z) : (y > z ? y : z) / 8);
-		return ret > 20 ? 20 : ret;
 	}
 
 	private void handleSplitting(List<Event> splittings) {
@@ -119,34 +73,6 @@ public class HandlerSimple extends Handler {
 				context.addNewObject(obj2);
 			}
 		}
-	}
-
-	private void handleAssociations(List<Event> associations) {
-		Event temp = null;
-		double distance;
-		for (int i = 0; i < associations.size(); i++) {
-			temp = associations.get(i);
-			ObjectTree3D obj1 = temp.getObjectSource();
-			ObjectTree3D obj2 = temp.getObjectTarget();
-			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			double comp = getDistCenterMax(obj1.getObject());
-			comp = Double.isNaN(comp) ? context.getMeanDistanceFrame() : comp; 
-			if(distance < (comp*context.getMeanDistanceFrame())) {
-				context.addNewObjectId(obj1.getId(), obj2);
-				obj2.setParent(obj1);
-				obj1.addChild(obj2);
-			} else {
-				context.finishObjectTracking(obj1);
-				context.addNewObject(obj2);
-			}
-		}
-	}
-	
-	private double getDistCenterMax(Object3D object) {
-		double x = object.getXmax() - object.getXmin();
-		double y = object.getYmax() - object.getYmin();
-		double z = object.getZmax() - object.getZmin();
-		return x > y ? (x > z ? x : z) : (y > z ? y : z);
 	}
 
 	private void reconnect(List<MissedObject> misses, List<Event> splittings) {

@@ -32,6 +32,8 @@ public class EventSeekerStrategy extends Strategy {
 		
 		current = (EventSeekerAction) nextAction();
 		current.execute();
+		
+		context.calcMeanDistance();
 	}
 	
 	public void addEventSeekerAction(Action action) {

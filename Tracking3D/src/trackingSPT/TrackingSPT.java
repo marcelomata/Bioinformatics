@@ -5,7 +5,7 @@ import java.io.File;
 
 import trackingInterface.TrackingStrategy;
 import trackingSPT.events.eventfinder.EventSeekerTrackingAction;
-import trackingSPT.events.eventhandler.HandlerSimple;
+import trackingSPT.events.eventhandler.EventHandlerTrackingAction;
 import trackingSPT.objects3D.TrackingContextSPT;
 import trackingSPT.segmentation.SegmentationTrackingAction;
 
@@ -21,7 +21,7 @@ public class TrackingSPT extends TrackingStrategy {
 	public void build() {
 		addTrackingAction(new SegmentationTrackingAction(context));
 		addTrackingAction(new EventSeekerTrackingAction(context));
-		addTrackingAction(new HandlerSimple(context));
+		addTrackingAction(new EventHandlerTrackingAction(context));
 	}
 
 	@Override

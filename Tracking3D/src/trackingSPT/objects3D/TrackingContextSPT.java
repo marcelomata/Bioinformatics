@@ -28,6 +28,9 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	private File segmentedDataDir;
 	private File[] framesRawFile;
 	
+	private double[] meanDistFrame;
+	private double[] numberOfDist;
+	
 
 	/////////////////
 	//ObjectActionSPT
@@ -49,6 +52,8 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		this.misses = new ArrayList<MissedObject>();
 		this.segmentedDataDir = segmentedDataDir;
 		this.rawDataDir = rawDataDir;
+		this.meanDistFrame = new double[inObject.getSize()];
+		this.numberOfDist = new double[inObject.getSize()];
 		loadRawFiles();
 		
 		clear();
@@ -59,6 +64,11 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		if(getCurrentFrame() == 0) {
 			loadRoots();
 		}
+	}
+
+	public void addDistanceValue(double value) {
+		this.meanDistFrame[getCurrentFrame()] += value;
+		this.numberOfDist[getCurrentFrame()]++;
 	}
 
 	private void loadRoots() {
@@ -254,6 +264,14 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 
 	public String getSegFileName() {
 		return inObject.getSegFileName();
+	}
+
+	public void calcMeanDistance() {
+		meanDistFrame[getCurrentFrame()] /= numberOfDist[getCurrentFrame()];
+	}
+
+	public double getMeanDistanceFrame() {
+		return meanDistFrame[getCurrentFrame()];
 	}
 	
 }

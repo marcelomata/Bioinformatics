@@ -38,7 +38,6 @@ public class AssociationMinDistance extends AssociationSeeker {
 		List<ObjectTree3D> leftTargetObject3DList = new ArrayList<ObjectTree3D>();
 		CostMatrix matrix = new CostMatrix(leftSourceObject3DList.size(), object3DListTarget.size());
 		
-		
 		for (Object3D object3d : object3DListTarget) {
 			leftTargetObject3DList.add(new ObjectTree3D(object3d, context.getCurrentFrame()));
 		}
@@ -86,6 +85,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 				event = new Event(EventCause.MINOR_DISTANCE);
 				obj2 = matrix.getTarget(j);
 				context.addAssociation(obj1, obj2);
+				context.addDistanceValue(obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()));
 				event.setObjectSource(obj1);
 				event.setObjectTarget(obj2);
 				events.add(event);
@@ -111,7 +111,6 @@ public class AssociationMinDistance extends AssociationSeeker {
 			for (int j = 0; j < list2.size(); j++) {
 				obj2 = list2.get(j);
 				matrix.addObjectTarget(obj2, j);
-				//distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 				distance = function.calcDistance(obj1, obj2);
 				matrix.setCost(i, j, distance);
 			}
