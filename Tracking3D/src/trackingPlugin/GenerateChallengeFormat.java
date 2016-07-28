@@ -39,7 +39,7 @@ public class GenerateChallengeFormat {
 		this.roots = new ArrayList<Node<Spot>>();
 		this.nodesPerFrame = new ArrayList<List<Node<Spot>>>();
 		this.dirSeg = dirSeg;
-		this.dirRes = new File("");
+		this.dirRes = new File(dirSeg.getParentFile().getAbsolutePath());
 		this.numberOfFrames = result.getNumberOfFrames();
 		loadRoots(result);
 	}

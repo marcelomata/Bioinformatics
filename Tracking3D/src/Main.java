@@ -7,12 +7,14 @@ public class Main {
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_RES/TRACK/");
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/02_RES/TRACK/");
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/03_RES/TRACK/");
-		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/");
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/");
+		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N3D-CHO-2/N3DH-CHO-testing/");
 		
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/01_GT");
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/02_GT");
 //		tracking.run("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/03_GT");
-		tracking.run("04");
+//		tracking.run("04");
+		tracking.run("01");
 		
 		///////////////////////////////////////////////////////
 		

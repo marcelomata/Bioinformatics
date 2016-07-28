@@ -2,7 +2,6 @@ package trackingPlugin;
 import java.io.File;
 
 import cell3DRenderer.Particles4DJOGLRenderer;
-import ij.io.Opener;
 import ij.plugin.PlugIn;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.TrackingSPT;
@@ -28,6 +27,12 @@ public class PluginTracking implements PlugIn {
 		if(image.isFile()) {
 			tracking = new TrackingSPT(dirSeg, dirTrack);
 		} else {
+			if(!dirSeg.exists()) {
+				dirSeg.mkdirs();
+			}
+			if(!dirRaw.exists()) {
+				dirRaw.mkdirs();
+			}
 			tracking = new TrackingSPT(dirSeg, dirRaw);
 		}
 		

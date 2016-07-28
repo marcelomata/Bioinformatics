@@ -31,6 +31,10 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	private double[] meanDistFrame;
 	private double[] numberOfDist;
 	
+	private double height;
+	private double width;
+	private double depth;
+	private boolean setBoundbox;
 
 	/////////////////
 	//ObjectActionSPT
@@ -255,7 +259,14 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	}
 	
 	public ImagePlus getCurrentRawFrame() {
-		return inObject.getRawFrame();
+		ImagePlus imp = inObject.getRawFrame();
+		if(!setBoundbox) {
+			height = imp.getFileInfo().height;
+			width = imp.getFileInfo().width;
+			depth = imp.getFileInfo().nImages * imp.getFileInfo().pixelDepth;
+			setBoundbox = true;
+		}
+		return imp;
 	}
 	
 	public ImagePlus getCurrentSegFrame() {
@@ -272,6 +283,18 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 
 	public double getMeanDistanceFrame() {
 		return meanDistFrame[getCurrentFrame()];
+	}
+
+	public double getHeight() {
+		return height;
+	}
+
+	public double getWidht() {
+		return width;
+	}
+
+	public double getDepth() {
+		return depth;
 	}
 	
 }
