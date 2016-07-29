@@ -8,6 +8,7 @@ import java.util.List;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.io.FileInfo;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.Frame;
@@ -22,12 +23,13 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	private File directorySeg;
 	private File directoryRaw;
 	private String fileSegName;
-	private String fileRawName;
+//	private String fileRawName;
 	private ImagePlus file;
 	private int numberOfFrames; 
 	private int currentFrame;
-	private File []framesFile;
+//	private File []framesFile;
 	private File []rawFramesFile;
+	private FileInfo[] fileInfo;
 	
 //	/**
 //	 * 
@@ -46,7 +48,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	public ObjectActionSPT4D(String folderSeg, String fileSegName, String folderRaw, String fileRawName) {
 		init();
 		this.fileSegName = fileSegName;
-		this.fileRawName = fileRawName;
+//		this.fileRawName = fileRawName;
 		this.directorySeg = new File(folderSeg);
 		this.directoryRaw = new File(folderRaw);
 		loadRawFrames3D(folderRaw);

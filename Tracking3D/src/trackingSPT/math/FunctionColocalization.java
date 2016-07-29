@@ -15,7 +15,7 @@ public class FunctionColocalization implements FunctionCalcObjectRelation {
         if(norm == 1) {
         	return 100;
         }
-		return  (1-norm)*100;
+		return (1-norm)*100;
 	}
 
 }

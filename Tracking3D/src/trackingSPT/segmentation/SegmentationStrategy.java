@@ -30,6 +30,7 @@ public class SegmentationStrategy extends Strategy {
 //		current = (SegmentationAction) nextAction();
 //		current.execute();
 
+		context.getCurrentRawFrame();
 		context.setTemporalPopulation();
 	}
 	

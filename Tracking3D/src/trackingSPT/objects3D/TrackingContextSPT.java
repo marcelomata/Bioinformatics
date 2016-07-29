@@ -260,17 +260,23 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	
 	public ImagePlus getCurrentRawFrame() {
 		ImagePlus imp = inObject.getRawFrame();
+		setBoundBox(imp);
+		return imp;
+	}
+	
+	public ImagePlus getCurrentSegFrame() {
+		ImagePlus imp = inObject.getSegFrame();
+		setBoundBox(imp);
+		return imp;
+	}
+	
+	public void setBoundBox(ImagePlus imp) {
 		if(!setBoundbox) {
 			height = imp.getFileInfo().height;
 			width = imp.getFileInfo().width;
 			depth = imp.getFileInfo().nImages * imp.getFileInfo().pixelDepth;
 			setBoundbox = true;
 		}
-		return imp;
-	}
-	
-	public ImagePlus getCurrentSegFrame() {
-		return inObject.getSegFrame();
 	}
 
 	public String getSegFileName() {
