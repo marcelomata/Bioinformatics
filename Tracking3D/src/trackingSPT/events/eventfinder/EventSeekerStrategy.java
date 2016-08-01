@@ -18,6 +18,9 @@ public class EventSeekerStrategy extends Strategy {
 	}
 	
 	public void build() {
+		addEventSeekerAction(new ColocalizationAssociation(context));
+		addEventSeekerAction(new GoingInAssociation(context));
+		addEventSeekerAction(new GoingOutAssociation(context));
 		addEventSeekerAction(new AssociationMinDistance(context));
 		addEventSeekerAction(new SplittingSimple(context));
 		addEventSeekerAction(new MergingSimple(context));
@@ -25,6 +28,15 @@ public class EventSeekerStrategy extends Strategy {
 	
 	public void run() {
 		EventSeekerAction current = (EventSeekerAction) nextAction();
+		current.execute();
+		
+		current = (EventSeekerAction) nextAction();
+		current.execute();
+		
+		current = (EventSeekerAction) nextAction();
+		current.execute();
+		
+		current = (EventSeekerAction) nextAction();
 		current.execute();
 		
 		current = (EventSeekerAction) nextAction();

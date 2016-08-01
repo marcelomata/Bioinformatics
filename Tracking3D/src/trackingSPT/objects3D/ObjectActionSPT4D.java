@@ -8,7 +8,6 @@ import java.util.List;
 
 import ij.IJ;
 import ij.ImagePlus;
-import ij.io.FileInfo;
 import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.Frame;
@@ -29,7 +28,7 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	private int currentFrame;
 //	private File []framesFile;
 	private File []rawFramesFile;
-	private FileInfo[] fileInfo;
+//	private FileInfo[] fileInfo;
 	
 //	/**
 //	 * 

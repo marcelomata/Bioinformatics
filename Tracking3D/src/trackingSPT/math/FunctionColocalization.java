@@ -13,9 +13,9 @@ public class FunctionColocalization implements FunctionCalcObjectRelation {
         double norm = (vol1 + vol2 - coloc) / (vol1 + vol2);
 
         if(norm == 1) {
-        	return 100;
+        	return Double.MAX_VALUE;
         }
-		return (1-norm)*100;
+		return norm;
 	}
 
 }

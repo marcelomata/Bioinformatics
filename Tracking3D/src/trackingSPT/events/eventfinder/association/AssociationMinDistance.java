@@ -4,9 +4,6 @@ package trackingSPT.events.eventfinder.association;
 import java.util.ArrayList;
 import java.util.List;
 
-import mcib3d.geom.Object3D;
-import mcib3d.geom.Objects3DPopulation;
-import mcib3d.geom.Point3D;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
@@ -29,54 +26,34 @@ public class AssociationMinDistance extends AssociationSeeker {
 
 	@Override
 	public void execute() {
-		Objects3DPopulation object3DTPlus1 = this.context.getObjectNextFrame();
+//		Objects3DPopulation object3DTPlus1 = this.context.getObjectNextFrame();
+//		
+//		List<ObjectTree3D> leftSourceObject3DList = context.getListLastObjects();
+//		
+//		System.out.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
+//		
+//		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
+//		List<ObjectTree3D> leftTargetObject3DList = new ArrayList<ObjectTree3D>();
 		
-		List<ObjectTree3D> leftSourceObject3DList = context.getListLastObjects();
+		List<ObjectTree3D> leftTargetObject3DList = this.context.getLeftTargetObjects();
+		List<ObjectTree3D> leftSourceObject3DList = this.context.getLeftSourceObjects();
 		
-		System.out.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
-		
-		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
-		List<ObjectTree3D> leftTargetObject3DList = new ArrayList<ObjectTree3D>();
-		CostMatrix matrix = new CostMatrix(leftSourceObject3DList.size(), object3DListTarget.size());
-		
-		for (Object3D object3d : object3DListTarget) {
-			leftTargetObject3DList.add(new ObjectTree3D(object3d, context.getCurrentFrame()));
-		}
-		
-		checkBoundBox(leftSourceObject3DList, leftTargetObject3DList);
+		CostMatrix matrix = new CostMatrix(leftSourceObject3DList.size(), leftTargetObject3DList.size());
 		
 		findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix);
 		this.context.addAllLeftTargetObjects(leftTargetObject3DList);
 		this.context.addAllLeftSourceObjects(leftSourceObject3DList);
 	}
 	
-	private void checkBoundBox(List<ObjectTree3D> leftSourceObject3DList, List<ObjectTree3D> leftTargetObject3DList) {
-		double height = this.context.getHeight();
-		double widht = this.context.getWidht();
-		double depth = this.context.getDepth();
-		
-		Point3D p;
-		for (ObjectTree3D objectTree3D : leftTargetObject3DList) {
-			p = objectTree3D.getObject().getCenterAsPoint();
-			if(!(p.getY() <= height && p.getY() >= 0) || !(p.getX() <= widht && p.getX() >= 0)) {
-				System.out.println("Object "+objectTree3D.getId()+" out");
-			} else {
-				if(depth > 1) {
-					if(!(p.getZ() <= depth && p.getZ() >= 0)) {
-						System.out.println("Object "+objectTree3D.getId()+" out");
-					}
-				}
-			}
-		}
-	}
-
 	private void findShortestDistance(List<ObjectTree3D> source, List<ObjectTree3D> target, CostMatrix matrix) {
 		List<Event> events = new ArrayList<Event>();
 		List<ObjectTree3D> list1 = source;
 		List<ObjectTree3D> list2 = target;
 		
-		computeCostsMatrix(matrix, list1, list2);
-		findEvents(matrix, list1, list2, events);
+		if(list1.size() > 0 && list2.size() > 0) {
+			computeCostsMatrix(matrix, list1, list2);
+			findEvents(matrix, list1, list2, events);
+		}
 		
 		EventMapItem item = new EventMapItem(EventType.ASSOCIATION);
 		item.addEventList(events);
