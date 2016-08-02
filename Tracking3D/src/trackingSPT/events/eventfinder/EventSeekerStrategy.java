@@ -27,25 +27,12 @@ public class EventSeekerStrategy extends Strategy {
 	}
 	
 	public void run() {
-		EventSeekerAction current = (EventSeekerAction) nextAction();
-		current.execute();
+		EventSeekerAction current;
 		
-		current = (EventSeekerAction) nextAction();
-		current.execute();
-		
-		current = (EventSeekerAction) nextAction();
-		current.execute();
-		
-		current = (EventSeekerAction) nextAction();
-		current.execute();
-		
-		current = (EventSeekerAction) nextAction();
-		current.execute();
-		
-		current = (EventSeekerAction) nextAction();
-		current.execute();
-		
-		context.calcMeanDistance();
+		for(int i = 0; i < getNumberOfActions(); i++) {
+			current = (EventSeekerAction) nextAction();
+			current.execute();
+		}
 	}
 	
 	public void addEventSeekerAction(Action action) {

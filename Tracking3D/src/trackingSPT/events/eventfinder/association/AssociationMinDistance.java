@@ -41,8 +41,9 @@ public class AssociationMinDistance extends AssociationSeeker {
 		CostMatrix matrix = new CostMatrix(leftSourceObject3DList.size(), leftTargetObject3DList.size());
 		
 		findShortestDistance(leftSourceObject3DList, leftTargetObject3DList, matrix);
-		this.context.addAllLeftTargetObjects(leftTargetObject3DList);
-		this.context.addAllLeftSourceObjects(leftSourceObject3DList);
+		
+//		this.context.addAllLeftTargetObjects(leftTargetObject3DList);
+//		this.context.addAllLeftSourceObjects(leftSourceObject3DList);
 	}
 	
 	private void findShortestDistance(List<ObjectTree3D> source, List<ObjectTree3D> target, CostMatrix matrix) {
@@ -58,6 +59,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 		EventMapItem item = new EventMapItem(EventType.ASSOCIATION);
 		item.addEventList(events);
 		context.addEventItem(item);
+		System.out.println("Association events "+events.size());
 	}
 
 	private void findEvents(CostMatrix matrix, List<ObjectTree3D> source, List<ObjectTree3D> target, List<Event> events) {

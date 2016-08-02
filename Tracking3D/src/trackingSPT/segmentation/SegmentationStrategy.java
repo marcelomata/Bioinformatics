@@ -21,14 +21,11 @@ public class SegmentationStrategy extends Strategy {
 	}
 	
 	public void run() {
-//		SegmentationAction current = (SegmentationAction) nextAction();
-//		current.execute();
-//		
-//		current = (SegmentationAction) nextAction();
-//		current.execute();
-//		
-//		current = (SegmentationAction) nextAction();
-//		current.execute();
+//		SegmentationAction current;
+//		for(int i = 0; i < getNumberOfActions(); i++) {
+//			current = (SegmentationAction) nextAction();
+//			current.execute();
+//		}
 
 		context.getCurrentRawFrame();
 		context.setTemporalPopulation();

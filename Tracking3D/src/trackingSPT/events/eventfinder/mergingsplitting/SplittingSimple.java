@@ -71,5 +71,6 @@ public class SplittingSimple extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.SPLITTING);
 		item.addEventList(events);
 		this.context.addEventItem(item);
+		System.out.println("Splittinh events "+events.size());
 	}
 }

@@ -18,10 +18,11 @@ public class PluginTracking implements PlugIn {
 	@Override
 	public void run(String test) {
 		TrackingStrategy tracking;
+		String segDir = "/"+test+"_GT/";
 		String resDir = "/"+test+"_RES/";
 		String rawDir = "/"+test+"/";
-		File dirSeg = new File(parentDir+resDir+"SEG/");
-		File dirTrack = new File(parentDir+rawDir+"TRACK/");
+		File dirSeg = new File(parentDir+segDir+"SEG/");
+		File dirTrack = new File(parentDir+resDir+"TRACK/");
 		File dirRaw = new File(parentDir+rawDir);
 		File image = new File(parentDir);
 		if(image.isFile()) {
@@ -39,7 +40,7 @@ public class PluginTracking implements PlugIn {
 		tracking.run();
 		
 		System.out.println("Generating Challenge Format");
-		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg);
+		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirTrack.getParentFile());
 		gen.computeColorChallenge(1);
 		gen.challengeFormat(0);
 		gen.computeColorChallenge(0);

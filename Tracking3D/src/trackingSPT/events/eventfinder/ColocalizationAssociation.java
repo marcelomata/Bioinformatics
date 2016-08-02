@@ -50,9 +50,11 @@ public class ColocalizationAssociation extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.COLOCALIZATION);
 		item.addEventList(events);
 		context.addEventItem(item);
+		System.out.println("Colocalization events "+events.size());
 		
 		this.context.addAllLeftTargetObjects(leftTargetObject3DList);
 		this.context.addAllLeftSourceObjects(leftSourceObject3DList);
+		context.calcMeanDistance();
 	}
 	
 	private void findEvents(List<ObjectTree3D> source, List<ObjectTree3D> target, List<Event> events, CostMatrix matrix) {
@@ -81,7 +83,7 @@ public class ColocalizationAssociation extends EventSeekerAction {
 				if(cost <= 1) {
 					event = new Event(EventCause.COLOCALIZATION);
 					obj2 = matrix.getTarget(j);
-//					context.addAssociation(obj1, obj2);
+					context.addAssociation(obj1, obj2);
 					context.addDistanceValue(obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()));
 					event.setObjectSource(obj1);
 					event.setObjectTarget(obj2);
@@ -91,6 +93,9 @@ public class ColocalizationAssociation extends EventSeekerAction {
 					if(targetLeft) {
 						target.remove(obj2);
 					}
+				} else {
+					source.add(obj1);
+					target.add(matrix.getTarget(j));
 				}
 			} else {
 				//leave source objects unlinked in the source list

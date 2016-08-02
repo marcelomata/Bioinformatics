@@ -26,7 +26,7 @@ public class HandlerGoingOut extends EventHandlerAction {
 	private void handleGoingIn(List<Event> goingIn) {
 		ObjectTree3D obj1;
 		for (Event event : goingIn) {
-			obj1 = event.getObjectSource();
+			obj1 = event.getObjectTarget();
 			context.finishObjectTracking(obj1);
 		}
 	}

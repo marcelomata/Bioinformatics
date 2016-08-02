@@ -37,4 +37,8 @@ public abstract class Strategy {
 		build();
 	}
 	
+	public int getNumberOfActions() {
+		return this.actions.size();
+	}
+	
 }

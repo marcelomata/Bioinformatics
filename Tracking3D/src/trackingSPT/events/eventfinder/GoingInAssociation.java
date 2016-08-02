@@ -38,22 +38,24 @@ public class GoingInAssociation extends EventSeekerAction {
 		double distance;
 		double distMax;
 		Event event;
-		for (ObjectTree3D objectTree3D : leftTargetObjects) {
+		ObjectTree3D objectTree3D;
+		for (int i = 0; i < leftTargetObjects.size(); i++) {
+			objectTree3D = leftTargetObjects.get(i);
 			distance = function.calculate(objectTree3D, new ObjectTree3D(new Object3DPoint(1, new Point3D(widht, height, depth)), context.getFrameTime()));
-			distMax = objectTree3D.getObject().getDistCenterMax();
-			distMax = distMax == Double.NaN ? context.getMeanDistanceFrame() : distMax;
+			distMax = context.getMeanDistanceFrame() * 4;
 			if(distance < distMax) {
 				event = new Event(EventCause.GOING_IN);
 				event.setObjectSource(null);
 				event.setObjectTarget(objectTree3D);
 				events.add(event);
 				leftTargetObjects.remove(objectTree3D);
-			}
+			} 
 		}
 		
 		EventMapItem item = new EventMapItem(EventType.GOING_IN);
 		item.addEventList(events);
 		context.addEventItem(item);
+		System.out.println("Going in events "+events.size());
 	}
 	
 	private void checkBoundBox(List<ObjectTree3D> leftTargetObjects) {

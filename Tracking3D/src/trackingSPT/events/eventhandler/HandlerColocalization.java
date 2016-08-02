@@ -30,6 +30,8 @@ public class HandlerColocalization extends EventHandlerAction {
 		for (Event event : colocalizations) {
 			obj1 = event.getObjectSource();
 			obj2 = event.getObjectTarget();
+			obj1.addChild(obj2);
+			obj2.setParent(obj1);
 			context.addNewObjectId(obj1.getId(), obj2);
 		}
 	}

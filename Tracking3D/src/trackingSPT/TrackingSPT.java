@@ -31,16 +31,12 @@ public class TrackingSPT extends TrackingStrategy {
 		while(context.getFrameTime() < context.getSize()) {
 			System.out.println("Current Frame -> "+context.getFrameTime());
 			context.clear();
-			current = (TrackingAction) nextAction();
-			current.execute();
-			
-			current = (TrackingAction) nextAction();
-			current.execute();
-			
-			current = (TrackingAction) nextAction();
-			current.execute();
-			context.nextFrame();
+			for(int i = 0; i < getNumberOfActions(); i++) {
+				current = (TrackingAction) nextAction();
+				current.execute();
+			}
 			System.out.println("################################");
+			context.nextFrame();
 		}
 		result = context.getResult();
 	}

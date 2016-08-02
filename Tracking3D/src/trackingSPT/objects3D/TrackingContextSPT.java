@@ -302,5 +302,5 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	public double getDepth() {
 		return depth;
 	}
-	
+
 }

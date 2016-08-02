@@ -38,10 +38,11 @@ public class GoingOutAssociation extends EventSeekerAction {
 		double distance;
 		double distMax;
 		Event event;
-		for (ObjectTree3D objectTree3D : leftSourceObjects) {
+		ObjectTree3D objectTree3D;
+		for (int i = 0; i < leftSourceObjects.size(); i++) {
+			objectTree3D = leftSourceObjects.get(i);
 			distance = function.calculate(objectTree3D, new ObjectTree3D(new Object3DPoint(1, new Point3D(widht, height, depth)), context.getFrameTime()));
-			distMax = objectTree3D.getObject().getDistCenterMax();
-			distMax = distMax == Double.NaN ? context.getMeanDistanceFrame() : distMax;
+			distMax = context.getMeanDistanceFrame() * 4;
 			if(distance < distMax) {
 				event = new Event(EventCause.GOING_OUT);
 				event.setObjectSource(null);
@@ -54,6 +55,7 @@ public class GoingOutAssociation extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.GOING_OUT);
 		item.addEventList(events);
 		context.addEventItem(item);
+		System.out.println("Going out events "+events.size());
 	}
 	
 	private void checkBoundBox(List<ObjectTree3D> leftObjects) {

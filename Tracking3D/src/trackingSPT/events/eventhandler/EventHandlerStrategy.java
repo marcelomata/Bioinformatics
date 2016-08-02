@@ -42,23 +42,11 @@ public class EventHandlerStrategy extends Strategy {
 		System.out.println("Splitting Events -> "+splittings.size());
 		System.out.println("Merging Events -> "+mergings.size());
 		
-		EventHandlerAction current = (EventHandlerAction) nextAction();
-		current.execute();
-		
-		current = (EventHandlerAction) nextAction();
-		current.execute();
-		
-		current = (EventHandlerAction) nextAction();
-		current.execute();
-		
-		current = (EventHandlerAction) nextAction();
-		current.execute();
-		
-		current = (EventHandlerAction) nextAction();
-		current.execute();
-		
-		current = (EventHandlerAction) nextAction();
-		current.execute();
+		EventHandlerAction current;
+		for(int i = 0; i < getNumberOfActions(); i++) {
+			current = (EventHandlerAction) nextAction();
+			current.execute();
+		}
 	}
 	
 	public void addEventHandlerAction(Action action) {

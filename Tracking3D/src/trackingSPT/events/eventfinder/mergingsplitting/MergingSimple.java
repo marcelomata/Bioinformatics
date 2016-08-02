@@ -73,6 +73,7 @@ public class MergingSimple extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.MERGING);
 		item.addEventList(events);
 		this.context.addEventItem(item);
+		System.out.println("Merging events "+events.size());
 	}
 
 }
