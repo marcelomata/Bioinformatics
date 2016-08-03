@@ -24,7 +24,7 @@ public class PluginTracking implements PlugIn {
 		File dirSeg = new File(parentDir+segDir+"SEG/");
 		File dirTrack = new File(parentDir+resDir+"TRACK/");
 		File dirRaw = new File(parentDir+rawDir);
-		File image = new File(parentDir);
+		File image = new File(parentDir);	
 		if(image.isFile()) {
 			tracking = new TrackingSPT(dirSeg, dirTrack);
 		} else {

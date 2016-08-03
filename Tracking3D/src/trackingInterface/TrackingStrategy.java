@@ -20,7 +20,15 @@ public abstract class TrackingStrategy extends Strategy {
 		build();
 	}
 	
+//	public TrackingStrategy(File imageFile) {
+//		super();
+//		init(imageFile);
+//		build();
+//	}
+	
 	public abstract void init(File segmentedDataDir, File rawDataDir);
+	
+//	public abstract void init(File imageFile);
 	
 	public abstract void build();
 	

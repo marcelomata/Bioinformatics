@@ -16,6 +16,10 @@ public class TrackingSPT extends TrackingStrategy {
 	public TrackingSPT(File segmentedDataDir, File rawDataDir) {
 		super(segmentedDataDir, rawDataDir);
 	}
+	
+//	public TrackingSPT(File imageFile) {
+//		super(imageFile);
+//	}
 
 	@Override
 	public void build() {

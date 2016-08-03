@@ -111,12 +111,15 @@ public class ColocalizationAssociation extends EventSeekerAction {
 		for (int i = 0; i < list1.size(); i++) {
 			obj1 = list1.get(i);
 			matrix.addObjectSource(obj1, i);
+//			System.out.println("Distances obj - "+obj1.getId());
 			for (int j = 0; j < list2.size(); j++) {
 				obj2 = list2.get(j);
 				matrix.addObjectTarget(obj2, j);
 				distance = function.calculate(obj1, obj2);
 				matrix.setCost(i, j, distance);
+//				System.out.print(distance+" ");
 			}
+//			System.out.println();
 		}
 	}
 }
