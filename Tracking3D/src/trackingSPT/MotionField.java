@@ -126,6 +126,8 @@ public class MotionField {
 		System.out.println("Finishing track " + obj.getId() + " - Frame " + obj.getFrame());
 		List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
 		mapFinishedObjects.put(obj.getId(), temp);
+//		temp = mapMissedObjects.remove(obj.getId());
+//		mapFinishedObjects.put(obj.getId(), temp);
 	}
 	
 	public Map<Integer, List<ObjectTree3D>> getFinalResultByTrack() {

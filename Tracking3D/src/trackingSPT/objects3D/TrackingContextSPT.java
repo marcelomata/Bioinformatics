@@ -288,7 +288,7 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 			height = imp.getFileInfo().height;
 			width = imp.getFileInfo().width;
 			depth = imp.getFileInfo().nImages * imp.getFileInfo().pixelDepth;
-			setBoundbox = true;
+		setBoundbox = true;
 		}
 	}
 

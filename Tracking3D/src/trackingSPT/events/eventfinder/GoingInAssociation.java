@@ -42,7 +42,7 @@ public class GoingInAssociation extends EventSeekerAction {
 		for (int i = 0; i < leftTargetObjects.size(); i++) {
 			objectTree3D = leftTargetObjects.get(i);
 			distance = function.calculate(objectTree3D, new ObjectTree3D(new Object3DPoint(1, new Point3D(widht, height, depth)), context.getFrameTime()));
-			distMax = context.getMeanDistanceFrame() * 4;
+			distMax = context.getMeanDistanceFrame();
 			if(distance < distMax) {
 				event = new Event(EventCause.GOING_IN);
 				event.setObjectSource(null);

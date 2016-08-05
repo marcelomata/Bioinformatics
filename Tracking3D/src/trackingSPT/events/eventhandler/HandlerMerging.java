@@ -39,6 +39,7 @@ public class HandlerMerging extends EventHandlerAction {
 			} else {
 				context.finishObjectTracking(obj1);
 			}
+//			context.finishObjectTracking(obj1);
 		}
 	}
 
