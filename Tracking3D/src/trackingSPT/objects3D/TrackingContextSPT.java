@@ -298,6 +298,19 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 
 	public void calcMeanDistance() {
 		meanDistFrame[getCurrentFrame()] /= numberOfDist[getCurrentFrame()];
+		if(Double.isNaN(meanDistFrame[getCurrentFrame()])) {
+			setMeanFromPrevious();
+		}
+	}
+
+	private void setMeanFromPrevious() {
+		double sum = 0;
+		if(getCurrentFrame() > 1) {
+			for (int i = 1; i < getCurrentFrame(); i++) {
+				sum += meanDistFrame[i];
+			}
+			meanDistFrame[getCurrentFrame()] = sum / (getCurrentFrame()-1);
+		}
 	}
 
 	public double getMeanDistanceFrame() {
@@ -315,5 +328,10 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	public double getDepth() {
 		return depth;
 	}
+
+//	//TODO
+//	public void check() {
+//		result.getMotionField().check();
+//	}
 
 }

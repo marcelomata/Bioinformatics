@@ -47,6 +47,7 @@ public class EventHandlerStrategy extends Strategy {
 			current = (EventHandlerAction) nextAction();
 			current.execute();
 		}
+//		context.check();
 	}
 	
 	public void addEventHandlerAction(Action action) {

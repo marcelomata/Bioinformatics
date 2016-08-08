@@ -35,14 +35,24 @@ public class MotionField {
 		object.setId(id);
 		list.add(object);
 		mapObjects.put(id, list);
+//		if(id == 63) {
+//			for (ObjectTree3D objectTree3D : list) {
+//				System.out.println(objectTree3D.getId());
+//			}
+//		}
 		id++;
 	}
 	
 	public void addNewObjectId(Integer idObject, ObjectTree3D object) {
-		System.out.println("Adding object to track " + idObject + " - Frame " + object.getFrame() + " - Object Value "+object.getObject().getValue());
 		object.setId(idObject);
+		System.out.println("Adding object to track " + idObject + " - Frame " + object.getFrame() + " - Object Value "+object.getObject().getValue());
 		List<ObjectTree3D> list = mapObjects.get(idObject);
 		list.add(object);
+		if(idObject == 63) {
+			for (ObjectTree3D objectTree3D : list) {
+				System.out.println(objectTree3D.getId());
+			}
+		}
 	}
 	
 	public void reconnectMissedObjectId(Integer idObject) {
@@ -259,5 +269,16 @@ public class MotionField {
 		List<ObjectTree3D> temp = mapObjects.remove(objMissed.getId());
 		mapMissedObjects.put(objMissed.getId(), temp);
 	}
+
+//	public void check() {
+//		List<ObjectTree3D> list; 
+//		list = mapObjects.get(63);
+//		if(list != null) {
+//			System.out.println("########Checking");
+//			for (ObjectTree3D objectTree3D : list) {
+//				System.out.println(objectTree3D.getId());
+//			}
+//		}
+//	}
 
 }

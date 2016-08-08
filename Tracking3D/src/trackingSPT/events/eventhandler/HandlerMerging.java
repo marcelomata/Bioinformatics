@@ -33,7 +33,7 @@ public class HandlerMerging extends EventHandlerAction {
 			obj1 = event.getObjectSource();
 			obj2 = event.getObjectTarget();
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			//if the closest is near so a merge sould happened
+			//if the closest is near so a merge should happened
 			if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
 				context.addMissed(obj1);
 			} else {

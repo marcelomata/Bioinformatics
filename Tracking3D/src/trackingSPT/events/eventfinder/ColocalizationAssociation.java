@@ -58,6 +58,9 @@ public class ColocalizationAssociation extends EventSeekerAction {
 	}
 	
 	private void findEvents(List<ObjectTree3D> source, List<ObjectTree3D> target, List<Event> events, CostMatrix matrix) {
+		if(context.getFrameTime() == 8) {
+			checkDouble(target);
+		}
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
 		Event event;
@@ -95,12 +98,24 @@ public class ColocalizationAssociation extends EventSeekerAction {
 					}
 				} else {
 					source.add(obj1);
-					target.add(matrix.getTarget(j));
 				}
 			} else {
 				//leave source objects unlinked in the source list
 				source.add(obj1);
 			}
+		}
+	}
+
+	private void checkDouble(List<ObjectTree3D> target) {
+		int count;
+		for (ObjectTree3D objectTree3D : target) {
+			count = 0;
+			for (ObjectTree3D objectTree3D2 : target) {
+				if (objectTree3D == objectTree3D2) {
+					count++;
+				}
+			}
+			System.out.println("Object Id "+objectTree3D.getId()+" appear "+count+" times.");
 		}
 	}
 

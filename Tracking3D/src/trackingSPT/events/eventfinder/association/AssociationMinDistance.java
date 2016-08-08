@@ -87,7 +87,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 				event = new Event(EventCause.MINOR_DISTANCE);
 				obj2 = matrix.getTarget(j);
 				context.addAssociation(obj1, obj2);
-				context.addDistanceValue(obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()));
+//				context.addDistanceValue(obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()));
 				event.setObjectSource(obj1);
 				event.setObjectTarget(obj2);
 				events.add(event);
