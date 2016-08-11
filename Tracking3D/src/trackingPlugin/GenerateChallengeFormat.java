@@ -67,7 +67,7 @@ public class GenerateChallengeFormat {
 			}
 			
 			if(obj != null && objectTree.getParent() == null) {
-				for (int j = objectTree.getFrame(); j <= objectTree.getFrame(); j++) {
+				for (int j = nodesPerFrame.size()-1; j <= objectTree.getFrame(); j++) {
 					nodesPerFrame.add(new ArrayList<Node<Spot>>());
 				}
 				listFrame = nodesPerFrame.get(objectTree.getFrame());
@@ -90,7 +90,7 @@ public class GenerateChallengeFormat {
 		for (ObjectTree3D objectTree3D : children) {
 			obj = objectTree3D.getObject();
 			if(obj != null) {
-				for (int j = objectTree3D.getFrame(); j <= objectTree3D.getFrame(); j++) {
+				for (int j = nodesPerFrame.size()-1; j <= objectTree3D.getFrame(); j++) {
 					nodesPerFrame.add(new ArrayList<Node<Spot>>());
 				}
 				listFrame = nodesPerFrame.get(objectTree3D.getFrame());
