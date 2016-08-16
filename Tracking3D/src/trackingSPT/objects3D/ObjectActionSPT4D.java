@@ -44,13 +44,13 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	 * 
 	 * @param imp It has to be a 4D image (3D+t)
 	 */
-	public ObjectActionSPT4D(String folderSeg, String fileSegName, String folderRaw, String fileRawName) {
+	public ObjectActionSPT4D(String folderSeg, String fileSegName, String folderRaw, String fileRawName, int numMaxFrames) {
 		init();
 		this.fileSegName = fileSegName;
 //		this.fileRawName = fileRawName;
 		this.directorySeg = new File(folderSeg);
 		this.directoryRaw = new File(folderRaw);
-		loadRawFrames3D(folderRaw);
+		loadRawFrames3D(folderRaw, numMaxFrames);
 	}
 	
 	private void init() {
@@ -81,14 +81,14 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 //        }
 //	}
 	
-	private void loadRawFrames3D(String folder) {
+	private void loadRawFrames3D(String folder, int numMaxFrames) {
 		this.readFromDirectory = true;
         File fileFolder = new File(folder);
         rawFramesFile = fileFolder.listFiles();
         List<File> framesList = Arrays.asList(rawFramesFile);
         Collections.sort(framesList);
         rawFramesFile = framesList.toArray(new File[framesList.size()]);
-        countFrames();
+        countFrames(numMaxFrames);
         frameByFrame = true;
 //        ImagePlus timedup;
 //        Objects3DPopulationSPT populationT;
@@ -110,11 +110,14 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 //        }
 	}
 
-	private void countFrames() {
+	private void countFrames(int numMaxFrames) {
 		for (int i = 0; i < rawFramesFile.length; i++) {
 			if(rawFramesFile[i].getName().contains(".tif")) {
 				numberOfFrames++;
 			}
+		}
+		if(numberOfFrames > numMaxFrames) {
+			numberOfFrames = numMaxFrames;
 		}
 	}
 

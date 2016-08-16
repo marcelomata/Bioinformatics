@@ -4,6 +4,7 @@ package trackingSPT.events.eventfinder.association;
 import java.util.ArrayList;
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
@@ -59,7 +60,7 @@ public class AssociationMinDistance extends AssociationSeeker {
 		EventMapItem item = new EventMapItem(EventType.ASSOCIATION);
 		item.addEventList(events);
 		context.addEventItem(item);
-		System.out.println("Association events "+events.size());
+		Log.println("Association events "+events.size());
 	}
 
 	private void findEvents(CostMatrix matrix, List<ObjectTree3D> source, List<ObjectTree3D> target, List<Event> events) {

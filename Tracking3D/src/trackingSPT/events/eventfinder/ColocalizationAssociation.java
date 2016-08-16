@@ -6,6 +6,7 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
@@ -33,7 +34,7 @@ public class ColocalizationAssociation extends EventSeekerAction {
 		
 		List<ObjectTree3D> leftSourceObject3DList = context.getListLastObjects();
 		
-		System.out.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
+		Log.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
 		
 		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
 		List<ObjectTree3D> leftTargetObject3DList = new ArrayList<ObjectTree3D>();
@@ -50,7 +51,7 @@ public class ColocalizationAssociation extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.COLOCALIZATION);
 		item.addEventList(events);
 		context.addEventItem(item);
-		System.out.println("Colocalization events "+events.size());
+		Log.println("Colocalization events "+events.size());
 		
 		this.context.addAllLeftTargetObjects(leftTargetObject3DList);
 		this.context.addAllLeftSourceObjects(leftSourceObject3DList);
@@ -83,21 +84,22 @@ public class ColocalizationAssociation extends EventSeekerAction {
 			j = result[i];
 			if(j != -1) {
 				cost = matrix.getCosts()[i][j];
+				obj2 = matrix.getTarget(j);
 				if(cost <= 1) {
 					event = new Event(EventCause.COLOCALIZATION);
-					obj2 = matrix.getTarget(j);
 					context.addAssociation(obj1, obj2);
 					context.addDistanceValue(obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()));
 					event.setObjectSource(obj1);
 					event.setObjectTarget(obj2);
 					events.add(event);
 					
-					//leave target objects unlinked in the target list
+					//left target objects unlinked in the target list
 					if(targetLeft) {
 						target.remove(obj2);
 					}
 				} else {
 					source.add(obj1);
+					target.add(obj2);
 				}
 			} else {
 				//leave source objects unlinked in the source list
@@ -115,7 +117,7 @@ public class ColocalizationAssociation extends EventSeekerAction {
 					count++;
 				}
 			}
-			System.out.println("Object Id "+objectTree3D.getId()+" appear "+count+" times.");
+			Log.println("Object Id "+objectTree3D.getId()+" appear "+count+" times.");
 		}
 	}
 

@@ -3,6 +3,7 @@ package trackingSPT.events.eventhandler;
 
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.ObjectTree3D;
@@ -19,7 +20,7 @@ public class HandlerMerging extends EventHandlerAction {
 		
 		List<Event> mergings = this.context.getEventList(EventType.MERGING);
 		
-		System.out.println("Merging Events -> "+mergings.size());
+		Log.println("Merging Events -> "+mergings.size());
 		
 		handleMergings(mergings);	
 	}
@@ -27,7 +28,7 @@ public class HandlerMerging extends EventHandlerAction {
 	private void handleMergings(List<Event> mergings) {
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
-		double distance;
+		double distance = 0;
 		//overlap
 		for (Event event : mergings) {
 			obj1 = event.getObjectSource();

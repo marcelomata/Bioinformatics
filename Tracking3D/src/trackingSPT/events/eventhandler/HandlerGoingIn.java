@@ -3,6 +3,7 @@ package trackingSPT.events.eventhandler;
 
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.ObjectTree3D;
@@ -19,7 +20,7 @@ public class HandlerGoingIn extends EventHandlerAction {
 		
 		List<Event> goingIn = this.context.getEventList(EventType.GOING_IN);
 		
-		System.out.println("Going In Events -> "+goingIn.size());
+		Log.println("Going In Events -> "+goingIn.size());
 		
 		handleGoingIn(goingIn);	
 	}

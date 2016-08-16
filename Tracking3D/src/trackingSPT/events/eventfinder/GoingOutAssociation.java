@@ -6,6 +6,7 @@ import java.util.List;
 
 import mcib3d.geom.Object3DPoint;
 import mcib3d.geom.Point3D;
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
@@ -55,7 +56,7 @@ public class GoingOutAssociation extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.GOING_OUT);
 		item.addEventList(events);
 		context.addEventItem(item);
-		System.out.println("Going out events "+events.size());
+		Log.println("Going out events "+events.size());
 	}
 	
 	private void checkBoundBox(List<ObjectTree3D> leftObjects) {
@@ -67,11 +68,11 @@ public class GoingOutAssociation extends EventSeekerAction {
 		for (ObjectTree3D objectTree3D : leftObjects) {
 			p = objectTree3D.getObject().getCenterAsPoint();
 			if(!(p.getY() <= height && p.getY() >= 0) || !(p.getX() <= widht && p.getX() >= 0)) {
-				System.out.println("Object "+objectTree3D.getId()+" out");
+				Log.println("Object "+objectTree3D.getId()+" out");
 			} else {
 				if(depth > 1) {
 					if(!(p.getZ() <= depth && p.getZ() >= 0)) {
-						System.out.println("Object "+objectTree3D.getId()+" out");
+						Log.println("Object "+objectTree3D.getId()+" out");
 					}
 				}
 			}

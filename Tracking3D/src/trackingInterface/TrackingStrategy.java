@@ -14,9 +14,9 @@ public abstract class TrackingStrategy extends Strategy {
 	
 	protected TrackingResultObjectAction result;
 	
-	public TrackingStrategy(File segmentedDataDir, File rawDataDir) {
+	public TrackingStrategy(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
 		super();
-		init(segmentedDataDir, rawDataDir);
+		init(segmentedDataDir, rawDataDir, numMaxFrames);
 		build();
 	}
 	
@@ -26,7 +26,7 @@ public abstract class TrackingStrategy extends Strategy {
 //		build();
 //	}
 	
-	public abstract void init(File segmentedDataDir, File rawDataDir);
+	public abstract void init(File segmentedDataDir, File rawDataDir, int numMaxFrames);
 	
 //	public abstract void init(File imageFile);
 	

@@ -4,6 +4,7 @@ import java.util.List;
 
 import trackingInterface.Action;
 import trackingInterface.Strategy;
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.TrackingContextSPT;
@@ -35,12 +36,12 @@ public class EventHandlerStrategy extends Strategy {
 		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
 		List<Event> mergings = this.context.getEventList(EventType.MERGING);
 		
-		System.out.println("Colocalization Events -> "+colocalization.size());
-		System.out.println("Going In Events -> "+goingIn.size());
-		System.out.println("Going Out Events -> "+goingOut.size());
-		System.out.println("Association Events -> "+associations.size());
-		System.out.println("Splitting Events -> "+splittings.size());
-		System.out.println("Merging Events -> "+mergings.size());
+		Log.println("Colocalization Events -> "+colocalization.size());
+		Log.println("Going In Events -> "+goingIn.size());
+		Log.println("Going Out Events -> "+goingOut.size());
+		Log.println("Association Events -> "+associations.size());
+		Log.println("Splitting Events -> "+splittings.size());
+		Log.println("Merging Events -> "+mergings.size());
 		
 		EventHandlerAction current;
 		for(int i = 0; i < getNumberOfActions(); i++) {

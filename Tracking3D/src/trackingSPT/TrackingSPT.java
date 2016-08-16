@@ -4,6 +4,7 @@ package trackingSPT;
 import java.io.File;
 
 import trackingInterface.TrackingStrategy;
+import trackingPlugin.Log;
 import trackingSPT.events.eventfinder.EventSeekerTrackingAction;
 import trackingSPT.events.eventhandler.EventHandlerTrackingAction;
 import trackingSPT.objects3D.TrackingContextSPT;
@@ -13,8 +14,8 @@ public class TrackingSPT extends TrackingStrategy {
 	
 	private TrackingContextSPT context;
 	
-	public TrackingSPT(File segmentedDataDir, File rawDataDir) {
-		super(segmentedDataDir, rawDataDir);
+	public TrackingSPT(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
+		super(segmentedDataDir, rawDataDir, numMaxFrames);
 	}
 	
 //	public TrackingSPT(File imageFile) {
@@ -32,22 +33,22 @@ public class TrackingSPT extends TrackingStrategy {
 	public void run() {
 		TrackingAction current;
 		
-		while(context.getFrameTime() < context.getSize()) {
-			System.out.println("Current Frame -> "+context.getFrameTime());
+		while(context.getFrameTime() <= context.getSize()) {
+			Log.println("Current Frame -> "+context.getFrameTime());
 			context.clear();
 			for(int i = 0; i < getNumberOfActions(); i++) {
 				current = (TrackingAction) nextAction();
 				current.execute();
 			}
-			System.out.println("################################");
+			Log.println("################################");
 			context.nextFrame();
 		}
 		result = context.getResult();
 	}
 
 	@Override
-	public void init(File segmentedDataDir, File rawDataDir) {
-		this.context = new TrackingContextSPT(segmentedDataDir, rawDataDir);
+	public void init(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
+		this.context = new TrackingContextSPT(segmentedDataDir, rawDataDir, numMaxFrames);
 	}
 
 }

@@ -3,6 +3,7 @@ package trackingSPT.events.eventhandler;
 
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.ObjectTree3D;
@@ -19,7 +20,7 @@ public class HandlerColocalization extends EventHandlerAction {
 		
 		List<Event> colocalizations = this.context.getEventList(EventType.COLOCALIZATION);
 		
-		System.out.println("Colocalization Events -> "+colocalizations.size());
+		Log.println("Colocalization Events -> "+colocalizations.size());
 		
 		handleColocalization(colocalizations);	
 	}

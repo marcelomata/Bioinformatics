@@ -50,14 +50,14 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	//////////////////////////////////////
 	private Map<EventType, List<Event>> eventListMap;
 	
-	public TrackingContextSPT(File segmentedDataDir, File rawDataDir) {
-		this.inObject = new ObjectActionSPT4D(segmentedDataDir.getAbsolutePath(), "man_seg", rawDataDir.getAbsolutePath(), "t");
+	public TrackingContextSPT(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
+		this.inObject = new ObjectActionSPT4D(segmentedDataDir.getAbsolutePath(), "man_seg", rawDataDir.getAbsolutePath(), "t", numMaxFrames);
 		this.result = new TrackingResult3DSPT(inObject);
 		this.misses = new ArrayList<MissedObject>();
 		this.segmentedDataDir = segmentedDataDir;
 		this.rawDataDir = rawDataDir;
-		this.meanDistFrame = new double[inObject.getSize()];
-		this.numberOfDist = new double[inObject.getSize()];
+		this.meanDistFrame = new double[inObject.getSize()+1];
+		this.numberOfDist = new double[inObject.getSize()+1];
 		loadRawFiles();
 		
 		clear();

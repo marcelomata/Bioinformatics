@@ -3,6 +3,7 @@ package trackingSPT.events.eventhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.math.CostMatrix;
@@ -21,7 +22,7 @@ public class HandlerSplitting extends EventHandlerAction {
 	public void execute() {
 		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
 		
-		System.out.println("Splitting Events -> "+splittings.size());
+		Log.println("Splitting Events -> "+splittings.size());
 		
 		handleSplitting(splittings);
 	}

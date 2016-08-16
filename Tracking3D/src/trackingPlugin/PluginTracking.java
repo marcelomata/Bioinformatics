@@ -10,9 +10,11 @@ import trackingSPT.objects3D.TrackingResult3DSPT;
 public class PluginTracking implements PlugIn {
 	
 	private String parentDir;
+	private int numMaxFrames;
 	
-	public PluginTracking(String parentDir) {
+	public PluginTracking(String parentDir, int numMaxFrames) {
 		this.parentDir = parentDir;
+		this.numMaxFrames = numMaxFrames;
 	}
 	
 	@Override
@@ -26,7 +28,7 @@ public class PluginTracking implements PlugIn {
 		File dirRaw = new File(parentDir+rawDir);
 		File image = new File(parentDir);	
 		if(image.isFile()) {
-			tracking = new TrackingSPT(dirSeg, dirTrack);
+			tracking = new TrackingSPT(dirSeg, dirTrack, numMaxFrames);
 		} else {
 			if(!dirSeg.exists()) {
 				dirSeg.mkdirs();
@@ -34,19 +36,19 @@ public class PluginTracking implements PlugIn {
 			if(!dirRaw.exists()) {
 				dirRaw.mkdirs();
 			}
-			tracking = new TrackingSPT(dirSeg, dirRaw);
+			tracking = new TrackingSPT(dirSeg, dirRaw, numMaxFrames);
 		}
 		
 		tracking.run();
 		
-		System.out.println("Generating Challenge Format");
-		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirTrack.getParentFile());
+		Log.println("Generating Challenge Format");
+		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirTrack.getParentFile(), numMaxFrames);
 		gen.computeColorChallenge(1);
 		gen.challengeFormat(0);
 		gen.computeColorChallenge(0);
 		gen.saveColoredChallenge(2, 0, 0);
 		gen.saveColored(2, 0);
-		System.out.println("Rendering");
+		Log.println("Rendering");
 		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
 		renderer.run();
 		

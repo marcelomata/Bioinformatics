@@ -77,7 +77,7 @@ public class ParticlesTrackingResult implements ParticlesObjects {
 	public List<List<Particle>> getObjectsListFrame() {
 		int numberOfFrames = trackingResult.getNumberOfFrames();
 		List<List<Particle>> result = new ArrayList<List<Particle>>(numberOfFrames);
-		for (int i = 0; i < numberOfFrames; i++) {
+		for (int i = 0; i <= numberOfFrames; i++) {
 			result.add(new ArrayList<Particle>());
 		}
 		

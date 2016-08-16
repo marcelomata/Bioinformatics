@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
@@ -49,6 +50,9 @@ public class MergingSimple extends EventSeekerAction {
 						matrix.addObjectTarget(obj2, j);
 						distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 						matrix.setCost(i, j, distance);
+					} else {
+						distance = Double.MAX_VALUE;
+						matrix.setCost(i, j, distance);
 					}
 					j++;
 				}
@@ -73,7 +77,7 @@ public class MergingSimple extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.MERGING);
 		item.addEventList(events);
 		this.context.addEventItem(item);
-		System.out.println("Merging events "+events.size());
+		Log.println("Merging events "+events.size());
 	}
 
 }

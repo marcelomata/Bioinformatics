@@ -3,6 +3,7 @@ package trackingSPT.events.eventhandler;
 
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.ObjectTree3D;
@@ -18,7 +19,7 @@ public class HandlerAssociation extends EventHandlerAction {
 	public void execute() {
 		List<Event> associations = this.context.getEventList(EventType.ASSOCIATION);
 		
-		System.out.println("Mean of shorter distances -> " + context.getMeanDistanceFrame());
+		Log.println("Mean of shorter distances -> " + context.getMeanDistanceFrame());
 		
 		handleAssociations(associations);
 	}

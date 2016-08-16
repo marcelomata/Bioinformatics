@@ -4,6 +4,7 @@ package trackingSPT.events.eventfinder.mergingsplitting;
 import java.util.ArrayList;
 import java.util.List;
 
+import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
@@ -71,6 +72,6 @@ public class SplittingSimple extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.SPLITTING);
 		item.addEventList(events);
 		this.context.addEventItem(item);
-		System.out.println("Splittinh events "+events.size());
+		Log.println("Splitting events "+events.size());
 	}
 }
