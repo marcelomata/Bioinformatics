@@ -44,4 +44,9 @@ public class Event {
 	public EventType getEventType() {
 		return eventType;
 	}
+	
+	@Override
+	public String toString() {
+		return objectSource.getId()+" | "+objectTarget.getId();
+	}
 }

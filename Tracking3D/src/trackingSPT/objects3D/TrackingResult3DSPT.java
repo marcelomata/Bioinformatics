@@ -119,5 +119,10 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 		motionField.setObjectMissed(objMissed);
 	}
 	
+	@Override
+	public ObjectTree3D getLastObjId(int id) {
+		return motionField.getLastObject(id);
+	}
+	
 }
 	

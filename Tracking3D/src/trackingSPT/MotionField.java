@@ -14,12 +14,16 @@ public class MotionField {
 	private Map<Integer, List<ObjectTree3D>> mapObjects;
 	private Map<Integer, List<ObjectTree3D>> mapFinishedObjects;
 	private Map<Integer, List<ObjectTree3D>> mapMissedObjects;
+	private List<ObjectTree3D> objectsAddedFrame;
+	private List<ObjectTree3D> objectsRemovedFrame;
 	private static Integer id = 1;
 	
 	public MotionField() {
 		this.mapObjects = new HashMap<Integer, List<ObjectTree3D>>();
 		this.mapFinishedObjects = new HashMap<Integer, List<ObjectTree3D>>();
 		this.mapMissedObjects = new HashMap<Integer, List<ObjectTree3D>>();
+		this.objectsAddedFrame = new ArrayList<ObjectTree3D>();
+		this.objectsRemovedFrame = new ArrayList<ObjectTree3D>();
 	}
 	
 	public Map<Integer, List<ObjectTree3D>> getMapObjects() {
@@ -31,16 +35,19 @@ public class MotionField {
 	}
 	
 	public void addNewObject(ObjectTree3D object) {
-		Log.println("Creating object " + id + " - Frame " + object.getFrame());
-		List<ObjectTree3D> list = new ArrayList<ObjectTree3D>();
-		object.setId(id);
-		list.add(object);
-		mapObjects.put(id, list);
-//		if(id == 63) {
-//			for (ObjectTree3D objectTree3D : list) {
-//				System.out.println(objectTree3D.getId());
-//			}
-//		}
+		if(!mapObjects.containsKey(id)) {
+			Log.println("Creating object " + id + " - Frame " + object.getFrame());
+			List<ObjectTree3D> list = new ArrayList<ObjectTree3D>();
+			object.setId(id);
+			list.add(object);
+			mapObjects.put(id, list);
+	//		if(id == 63) {
+	//			for (ObjectTree3D objectTree3D : list) {
+	//				System.out.println(objectTree3D.getId());
+	//			}
+	//		}
+	//		objectsAddedFrame.add(object);
+		}
 		id++;
 	}
 	
@@ -48,12 +55,15 @@ public class MotionField {
 		object.setId(idObject);
 		Log.println("Adding object to track " + idObject + " - Frame " + object.getFrame() + " - Object Value "+object.getObject().getValue());
 		List<ObjectTree3D> list = mapObjects.get(idObject);
-		list.add(object);
-		if(idObject == 63) {
-			for (ObjectTree3D objectTree3D : list) {
-				System.out.println(objectTree3D.getId());
-			}
+		if(!list.contains(object)) {
+			list.add(object);
 		}
+//		if(idObject == 63) {
+//			for (ObjectTree3D objectTree3D : list) {
+//				System.out.println(objectTree3D.getId());
+//			}
+//		}
+//		objectsAddedFrame.add(object);
 	}
 	
 	public void reconnectMissedObjectId(Integer idObject) {
@@ -120,6 +130,8 @@ public class MotionField {
 	
 	public ObjectTree3D getLastObject(Integer idObject) {
 		List<ObjectTree3D> temp = mapObjects.get(idObject);
+		if(temp == null)
+			return null; 
 		return temp.get(temp.size()-1);
 	}
 
@@ -134,9 +146,13 @@ public class MotionField {
 	}
 	
 	public void finishObject(ObjectTree3D obj) {
-		Log.println("Finishing track " + obj.getId() + " - Frame " + obj.getFrame());
-		List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
-		mapFinishedObjects.put(obj.getId(), temp);
+		if(!mapFinishedObjects.containsKey(obj.getId())){
+			Log.println("Finishing track " + obj.getId() + " - Frame " + obj.getFrame());
+			List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
+			mapFinishedObjects.put(obj.getId(), temp);
+		} else if(mapObjects.containsKey(obj.getId())) {
+			Log.println("GRANDE CAGADA AQUI");
+		}
 //		temp = mapMissedObjects.remove(obj.getId());
 //		mapFinishedObjects.put(obj.getId(), temp);
 	}
@@ -269,6 +285,11 @@ public class MotionField {
 		Log.println("Putting track " + objMissed.getId() + " - Frame " + objMissed.getFrame()+" as missed");
 		List<ObjectTree3D> temp = mapObjects.remove(objMissed.getId());
 		mapMissedObjects.put(objMissed.getId(), temp);
+	}
+	
+	public void clear() {
+		this.objectsAddedFrame.clear();
+		this.objectsRemovedFrame.clear();
 	}
 
 //	public void check() {

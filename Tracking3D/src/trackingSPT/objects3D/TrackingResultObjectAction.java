@@ -36,4 +36,6 @@ public abstract class TrackingResultObjectAction {
 
 	public abstract void setObjectMissed(ObjectTree3D objMissed);
 	
+	public abstract ObjectTree3D getLastObjId(int id);
+	
 }

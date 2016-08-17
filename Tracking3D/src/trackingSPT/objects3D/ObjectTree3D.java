@@ -78,4 +78,9 @@ public class ObjectTree3D {
 	public void removeChildren() {
 		this.children.clear();
 	}
+	
+	@Override
+	public String toString() {
+		return String.valueOf(id);
+	}
 }

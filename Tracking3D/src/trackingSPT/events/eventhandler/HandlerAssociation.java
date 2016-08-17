@@ -34,8 +34,7 @@ public class HandlerAssociation extends EventHandlerAction {
 			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 			double comp = getDistCenterMax(obj1.getObject());
 			comp = Double.isNaN(comp) ? context.getMeanDistanceFrame() : comp; 
-//			if(distance < (comp*context.getMeanDistanceFrame())) {
-			if(distance < (context.getMeanDistanceFrame())) {
+			if(distance < (context.getMeanDistanceFrame()*DISTANCE)) {
 				context.addNewObjectId(obj1.getId(), obj2);
 				obj2.setParent(obj1);
 				obj1.addChild(obj2);

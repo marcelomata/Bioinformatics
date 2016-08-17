@@ -6,7 +6,7 @@ import trackingSPT.objects3D.TrackingContextSPT;
 
 public abstract class EventHandlerAction implements Action {
 	
-//	private static double DISTANCE = 3;
+	protected static final double DISTANCE = 3;
 //	private static double DISTANCE = 6;
 
 	protected TrackingContextSPT context;

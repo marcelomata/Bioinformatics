@@ -71,7 +71,9 @@ public class HandlerSplitting extends EventHandlerAction {
 					}
 				}
 			} else {
-				context.addNewObject(obj2);
+				if(!context.motionFieldContains(obj2)) {
+					context.addNewObject(obj2);
+				}
 			}
 		}
 	}
