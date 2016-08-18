@@ -3,6 +3,8 @@ package trackingSPT.events.eventhandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import mcib3d.geom.Object3D;
+import mcib3d.geom.Vector3D;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
@@ -35,7 +37,7 @@ public class HandlerSplitting extends EventHandlerAction {
 		ObjectTree3D obj3;
 		double distance1;
 		double distance2;
-		double difference;
+//		double difference;
 		
 		//divisions
 		for (Event event : splittings) {
@@ -46,9 +48,10 @@ public class HandlerSplitting extends EventHandlerAction {
 
 				distance1 = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
 				distance2 = obj1.getObject().getCenterAsPoint().distance(obj3.getObject().getCenterAsPoint());
-				difference = Math.abs(distance1-distance2);
+//				difference = Math.abs(distance1-distance2);
 				
-				if(difference < distance1*context.getMeanDistanceFrame() && difference < distance2*context.getMeanDistanceFrame()) {
+//				if(difference < distance1*context.getMeanDistanceFrame() && difference < distance2*context.getMeanDistanceFrame()) {
+				if(checkSplitting(obj1, obj2, obj3)) {
 					context.finishObjectTracking(obj1);
 					obj1.removeChildren();
 					obj1.addChild(obj2);
@@ -76,6 +79,28 @@ public class HandlerSplitting extends EventHandlerAction {
 				}
 			}
 		}
+	}
+
+	private boolean checkSplitting(ObjectTree3D obj1, ObjectTree3D obj2, ObjectTree3D obj3) {
+		Vector3D tempVector3 = new Vector3D(obj1.getObject().getCenterAsPoint(), obj3.getObject().getCenterAsPoint());
+		Vector3D tempVectorOpp3 = new Vector3D(obj3.getObject().getCenterAsPoint(), obj1.getObject().getCenterAsPoint());
+		Vector3D tempVector2 = new Vector3D(obj1.getObject().getCenterAsPoint(), obj2.getObject().getCenterAsPoint());
+		Vector3D tempVectorOpp2 = new Vector3D(obj2.getObject().getCenterAsPoint(), obj1.getObject().getCenterAsPoint());
+//		Vector3D tempVectorOpp = new Vector3D(-tempVector.getX(), -tempVector.getY(), -tempVector.getZ());
+		Object3D objTemp2 = obj2.getObject();
+		objTemp2.translate(tempVectorOpp2);
+		Object3D objTemp3 = obj3.getObject();
+		objTemp3.translate(tempVectorOpp3);
+		
+		double vol2 = objTemp2.getVolumePixels();
+        double vol3 = objTemp3.getVolumePixels();
+        double coloc = objTemp2.getColoc(objTemp3);
+        double norm = (vol2 + vol3 - coloc) / (vol2 + vol3);
+        
+        objTemp2.translate(tempVector2);
+        objTemp3.translate(tempVector3);
+		
+		return norm < 1;
 	}
 
 	private void reconnect(List<MissedObject> misses, List<Event> splittings) {
