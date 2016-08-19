@@ -5,6 +5,7 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Vector3D;
+import trackingPlugin.ImageJStatic;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
@@ -96,6 +97,8 @@ public class HandlerSplitting extends EventHandlerAction {
         double vol3 = objTemp3.getVolumePixels();
         double coloc = objTemp2.getColoc(objTemp3);
         double norm = (vol2 + vol3 - coloc) / (vol2 + vol3);
+        
+        ImageJStatic.drawImageObjects(objTemp2, objTemp3, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent());
         
         objTemp2.translate(tempVector2);
         objTemp3.translate(tempVector3);

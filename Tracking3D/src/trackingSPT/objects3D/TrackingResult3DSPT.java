@@ -124,5 +124,9 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 		return motionField.getLastObject(id);
 	}
 	
+	@Override
+	public void updateMotionObjects() {
+		motionField.updateObjectsAttributes();
+	}
 }
 	

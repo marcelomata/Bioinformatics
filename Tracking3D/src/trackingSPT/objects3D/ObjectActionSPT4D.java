@@ -198,4 +198,5 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	public String getSegFileName() {
 		return fileSegName;
 	}
+
 }

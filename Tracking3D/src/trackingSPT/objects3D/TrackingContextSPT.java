@@ -329,6 +329,10 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		return depth;
 	}
 
+	public void updateObjectsAttributes() {
+		result.updateMotionObjects();
+	}
+
 //	//TODO
 //	public void check() {
 //		result.getMotionField().check();

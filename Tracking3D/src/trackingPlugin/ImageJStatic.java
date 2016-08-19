@@ -4,6 +4,9 @@ import java.io.File;
 
 import ij.IJ;
 import ij.ImagePlus;
+import mcib3d.geom.Object3D;
+import mcib3d.geom.ObjectCreator3D;
+import mcib3d.geom.Objects3DPopulation;
 import mcib3d.image3d.ImageHandler;
 
 public class ImageJStatic {
@@ -59,5 +62,20 @@ public class ImageJStatic {
 
         return ImageHandler.wrap(plus);
     }
+
+	public static void drawImageObjects(Object3D obj1, Object3D obj2, ImagePlus imagePlus, String dir) {
+          // The object responsible of creating the new 3D image where the cell's detections
+          // will be coloured according to the colour of the first occurrence of the cell
+          ObjectCreator3D creator = new ObjectCreator3D(imagePlus.getImageStack());
+          
+          creator.drawObject(obj1);
+          creator.drawObject(obj2);
+          
+          // Create the new image containing the differently-coloured objects
+          ImagePlus res = new ImagePlus("Res", creator.getStack());
+
+          // Save the image under the specified folder
+          IJ.saveAsTiff(res, dir+ "/TEST/" + "TestColoc" + obj1.getValue() + ".tif");
+	}
 
 }
