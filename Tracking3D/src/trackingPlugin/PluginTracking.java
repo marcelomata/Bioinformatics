@@ -48,9 +48,9 @@ public class PluginTracking implements PlugIn {
 		gen.computeColorChallenge(0);
 		gen.saveColoredChallenge(2, 0, 0);
 		gen.saveColored(2, 0);
-		Log.println("Rendering");
-		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
-		renderer.run();
+//		Log.println("Rendering");
+//		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
+//		renderer.run();
 		
 	}
 }

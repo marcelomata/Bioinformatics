@@ -67,6 +67,7 @@ public class ImageJStatic {
           // The object responsible of creating the new 3D image where the cell's detections
           // will be coloured according to the colour of the first occurrence of the cell
           ObjectCreator3D creator = new ObjectCreator3D(imagePlus.getImageStack());
+          creator.clear();
           
           creator.drawObject(obj1);
           creator.drawObject(obj2);
@@ -75,7 +76,22 @@ public class ImageJStatic {
           ImagePlus res = new ImagePlus("Res", creator.getStack());
 
           // Save the image under the specified folder
-          IJ.saveAsTiff(res, dir+ "/TEST/" + "TestColoc" + obj1.getValue() + ".tif");
+          IJ.saveAsTiff(res, dir+ "/TEST/" + "TestColoc" + obj1.getValue()+obj2.getValue() + ".tif");
+	}
+	
+	public static void drawImageObjects(Object3D obj, ImagePlus imagePlus, String dir, String addName) {
+        // The object responsible of creating the new 3D image where the cell's detections
+        // will be coloured according to the colour of the first occurrence of the cell
+        ObjectCreator3D creator = new ObjectCreator3D(imagePlus.getImageStack());
+        creator.clear();
+        
+        creator.drawObject(obj);
+        
+        // Create the new image containing the differently-coloured objects
+        ImagePlus res = new ImagePlus("Res", creator.getStack());
+
+        // Save the image under the specified folder
+        IJ.saveAsTiff(res, dir+ "/TEST/" + "TestColoc" + obj.getValue() + addName + ".tif");
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Vector3D;
-import trackingPlugin.ImageJStatic;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
@@ -88,20 +87,33 @@ public class HandlerSplitting extends EventHandlerAction {
 		Vector3D tempVector2 = new Vector3D(obj1.getObject().getCenterAsPoint(), obj2.getObject().getCenterAsPoint());
 		Vector3D tempVectorOpp2 = new Vector3D(obj2.getObject().getCenterAsPoint(), obj1.getObject().getCenterAsPoint());
 //		Vector3D tempVectorOpp = new Vector3D(-tempVector.getX(), -tempVector.getY(), -tempVector.getZ());
-		Object3D objTemp2 = obj2.getObject();
-		objTemp2.translate(tempVectorOpp2);
+		Object3D objTemp1 = obj1.getObject();
+//		Object3D objTemp2 = obj2.getObject();
 		Object3D objTemp3 = obj3.getObject();
-		objTemp3.translate(tempVectorOpp3);
+//		ImageJStatic.drawImageObjects(objTemp1, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent(), "1");
+		objTemp1.translate(tempVector2);
+//		ImageJStatic.drawImageObjects(objTemp1, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent(), "2");
+//		ImageJStatic.drawImageObjects(objTemp1, objTemp2, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent());
+		objTemp1.translate(tempVector3.multiply(2));
+//		ImageJStatic.drawImageObjects(objTemp1, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent(), "3");
+//		objTemp1.translate(tempVector3);
 		
-		double vol2 = objTemp2.getVolumePixels();
+//		Log.println(String.valueOf(obj1.getObject().getColoc(obj3.getObject())));
+//		Log.println(String.valueOf(obj1.getObject().getColoc(obj2.getObject())));
+		
+		double vol2 = objTemp1.getVolumePixels();
         double vol3 = objTemp3.getVolumePixels();
-        double coloc = objTemp2.getColoc(objTemp3);
+        double coloc = objTemp1.getColoc(objTemp3);
         double norm = (vol2 + vol3 - coloc) / (vol2 + vol3);
         
-        ImageJStatic.drawImageObjects(objTemp2, objTemp3, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent());
+//        ImageJStatic.drawImageObjects(objTemp1, objTemp3, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent());
+//        ImageJStatic.drawImageObjects(objTemp1, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent(), "4");
+//        ImageJStatic.drawImageObjects(objTemp2, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent(), "1");
+//        ImageJStatic.drawImageObjects(objTemp3, context.getCurrentSegFrame(), context.getSegmentedDataDir().getParent(), "1");
         
-        objTemp2.translate(tempVector2);
-        objTemp3.translate(tempVector3);
+        objTemp1.translate(tempVectorOpp3.multiply(2));
+//        objTemp1.translate(tempVectorOpp3);
+        objTemp1.translate(tempVectorOpp2);
 		
 		return norm < 1;
 	}
