@@ -104,10 +104,11 @@ public class ColocalizationAssociation extends EventSeekerAction {
 //					source.add(obj1);
 //					target.add(obj2);
 //				}
-			} else {
-				//leave source objects unlinked in the source list
-				source.add(obj1);
-			}
+			} 
+//			else {
+//				//leave source objects unlinked in the source list
+//				source.add(obj1);
+//			}
 		}
 	}
 

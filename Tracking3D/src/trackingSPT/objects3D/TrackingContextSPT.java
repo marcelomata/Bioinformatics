@@ -333,6 +333,10 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		result.updateMotionObjects();
 	}
 
+	public int numberMissedObjects() {
+		return result.numberMissedObjects();
+	}
+
 //	//TODO
 //	public void check() {
 //		result.getMotionField().check();

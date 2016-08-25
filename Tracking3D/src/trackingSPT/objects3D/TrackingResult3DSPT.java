@@ -128,5 +128,10 @@ public class TrackingResult3DSPT extends TrackingResultObjectAction {
 	public void updateMotionObjects() {
 		motionField.updateObjectsAttributes();
 	}
+
+	@Override
+	public int numberMissedObjects() {
+		return motionField.numberMissedObjects();
+	}
 }
 	

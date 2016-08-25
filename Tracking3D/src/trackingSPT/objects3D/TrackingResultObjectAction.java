@@ -40,4 +40,6 @@ public abstract class TrackingResultObjectAction {
 
 	public abstract void updateMotionObjects();
 	
+	public abstract int numberMissedObjects();
+	
 }

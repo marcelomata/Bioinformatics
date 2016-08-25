@@ -51,9 +51,9 @@ public class HandlerSplitting extends EventHandlerAction {
 //				difference = Math.abs(distance1-distance2);
 				
 //				if(difference < distance1*context.getMeanDistanceFrame() && difference < distance2*context.getMeanDistanceFrame()) {
+				obj1.removeChildren();
 				if(checkSplitting(obj1, obj2, obj3)) {
 					context.finishObjectTracking(obj1);
-					obj1.removeChildren();
 					obj1.addChild(obj2);
 					obj1.addChild(obj3);
 					obj2.setParent(obj1);
@@ -153,7 +153,7 @@ public class HandlerSplitting extends EventHandlerAction {
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
+					if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame()) && context.numberMissedObjects() > 0) {
 						context.reconnectMissedObject(obj2.getId());
 						context.addNewObjectId(obj2.getId(), obj1);
 						obj1.setParent(obj2);

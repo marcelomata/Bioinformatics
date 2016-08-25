@@ -68,13 +68,13 @@ public class AssociationMinDistance extends AssociationSeeker {
 		// result index is the frame t and the value is the index to the linked object in the next frame
 		int []result = lapSolver.execute();
 		
-		boolean targetLeft = false;
-		source.clear();
-		if(source.size() < target.size()) {
-			targetLeft = true;
-		} else {
-			target.clear();
-		}
+//		boolean targetLeft = false;
+//		source.clear();
+//		if(source.size() < target.size()) {
+//			targetLeft = true;
+//		} else {
+//			target.clear();
+//		}
 		
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
@@ -94,13 +94,15 @@ public class AssociationMinDistance extends AssociationSeeker {
 				events.add(event);
 				
 				//leave target objects unlinked in the target list
-				if(targetLeft) {
+//				if(targetLeft) {
+					source.remove(obj1);
 					target.remove(obj2);
-				}
-			} else {
-				//leave source objects unlinked in the source list
-				source.add(obj1);
-			}
+//				}
+			} 
+//			else {
+//				//leave source objects unlinked in the source list
+//				source.add(obj1);
+//			}
 		}
 	}
 

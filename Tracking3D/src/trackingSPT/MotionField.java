@@ -150,8 +150,6 @@ public class MotionField {
 			Log.println("Finishing track " + obj.getId() + " - Frame " + obj.getFrame());
 			List<ObjectTree3D> temp = mapObjects.remove(obj.getId());
 			mapFinishedObjects.put(obj.getId(), temp);
-		} else if(mapObjects.containsKey(obj.getId())) {
-			Log.println("GRANDE CAGADA AQUI");
 		}
 //		temp = mapMissedObjects.remove(obj.getId());
 //		mapFinishedObjects.put(obj.getId(), temp);
@@ -308,6 +306,10 @@ public class MotionField {
 
 	private void updateAttributes(ObjectTree3D objectTree3D, ObjectTree3D parent) {
 		
+	}
+
+	public int numberMissedObjects() {
+		return this.numberMissedObjects();
 	}
 
 //	public void check() {

@@ -6,7 +6,7 @@ public class Main {
 		
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-GOWT1/", 91);
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-GOWT1-mini/", 10);
-		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/", 99);
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DH-SIM/", 50);
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N2DL-HeLa/", 91);
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/N3D-CHO-2/N3DH-CHO-training/", 91);
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/Raw1-amal/");
@@ -17,9 +17,10 @@ public class Main {
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/Test3");
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/Test4");
 //		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/Test21");
-//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/Challenge/Test22");
+//		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/'Challenge/Test22");
+		PluginTracking tracking = new PluginTracking("/home/marcelodmo/Documents/data/A workflow to proc 3D+t/data/", 20);
 		
-		tracking.run("06");
+		tracking.run("20");
 	}
 
 }
