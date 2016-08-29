@@ -14,17 +14,17 @@ import trackingSPT.objects3D.MissedObject;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
-public class HandlerSplitting extends EventHandlerAction {
+public class HandlerMitosis extends EventHandlerAction {
 	
-	public HandlerSplitting(TrackingContextSPT context) {
+	public HandlerMitosis(TrackingContextSPT context) {
 		super(context);
 	}
 
 	@Override
 	public void execute() {
-		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
+		List<Event> splittings = this.context.getEventList(EventType.MITOSIS);
 		
-		Log.println("Splitting Events -> "+splittings.size());
+		Log.println("Mitosis Events -> "+splittings.size());
 		
 		handleSplitting(splittings);
 	}

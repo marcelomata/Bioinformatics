@@ -1,11 +1,11 @@
-package trackingSPT.events.eventfinder.mergingsplitting;
+package trackingSPT.events.eventfinder.mergingmitosis;
 
 import java.util.List;
 import java.util.Map;
 
 import trackingSPT.objects3D.ObjectTree3D;
 
-public interface SplittingMergingObj {
+public interface MistosisMergingObj {
 	
 	public abstract List<ObjectTree3D> getLeftTargetObjects();
 	

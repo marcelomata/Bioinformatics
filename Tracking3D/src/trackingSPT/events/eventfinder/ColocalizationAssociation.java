@@ -59,9 +59,6 @@ public class ColocalizationAssociation extends EventSeekerAction {
 	}
 	
 	private void findEvents(List<ObjectTree3D> source, List<ObjectTree3D> target, List<Event> events, CostMatrix matrix) {
-//		if(context.getFrameTime() == 8) {
-//			checkDouble(target);
-//		}
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
 		Event event;
@@ -69,15 +66,6 @@ public class ColocalizationAssociation extends EventSeekerAction {
 		HungarianAlgorithm lapSolver = new HungarianAlgorithm(matrix.getCosts());
 		// result index is the frame t and the value is the index to the linked object in the next frame
 		int []result = lapSolver.execute();
-		
-//		boolean targetLeft = false;
-//		if(source.size() < target.size()) {
-//			targetLeft = true;
-//		} else {
-//			
-//		}
-//		target.clear();
-//		source.clear();
 		
 		int j;
 		for (int i = 0; i < result.length; i++) {
@@ -94,36 +82,12 @@ public class ColocalizationAssociation extends EventSeekerAction {
 					event.setObjectTarget(obj2);
 					events.add(event);
 					
-					//left target objects unlinked in the target list
-//					if(targetLeft) {
-						source.remove(obj1);
-						target.remove(obj2);
-//					}
+					source.remove(obj1);
+					target.remove(obj2);
 				}
-//				else {
-//					source.add(obj1);
-//					target.add(obj2);
-//				}
 			} 
-//			else {
-//				//leave source objects unlinked in the source list
-//				source.add(obj1);
-//			}
 		}
 	}
-
-//	private void checkDouble(List<ObjectTree3D> target) {
-//		int count;
-//		for (ObjectTree3D objectTree3D : target) {
-//			count = 0;
-//			for (ObjectTree3D objectTree3D2 : target) {
-//				if (objectTree3D == objectTree3D2) {
-//					count++;
-//				}
-//			}
-//			Log.println("Object Id "+objectTree3D.getId()+" appear "+count+" times.");
-//		}
-//	}
 
 	private void computeCostsMatrix(CostMatrix matrix, List<ObjectTree3D> list1, List<ObjectTree3D> list2) {
 		ObjectTree3D obj1;
@@ -132,15 +96,12 @@ public class ColocalizationAssociation extends EventSeekerAction {
 		for (int i = 0; i < list1.size(); i++) {
 			obj1 = list1.get(i);
 			matrix.addObjectSource(obj1, i);
-//			System.out.println("Distances obj - "+obj1.getId());
 			for (int j = 0; j < list2.size(); j++) {
 				obj2 = list2.get(j);
 				matrix.addObjectTarget(obj2, j);
 				distance = function.calculate(obj1, obj2);
 				matrix.setCost(i, j, distance);
-//				System.out.print(distance+" ");
 			}
-//			System.out.println();
 		}
 	}
 }

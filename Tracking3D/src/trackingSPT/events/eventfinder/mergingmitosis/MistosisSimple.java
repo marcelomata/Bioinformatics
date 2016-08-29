@@ -1,4 +1,4 @@
-package trackingSPT.events.eventfinder.mergingsplitting;
+package trackingSPT.events.eventfinder.mergingmitosis;
 
 
 import java.util.ArrayList;
@@ -15,11 +15,11 @@ import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
-public class SplittingSimple extends EventSeekerAction {
+public class MistosisSimple extends EventSeekerAction {
 
-	public SplittingSimple(TrackingContextSPT context) {
+	public MistosisSimple(TrackingContextSPT context) {
 		super(context);
-		context.addEventType(EventType.SPLITTING);
+		context.addEventType(EventType.MITOSIS);
 	}
 	
 	@Override
@@ -60,7 +60,7 @@ public class SplittingSimple extends EventSeekerAction {
 					obj2 = matrix.getSource(i);
 					event.setObjectSource(obj1);
 					event.setObjectTarget(obj2);
-					event.setEventType(EventType.SPLITTING);
+					event.setEventType(EventType.MITOSIS);
 					events.add(event);
 				}
 			}
@@ -69,9 +69,9 @@ public class SplittingSimple extends EventSeekerAction {
 		associationsSources.clear();
 		leftTargetObjects.clear();
 		
-		EventMapItem item = new EventMapItem(EventType.SPLITTING);
+		EventMapItem item = new EventMapItem(EventType.MITOSIS);
 		item.addEventList(events);
 		this.context.addEventItem(item);
-		Log.println("Splitting events "+events.size());
+		Log.println("Mitosis events "+events.size());
 	}
 }

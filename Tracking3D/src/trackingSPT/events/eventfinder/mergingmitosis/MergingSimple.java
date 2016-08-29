@@ -1,4 +1,4 @@
-package trackingSPT.events.eventfinder.mergingsplitting;
+package trackingSPT.events.eventfinder.mergingmitosis;
 
 
 import java.util.ArrayList;

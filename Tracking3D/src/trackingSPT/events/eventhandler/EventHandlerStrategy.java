@@ -24,7 +24,7 @@ public class EventHandlerStrategy extends Strategy {
 		addEventHandlerAction(new HandlerGoingIn(context));
 		addEventHandlerAction(new HandlerGoingOut(context));
 		addEventHandlerAction(new HandlerAssociation(context));
-		addEventHandlerAction(new HandlerSplitting(context));
+		addEventHandlerAction(new HandlerMitosis(context));
 		addEventHandlerAction(new HandlerMerging(context));
 	}
 	
@@ -33,7 +33,7 @@ public class EventHandlerStrategy extends Strategy {
 		List<Event> goingIn = this.context.getEventList(EventType.GOING_IN);
 		List<Event> goingOut = this.context.getEventList(EventType.GOING_OUT);
 		List<Event> associations = this.context.getEventList(EventType.ASSOCIATION);
-		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
+		List<Event> splittings = this.context.getEventList(EventType.MITOSIS);
 		List<Event> mergings = this.context.getEventList(EventType.MERGING);
 		
 		Log.println("Colocalization Events -> "+colocalization.size());
