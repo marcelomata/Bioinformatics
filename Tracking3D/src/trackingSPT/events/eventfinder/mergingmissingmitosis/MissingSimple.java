@@ -1,4 +1,4 @@
-package trackingSPT.events.eventfinder.mergingmitosis;
+package trackingSPT.events.eventfinder.mergingmissingmitosis;
 
 
 import java.util.ArrayList;
@@ -17,11 +17,11 @@ import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
-public class MergingSimple extends EventSeekerAction {
+public class MissingSimple extends EventSeekerAction {
 
-	public MergingSimple(TrackingContextSPT context) {
+	public MissingSimple(TrackingContextSPT context) {
 		super(context);
-		context.addEventType(EventType.MERGING);
+		context.addEventType(EventType.MISSING);
 	}
 
 	@Override
@@ -63,21 +63,21 @@ public class MergingSimple extends EventSeekerAction {
 			Event event;
 			for (int i = 0; i < result.length; i++) {
 				if(result[i] != -1) {
-					event = new Event(EventCause.MISSED);
+					event = new Event(EventCause.MISSED, context.getFrameTime());
 					obj1 = matrix.getSource(i);
 					obj2 = matrix.getTarget(result[i]);
 					event.setObjectSource(obj1);
 					event.setObjectTarget(obj2);
-					event.setEventType(EventType.MERGING);
+					event.setEventType(EventType.MISSING);
 					events.add(event);
 				}
 			}
 		}
 		
-		EventMapItem item = new EventMapItem(EventType.MERGING);
+		EventMapItem item = new EventMapItem(EventType.MISSING);
 		item.addEventList(events);
 		this.context.addEventItem(item);
-		Log.println("Merging events "+events.size());
+		Log.println("Missing events "+events.size());
 	}
 
 }

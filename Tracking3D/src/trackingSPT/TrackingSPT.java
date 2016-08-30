@@ -10,6 +10,15 @@ import trackingSPT.events.eventhandler.EventHandlerTrackingAction;
 import trackingSPT.objects3D.TrackingContextSPT;
 import trackingSPT.segmentation.SegmentationTrackingAction;
 
+/**
+ * 
+ * This tool to perform tracking in 2D + t or 3D + t images.
+ * This tool was developed to process biomedical applications, but the interface can be used to
+ * implement tracking algorithm in another field of interest.
+ * 
+ * @author Marcelo da Mata
+ *
+ */
 public class TrackingSPT extends TrackingStrategy {
 	
 	private TrackingContextSPT context;

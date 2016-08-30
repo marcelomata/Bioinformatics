@@ -10,11 +10,13 @@ public class Event {
 	private ObjectTree3D objectTarget;
 	private EventCause objectType;
 	private EventType eventType;
+	private int frame;
 	
-	public Event(EventCause objectType) {
+	public Event(EventCause objectType, int frame) {
 		this.objectType = objectType;
 		this.objectSource = null;
 		this.objectTarget = null;
+		this.frame = frame;
 	}
 	
 	public ObjectTree3D getObjectSource() {
@@ -43,6 +45,10 @@ public class Event {
 	
 	public EventType getEventType() {
 		return eventType;
+	}
+	
+	public int getFrame() {
+		return frame;
 	}
 	
 	@Override

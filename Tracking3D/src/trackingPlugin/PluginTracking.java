@@ -1,7 +1,6 @@
 package trackingPlugin;
 import java.io.File;
 
-import cell3DRenderer.Particles4DJOGLRenderer;
 import ij.plugin.PlugIn;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.TrackingSPT;
@@ -12,6 +11,11 @@ public class PluginTracking implements PlugIn {
 	private String parentDir;
 	private int numMaxFrames;
 	
+	/**
+	 * 
+	 * @param parentDir the directory 
+	 * @param numMaxFrames
+	 */
 	public PluginTracking(String parentDir, int numMaxFrames) {
 		this.parentDir = parentDir;
 		this.numMaxFrames = numMaxFrames;

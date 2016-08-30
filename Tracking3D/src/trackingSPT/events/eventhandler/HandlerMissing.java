@@ -9,20 +9,20 @@ import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
-public class HandlerMerging extends EventHandlerAction {
+public class HandlerMissing extends EventHandlerAction {
 	
-	public HandlerMerging(TrackingContextSPT context) {
+	public HandlerMissing(TrackingContextSPT context) {
 		super(context);
 	}
 
 	@Override
 	public void execute() {
 		
-		List<Event> mergings = this.context.getEventList(EventType.MERGING);
+		List<Event> mergings = this.context.getEventList(EventType.MISSING);
 		
-		Log.println("Merging Events -> "+mergings.size());
+		Log.println("Missing Events -> "+mergings.size());
 		
-		handleMergings(mergings);	
+		handleMergings(mergings);
 	}
 
 	private void handleMergings(List<Event> mergings) {

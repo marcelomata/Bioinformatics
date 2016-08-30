@@ -3,8 +3,8 @@ package trackingSPT.events.eventfinder;
 import trackingInterface.Action;
 import trackingInterface.Strategy;
 import trackingSPT.events.eventfinder.association.AssociationMinDistance;
-import trackingSPT.events.eventfinder.mergingmitosis.MergingSimple;
-import trackingSPT.events.eventfinder.mergingmitosis.MistosisSimple;
+import trackingSPT.events.eventfinder.mergingmissingmitosis.MissingSimple;
+import trackingSPT.events.eventfinder.mergingmissingmitosis.MistosisSimple;
 import trackingSPT.objects3D.TrackingContextSPT;
 
 public class EventSeekerStrategy extends Strategy {
@@ -24,7 +24,7 @@ public class EventSeekerStrategy extends Strategy {
 		addEventSeekerAction(new GoingOutAssociation(context));
 		addEventSeekerAction(new AssociationMinDistance(context));
 		addEventSeekerAction(new MistosisSimple(context));
-		addEventSeekerAction(new MergingSimple(context));
+		addEventSeekerAction(new MissingSimple(context));
 	}
 	
 	public void run() {

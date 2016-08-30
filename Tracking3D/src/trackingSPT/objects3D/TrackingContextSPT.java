@@ -24,6 +24,8 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	
 	private TemporalPopulation3D temporalPopulation;
 	private List<MissedObject> misses;
+	private List<SplittedObject> splittings;
+	private List<MergedObject> mergings;
 	private File rawDataDir;
 	private File segmentedDataDir;
 	private File[] framesRawFile;
@@ -201,6 +203,13 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		this.misses.add(new MissedObject(objMissed, result.getCurrentFrame()));
 		this.result.setObjectMissed(objMissed);
 	}
+	
+	@Override
+	public void addSplitting(List<ObjectTree3D objMissed) {
+		System.out.println("Adding object track "+objMissed.getId()+" - Frame "+objMissed.getFrame()+" to missed list");
+		this.misses.add(new MissedObject(objMissed, result.getCurrentFrame()));
+		this.result.setObjectMissed(objMissed);
+	}
 
 	@Override
 	public void addNewObjectId(Integer id, ObjectTree3D treeObj) {
@@ -335,6 +344,10 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 
 	public int numberMissedObjects() {
 		return result.numberMissedObjects();
+	}
+
+	public void addSplittedObjects(ObjectTree3D source) {
+		
 	}
 
 //	//TODO

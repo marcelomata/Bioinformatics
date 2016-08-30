@@ -1,11 +1,11 @@
-package trackingSPT.events.eventfinder.mergingmitosis;
+package trackingSPT.events.eventfinder.mergingmissingmitosis;
 
 import java.util.List;
 import java.util.Map;
 
 import trackingSPT.objects3D.ObjectTree3D;
 
-public interface MistosisMergingObj {
+public interface MistosisMissingMergingObj {
 	
 	public abstract List<ObjectTree3D> getLeftTargetObjects();
 	

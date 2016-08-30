@@ -1,11 +1,14 @@
 package trackingSPT.events.eventhandler;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.objects3D.ObjectTree3D;
+import trackingSPT.objects3D.SplittedObject;
 import trackingSPT.objects3D.TrackingContextSPT;
 
 public class HadleSplitting extends EventHandlerAction {
@@ -26,21 +29,25 @@ public class HadleSplitting extends EventHandlerAction {
 
 	private void handleSplitting(List<Event> splittings) {
 		
-		//TODO implement the hangle splitting
-		ObjectTree3D obj1;
-		ObjectTree3D obj2;
-		double distance = 0;
-		//overlap
+		//if some splitting happened, so 2 or more events share the same source
+		Map<Integer, SplittedObject> sources = new HashMap<Integer, SplittedObject>();
+		
+		ObjectTree3D source;
+		ObjectTree3D target1;
+		SplittedObject splittedObj;
 		for (Event event : splittings) {
-			obj1 = event.getObjectSource();
-			obj2 = event.getObjectTarget();
-			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			//if the closest is near so a merge should happened
-			if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
-				context.addMissed(obj1);
+			source = event.getObjectSource();
+			if(sources.containsKey(source.getId())) {
+				splittedObj = sources.remove(source.getId());
 			} else {
-				context.finishObjectTracking(obj1);
+				splittedObj = new SplittedObject(source, context.getFrameTime());
+				sources.put(source.getId(), splittedObj);
 			}
+			
+			target1 = event.getObjectTarget();
+			splittedObj.addTarget(target1);
 		}
+		
+		context.addSplittedObjects(source);
 	}
 }
