@@ -45,7 +45,7 @@ public class GoingOutAssociation extends EventSeekerAction {
 			distance = function.calculate(objectTree3D, new ObjectTree3D(new Object3DPoint(1, new Point3D(widht, height, depth)), context.getFrameTime()));
 			distMax = context.getMeanDistanceFrame() * 4;
 			if(distance < distMax) {
-				event = new Event(EventCause.GOING_OUT);
+				event = new Event(EventCause.GOING_OUT, context.getFrameTime());
 				event.setObjectSource(null);
 				event.setObjectTarget(objectTree3D);
 				events.add(event);

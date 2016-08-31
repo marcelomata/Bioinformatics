@@ -11,9 +11,9 @@ import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.SplittedObject;
 import trackingSPT.objects3D.TrackingContextSPT;
 
-public class HadleSplitting extends EventHandlerAction {
+public class HandlerSplitting extends EventHandlerAction {
 	
-	public HadleSplitting(TrackingContextSPT context) {
+	public HandlerSplitting(TrackingContextSPT context) {
 		super(context);
 	}
 
@@ -30,24 +30,30 @@ public class HadleSplitting extends EventHandlerAction {
 	private void handleSplitting(List<Event> splittings) {
 		
 		//if some splitting happened, so 2 or more events share the same source
-		Map<Integer, SplittedObject> sources = new HashMap<Integer, SplittedObject>();
+		Map<Integer, SplittedObject> splittedObjs = new HashMap<Integer, SplittedObject>();
 		
+		ObjectTree3D newObject = null;
 		ObjectTree3D source;
 		ObjectTree3D target1;
 		SplittedObject splittedObj;
 		for (Event event : splittings) {
 			source = event.getObjectSource();
-			if(sources.containsKey(source.getId())) {
-				splittedObj = sources.remove(source.getId());
+			if(splittedObjs.containsKey(source.getId())) {
+				splittedObj = splittedObjs.remove(source.getId());
 			} else {
 				splittedObj = new SplittedObject(source, context.getFrameTime());
-				sources.put(source.getId(), splittedObj);
+				splittedObjs.put(source.getId(), splittedObj);
+				newObject = event.getObjectTarget();
 			}
 			
 			target1 = event.getObjectTarget();
+			if(newObject != target1) {
+//				newObject.getObject().
+//				merge the two objects here TODO
+			}
 			splittedObj.addTarget(target1);
 		}
 		
-		context.addSplittedObjects(source);
+		context.addSplittedObjects(splittedObjs);
 	}
 }

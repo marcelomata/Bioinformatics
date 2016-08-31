@@ -54,7 +54,7 @@ public class EventSeekerSplitting extends EventSeekerAction {
 					if(key != obj1) {
 						distance = function.calculate(obj1, key);
 						distance += function.calculate(obj2, key);
-						if(distance == 0) {
+						if(distance <= 0.1) {
 							event = new Event(EventCause.EXCEEDED, context.getFrameTime());
 							event.setObjectSource(key);
 							event.setObjectTarget(obj1);

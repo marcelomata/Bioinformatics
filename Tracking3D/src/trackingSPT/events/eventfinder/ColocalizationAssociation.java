@@ -75,7 +75,7 @@ public class ColocalizationAssociation extends EventSeekerAction {
 				cost = matrix.getCosts()[i][j];
 				obj2 = matrix.getTarget(j);
 				if(cost <= 1) {
-					event = new Event(EventCause.COLOCALIZATION);
+					event = new Event(EventCause.COLOCALIZATION, context.getFrameTime());
 					context.addAssociation(obj1, obj2);
 					context.addDistanceValue(obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint()));
 					event.setObjectSource(obj1);

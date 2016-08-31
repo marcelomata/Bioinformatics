@@ -54,7 +54,7 @@ public class MistosisSimple extends EventSeekerAction {
 			Event event;
 			for (int i = 0; i < result.length; i++) {
 				if(result[i] != -1) { 
-					event = new Event(EventCause.EXCEEDED);
+					event = new Event(EventCause.EXCEEDED, context.getFrameTime());
 					// The order was changed because the list of left target is smaller
 					obj1 = matrix.getTarget(result[i]);
 					obj2 = matrix.getSource(i);

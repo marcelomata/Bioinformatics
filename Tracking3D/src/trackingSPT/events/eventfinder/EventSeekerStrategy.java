@@ -20,6 +20,7 @@ public class EventSeekerStrategy extends Strategy {
 	public void build() {
 		addEventSeekerAction(new ColocalizationAssociation(context));
 		addEventSeekerAction(new EventSeekerSplitting(context));
+		addEventSeekerAction(new EventSeekerMerging(context));
 		addEventSeekerAction(new GoingInAssociation(context));
 		addEventSeekerAction(new GoingOutAssociation(context));
 		addEventSeekerAction(new AssociationMinDistance(context));

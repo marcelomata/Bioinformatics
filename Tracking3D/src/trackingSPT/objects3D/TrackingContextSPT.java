@@ -205,13 +205,6 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	}
 	
 	@Override
-	public void addSplitting(List<ObjectTree3D objMissed) {
-		System.out.println("Adding object track "+objMissed.getId()+" - Frame "+objMissed.getFrame()+" to missed list");
-		this.misses.add(new MissedObject(objMissed, result.getCurrentFrame()));
-		this.result.setObjectMissed(objMissed);
-	}
-
-	@Override
 	public void addNewObjectId(Integer id, ObjectTree3D treeObj) {
 		result.addNewObjectId(id, treeObj);
 	}
@@ -346,13 +339,18 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		return result.numberMissedObjects();
 	}
 
-	public void addSplittedObjects(ObjectTree3D source) {
-		
+	public void addSplittedObjects(Map<Integer, SplittedObject> splittedObjects) {
+		Set<Integer> keys = splittedObjects.keySet();
+		for (Integer integer : keys) {
+			splittings.add(splittedObjects.get(integer));
+		}
 	}
-
-//	//TODO
-//	public void check() {
-//		result.getMotionField().check();
-//	}
+	
+	public void addMergedObjects(Map<Integer, MergedObject> mergedObjects) {
+		Set<Integer> keys = mergedObjects.keySet();
+		for (Integer integer : keys) {
+			mergings.add(mergedObjects.get(integer));
+		}
+	}
 
 }

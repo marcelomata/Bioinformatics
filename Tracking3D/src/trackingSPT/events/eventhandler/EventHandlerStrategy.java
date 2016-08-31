@@ -21,11 +21,12 @@ public class EventHandlerStrategy extends Strategy {
 	
 	public void build() {
 		addEventHandlerAction(new HandlerColocalization(context));
+		addEventHandlerAction(new HandlerMerging(context));
+		addEventHandlerAction(new HandlerMissing(context));
 		addEventHandlerAction(new HandlerGoingIn(context));
 		addEventHandlerAction(new HandlerGoingOut(context));
 		addEventHandlerAction(new HandlerAssociation(context));
 		addEventHandlerAction(new HandlerMitosis(context));
-		addEventHandlerAction(new HandlerMissing(context));
 	}
 	
 	public void run() {
