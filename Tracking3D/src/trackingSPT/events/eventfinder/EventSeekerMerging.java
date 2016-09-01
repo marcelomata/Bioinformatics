@@ -3,8 +3,6 @@ package trackingSPT.events.eventfinder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
@@ -12,7 +10,8 @@ import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.math.FunctionCalcObjectRelation;
-import trackingSPT.math.FunctionColocalization;
+import trackingSPT.math.FunctionSplittingMergingColocalization;
+import trackingSPT.objects3D.MergedObject;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
@@ -31,43 +30,47 @@ public class EventSeekerMerging extends EventSeekerAction {
 	public EventSeekerMerging(TrackingContextSPT context) {
 		super(context);
 		context.addEventType(EventType.MERGING);
-		this.function =  new FunctionColocalization();
+		this.function =  new FunctionSplittingMergingColocalization();
 	}
 
 	@Override
 	public void execute() {
 		List<Event> events = new ArrayList<Event>();
 		List<ObjectTree3D> leftSourceObjects = this.context.getLeftSourceObjects();
-		Map<ObjectTree3D, List<ObjectTree3D>> associations = this.context.getAssociationsMap();
+		List<ObjectTree3D> leftTargetObjects = this.context.getLeftTargetObjects();
 		
 		//If the number of elements in the frame t is bigger than in the frame t+1
 		if(leftSourceObjects.size() > 0) {
-			Set<ObjectTree3D> targetsKey = associations.keySet();
-			ObjectTree3D obj1;
+			ObjectTree3D source;
 			ObjectTree3D target;
 			double distance;
+			MergedObject mergedObject;
 			Event event;
-			for (ObjectTree3D key : targetsKey) {
-				target = associations.get(key).get(0);
+			List<ObjectTree3D> sources ;
+			for (int j = 0; j < leftTargetObjects.size(); j++) {
+				target = leftTargetObjects.get(j);
+				mergedObject = new MergedObject(target, context.getFrameTime());
 				for (int i = 0; i < leftSourceObjects.size(); i++) {
-					obj1 = leftSourceObjects.get(i);
-					if(key != obj1) {
-						distance = function.calculate(obj1, target);
-						distance += function.calculate(key, target);
-						if(distance <= 0.1) {
-							event = new Event(EventCause.COLOCALIZATION, context.getFrameTime());
-							event.setObjectSource(key);
-							event.setObjectTarget(target);
-							event.setEventType(EventType.MERGING);
-							events.add(event);
-							event = new Event(EventCause.COLOCALIZATION, context.getFrameTime());
-							event.setObjectSource(obj1);
-							event.setObjectTarget(target);
-							event.setEventType(EventType.MERGING);
-							events.add(event);
-							associations.remove(key);
-						}
+					source = leftSourceObjects.get(i);
+					distance = function.calculate(target, source);
+					if(distance <= 0.99) {
+						mergedObject.addSource(source);
 					}
+				}
+				sources = mergedObject.getSourceObjects();
+				//If the object was merged from 2 or more objects
+				//So create the merging events
+				if(sources.size() > 1) {
+					for (ObjectTree3D mergedSource : sources) {
+						event = new Event(EventCause.COLOCALIZATION, context.getFrameTime());
+						event.setObjectSource(mergedSource);
+						event.setObjectTarget(target);
+						event.setEventType(EventType.MERGING);
+						events.add(event);
+						leftSourceObjects.remove(mergedSource);
+					}
+					leftTargetObjects.remove(target);
+					j--;
 				}
 			}
 			

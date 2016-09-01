@@ -4,8 +4,6 @@ package trackingSPT.events.eventfinder;
 import java.util.ArrayList;
 import java.util.List;
 
-import mcib3d.geom.Object3D;
-import mcib3d.geom.Objects3DPopulation;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
@@ -30,31 +28,19 @@ public class ColocalizationAssociation extends EventSeekerAction {
 
 	@Override
 	public void execute() {
-		Objects3DPopulation object3DTPlus1 = this.context.getObjectNextFrame();
+		List<ObjectTree3D> leftSourceObjects = this.context.getLeftSourceObjects();
+		List<ObjectTree3D> leftTargetObjects = this.context.getLeftTargetObjects();
 		
-		List<ObjectTree3D> leftSourceObject3DList = context.getListLastObjects();
-		
-		Log.println(leftSourceObject3DList.size() + " and " + object3DTPlus1.getNbObjects());
-		
-		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
-		List<ObjectTree3D> leftTargetObject3DList = new ArrayList<ObjectTree3D>();
-		
-		for (Object3D object3d : object3DListTarget) {
-			leftTargetObject3DList.add(new ObjectTree3D(object3d, context.getCurrentFrame()));
-		}
-		
-		CostMatrix matrix = new CostMatrix(leftSourceObject3DList.size(), object3DListTarget.size());
-		computeCostsMatrix(matrix, leftSourceObject3DList, leftTargetObject3DList);
+		CostMatrix matrix = new CostMatrix(leftSourceObjects.size(), leftTargetObjects.size());
+		computeCostsMatrix(matrix, leftSourceObjects, leftTargetObjects);
 		List<Event> events = new ArrayList<Event>();
-		findEvents(leftSourceObject3DList, leftTargetObject3DList, events, matrix);
+		findEvents(leftSourceObjects, leftTargetObjects, events, matrix);
 		
 		EventMapItem item = new EventMapItem(EventType.COLOCALIZATION);
 		item.addEventList(events);
 		context.addEventItem(item);
 		Log.println("Colocalization events "+events.size());
 		
-		this.context.addAllLeftTargetObjects(leftTargetObject3DList);
-		this.context.addAllLeftSourceObjects(leftSourceObject3DList);
 		context.calcMeanDistance();
 	}
 	

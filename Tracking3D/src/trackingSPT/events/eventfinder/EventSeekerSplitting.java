@@ -3,17 +3,18 @@ package trackingSPT.events.eventfinder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+import mcib3d.geom.Object3D;
+import mcib3d.geom.Objects3DPopulation;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
 import trackingSPT.events.enums.EventType;
 import trackingSPT.math.FunctionCalcObjectRelation;
-import trackingSPT.math.FunctionColocalization;
+import trackingSPT.math.FunctionSplittingMergingColocalization;
 import trackingSPT.objects3D.ObjectTree3D;
+import trackingSPT.objects3D.SplittedObject;
 import trackingSPT.objects3D.TrackingContextSPT;
 
 /**
@@ -31,43 +32,58 @@ public class EventSeekerSplitting extends EventSeekerAction {
 	public EventSeekerSplitting(TrackingContextSPT context) {
 		super(context);
 		context.addEventType(EventType.SPLITTING);
-		this.function =  new FunctionColocalization();
+		this.function =  new FunctionSplittingMergingColocalization();
 	}
 
 	@Override
 	public void execute() {
+		Objects3DPopulation object3DTPlus1 = this.context.getObjectNextFrame();
+		
 		List<Event> events = new ArrayList<Event>();
-		List<ObjectTree3D> leftTargetObjects = this.context.getLeftTargetObjects();
-		Map<ObjectTree3D, List<ObjectTree3D>> associations = this.context.getAssociationsMap();
+		List<ObjectTree3D> leftSourceObjects = context.getListLastObjects();
+		
+		List<Object3D> object3DListTarget = object3DTPlus1.getObjectsList();
+		
+		Log.println(leftSourceObjects.size() + " and " + object3DTPlus1.getNbObjects());
+		
+		List<ObjectTree3D> leftTargetObjects = new ArrayList<ObjectTree3D>();
+		
+		for (Object3D object3d : object3DListTarget) {
+			leftTargetObjects.add(new ObjectTree3D(object3d, context.getCurrentFrame()));
+		}
 		
 		//If the number of elements in the frame t is bigger than in the frame t+1
 		if(leftTargetObjects.size() > 0) {
-			Set<ObjectTree3D> targetsKey = associations.keySet();
-			ObjectTree3D obj1;
-			ObjectTree3D obj2;
+			ObjectTree3D source;
 			double distance;
 			Event event;
-			for (int i = 0; i < leftTargetObjects.size(); i++) {
-				obj1 = leftTargetObjects.get(i);
-				for (ObjectTree3D key : targetsKey) {
-					obj2 = associations.get(key).get(0);
-					if(key != obj1) {
-						distance = function.calculate(obj1, key);
-						distance += function.calculate(obj2, key);
-						if(distance <= 0.1) {
-							event = new Event(EventCause.EXCEEDED, context.getFrameTime());
-							event.setObjectSource(key);
-							event.setObjectTarget(obj1);
-							event.setEventType(EventType.SPLITTING);
-							events.add(event);
-							event = new Event(EventCause.EXCEEDED, context.getFrameTime());
-							event.setObjectSource(key);
-							event.setObjectTarget(obj2);
-							event.setEventType(EventType.SPLITTING);
-							events.add(event);
-							associations.remove(key);
+			SplittedObject splittedObject;
+			List<ObjectTree3D> targets ;
+			for (int i = 0; i < leftSourceObjects.size(); i++) {
+				source = leftSourceObjects.get(i);
+				splittedObject = new SplittedObject(source, context.getFrameTime());
+				for (ObjectTree3D target : leftTargetObjects) {
+						distance = function.calculate(source, target);
+						if(distance <= 1.00) {
+							splittedObject.addTarget(target);
 						}
+				}
+				targets = splittedObject.getTargetObjects();
+				//If the object splitted in 2 or more objects
+				//So create the splitting events
+				if(targets.size() > 1) {
+					for (ObjectTree3D splittedTarget : targets) {
+//						Log.println(source.getObject().getCenterAsPoint()+" - "+splittedTarget.getObject().getCenterAsPoint());
+//						Log.println(""+function.calculate(source, splittedTarget));
+						event = new Event(EventCause.EXCEEDED, context.getFrameTime());
+						event.setObjectSource(source);
+						event.setObjectTarget(splittedTarget);
+						event.setEventType(EventType.SPLITTING);
+						events.add(event);
+						leftTargetObjects.remove(splittedTarget);
 					}
+					leftSourceObjects.remove(source);
+					i--;
 				}
 			}
 			
@@ -76,6 +92,8 @@ public class EventSeekerSplitting extends EventSeekerAction {
 		EventMapItem item = new EventMapItem(EventType.SPLITTING);
 		item.addEventList(events);
 		this.context.addEventItem(item);
+		this.context.addAllLeftTargetObjects(leftTargetObjects);
+		this.context.addAllLeftSourceObjects(leftSourceObjects);
 		Log.println("Splitting events "+events.size());
 		
 	}

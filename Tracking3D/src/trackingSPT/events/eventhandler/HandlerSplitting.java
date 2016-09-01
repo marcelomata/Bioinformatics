@@ -40,16 +40,21 @@ public class HandlerSplitting extends EventHandlerAction {
 			source = event.getObjectSource();
 			if(splittedObjs.containsKey(source.getId())) {
 				splittedObj = splittedObjs.remove(source.getId());
+				newObject = splittedObj.getTargetObjects().get(0);
 			} else {
 				splittedObj = new SplittedObject(source, context.getFrameTime());
 				splittedObjs.put(source.getId(), splittedObj);
 				newObject = event.getObjectTarget();
+				//insert only one target object and add the voxels of the others
+				//to the inserted object
+				source.addChild(newObject);
+				newObject.setParent(source);
+				context.addNewObjectId(source.getId(), newObject);
 			}
 			
 			target1 = event.getObjectTarget();
 			if(newObject != target1) {
-//				newObject.getObject().
-//				merge the two objects here TODO
+				newObject.getObject().getVoxels().addAll(target1.getObject().getVoxels());
 			}
 			splittedObj.addTarget(target1);
 		}

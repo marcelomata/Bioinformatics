@@ -22,7 +22,7 @@ public class MergedObject {
 		this.frameEvent = frame;
 	}
 	
-	public ObjectTree3D getObjectSource() {
+	public ObjectTree3D getObjectTarget() {
 		return objectTarget;
 	}
 	
@@ -38,8 +38,8 @@ public class MergedObject {
 		return objectTarget.getId();
 	}
 
-	public void addSource(ObjectTree3D target1) {
-		this.sourceObjects.add(target1);
+	public void addSource(ObjectTree3D source) {
+		this.sourceObjects.add(source);
 	}
 
 }
