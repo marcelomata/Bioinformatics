@@ -63,6 +63,8 @@ public class EventSeekerMerging extends EventSeekerAction {
 				if(sources.size() > 1) {
 					for (ObjectTree3D mergedSource : sources) {
 						event = new Event(EventCause.COLOCALIZATION, context.getFrameTime());
+						Log.println("Source "+mergedSource.getObject().getCenterAsPoint()+" -> "+target.getObject().getCenterAsPoint());
+						Log.println("Distance "+function.calculate(target, mergedSource));
 						event.setObjectSource(mergedSource);
 						event.setObjectTarget(target);
 						event.setEventType(EventType.MERGING);

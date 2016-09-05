@@ -73,9 +73,8 @@ public class EventSeekerSplitting extends EventSeekerAction {
 				//So create the splitting events
 				if(targets.size() > 1) {
 					for (ObjectTree3D splittedTarget : targets) {
-//						Log.println(source.getObject().getCenterAsPoint()+" - "+splittedTarget.getObject().getCenterAsPoint());
-//						Log.println(""+function.calculate(source, splittedTarget));
 						event = new Event(EventCause.EXCEEDED, context.getFrameTime());
+						Log.println("Source "+source.getObject().getCenterAsPoint()+" -> "+splittedTarget.getObject().getCenterAsPoint()+" -> Distance "+function.calculate(source, splittedTarget));
 						event.setObjectSource(source);
 						event.setObjectTarget(splittedTarget);
 						event.setEventType(EventType.SPLITTING);

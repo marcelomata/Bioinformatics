@@ -3,8 +3,6 @@ package trackingSPT.events.eventfinder;
 import trackingInterface.Action;
 import trackingInterface.Strategy;
 import trackingSPT.events.eventfinder.association.AssociationMinDistance;
-import trackingSPT.events.eventfinder.mergingmissingmitosis.MissingSimple;
-import trackingSPT.events.eventfinder.mergingmissingmitosis.MistosisSimple;
 import trackingSPT.objects3D.TrackingContextSPT;
 
 public class EventSeekerStrategy extends Strategy {

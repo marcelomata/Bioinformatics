@@ -18,28 +18,20 @@ public class HandlerMissing extends EventHandlerAction {
 	@Override
 	public void execute() {
 		
-		List<Event> mergings = this.context.getEventList(EventType.MISSING);
+		List<Event> missing = this.context.getEventList(EventType.MISSING);
 		
-		Log.println("Missing Events -> "+mergings.size());
+		Log.println("Missing Events -> "+missing.size());
 		
-		handleMergings(mergings);
+		handleMergings(missing);
 	}
 
-	private void handleMergings(List<Event> mergings) {
+	private void handleMergings(List<Event> missing) {
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
-		double distance = 0;
-		//overlap
-		for (Event event : mergings) {
+		for (Event event : missing) {
 			obj1 = event.getObjectSource();
-			obj2 = event.getObjectTarget();
-			distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-			//if the closest is near so a merge should happened
-			if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
-				context.addMissed(obj1);
-			} else {
-				context.finishObjectTracking(obj1);
-			}
+			obj2 = new ObjectTree3D(obj1.getObject(), this.context.getFrameTime());
+			context.addNewObjectId(obj1.getId(), obj2);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package trackingSPT.events.eventfinder.mergingmissingmitosis;
+package trackingSPT.events.eventfinder;
 
 import java.util.List;
 import java.util.Map;

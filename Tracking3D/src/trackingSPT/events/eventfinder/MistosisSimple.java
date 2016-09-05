@@ -1,4 +1,4 @@
-package trackingSPT.events.eventfinder.mergingmissingmitosis;
+package trackingSPT.events.eventfinder;
 
 
 import java.util.ArrayList;
@@ -9,7 +9,6 @@ import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventCause;
 import trackingSPT.events.enums.EventType;
-import trackingSPT.events.eventfinder.EventSeekerAction;
 import trackingSPT.math.CostMatrix;
 import trackingSPT.math.HungarianAlgorithm;
 import trackingSPT.objects3D.ObjectTree3D;

@@ -82,6 +82,6 @@ public class ObjectTree3D {
 	
 	@Override
 	public String toString() {
-		return String.valueOf(id);
+		return String.valueOf(id)+" - P -> "+object.getCenterAsPoint();
 	}
 }

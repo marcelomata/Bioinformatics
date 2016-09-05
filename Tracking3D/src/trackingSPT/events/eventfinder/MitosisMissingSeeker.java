@@ -1,6 +1,5 @@
-package trackingSPT.events.eventfinder.mergingmissingmitosis;
+package trackingSPT.events.eventfinder;
 
-import trackingSPT.events.eventfinder.EventSeekerAction;
 import trackingSPT.objects3D.TrackingContextSPT;
 
 public abstract class MitosisMissingSeeker extends EventSeekerAction {
