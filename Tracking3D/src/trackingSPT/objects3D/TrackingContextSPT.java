@@ -37,6 +37,8 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	private double width;
 	private double depth;
 	private boolean setBoundbox;
+	
+	private StringBuilder segmentationText;
 
 	/////////////////
 	//ObjectActionSPT
@@ -60,6 +62,7 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		this.rawDataDir = rawDataDir;
 		this.meanDistFrame = new double[inObject.getSize()+1];
 		this.numberOfDist = new double[inObject.getSize()+1];
+		this.segmentationText = new StringBuilder();
 		loadRawFiles();
 		
 		clear();
@@ -352,5 +355,6 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 			mergings.add(mergedObjects.get(integer));
 		}
 	}
+	
 
 }

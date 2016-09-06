@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mcib3d.geom.Vector3D;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
