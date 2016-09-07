@@ -22,7 +22,7 @@ public class HandlerGenerateSegmentationText extends EventHandlerAction {
 		
 		List<Event> splittings = this.context.getEventList(EventType.SPLITTING);
 		
-		Log.println("Splitting Events -> "+splittings.size());
+		Log.println("Generating segmentation error files -> "+splittings.size());
 		
 		handleSplitting(splittings);	
 	}

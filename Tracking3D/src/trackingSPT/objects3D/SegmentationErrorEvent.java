@@ -18,7 +18,7 @@ public class SegmentationErrorEvent {
 	public String toString() {
 		String typeError = "";
 		if(type == EventType.MERGING) {
-//			typeError = ""
+			
 		}
 		return super.toString();
 	}

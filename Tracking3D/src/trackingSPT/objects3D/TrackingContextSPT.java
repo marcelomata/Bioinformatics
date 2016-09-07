@@ -68,19 +68,6 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		clear();
 	}
 	
-//	public TrackingContextSPT(File segmentedDataDir, File rawDataDir) {
-//		this.inObject = new ObjectActionSPT4D(segmentedDataDir.getAbsolutePath(), "man_seg", rawDataDir.getAbsolutePath(), "t");
-//		this.result = new TrackingResult3DSPT(inObject);
-//		this.misses = new ArrayList<MissedObject>();
-//		this.segmentedDataDir = segmentedDataDir;
-//		this.rawDataDir = rawDataDir;
-//		this.meanDistFrame = new double[inObject.getSize()];
-//		this.numberOfDist = new double[inObject.getSize()];
-//		loadRawFiles();
-//		
-//		clear();
-//	}
-	
 	public void setTemporalPopulation() {
 		this.temporalPopulation = this.inObject.getTemporalPopulation3D();
 		if(getCurrentFrame() == 0) {
@@ -293,7 +280,7 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 			height = imp.getFileInfo().height;
 			width = imp.getFileInfo().width;
 			depth = imp.getFileInfo().nImages * imp.getFileInfo().pixelDepth;
-		setBoundbox = true;
+			setBoundbox = true;
 		}
 	}
 
@@ -356,5 +343,5 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		}
 	}
 	
-
+	
 }
