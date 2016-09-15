@@ -1,6 +1,5 @@
 package trackingSPT.events.eventhandler;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import mcib3d.geom.Object3D;
@@ -8,9 +7,6 @@ import mcib3d.geom.Vector3D;
 import trackingPlugin.Log;
 import trackingSPT.events.Event;
 import trackingSPT.events.enums.EventType;
-import trackingSPT.math.CostMatrix;
-import trackingSPT.math.HungarianAlgorithm;
-import trackingSPT.objects3D.MissedObject;
 import trackingSPT.objects3D.ObjectTree3D;
 import trackingSPT.objects3D.TrackingContextSPT;
 
@@ -30,8 +26,8 @@ public class HandlerMitosis extends EventHandlerAction {
 	}
 
 	private void handleSplitting(List<Event> splittings) {
-		List<MissedObject> misses = this.context.getMisses();
-		reconnect(misses, splittings);
+//		List<MissedObject> misses = this.context.getMisses();
+//		reconnect(misses, splittings);
 		ObjectTree3D obj1;
 		ObjectTree3D obj2;
 		ObjectTree3D obj3;
@@ -118,83 +114,83 @@ public class HandlerMitosis extends EventHandlerAction {
 		return norm < 1;
 	}
 
-	private void reconnect(List<MissedObject> misses, List<Event> splittings) {
-		int numSplittings = splittings.size();
-		int numMisses = misses.size();
-		
-		if(numMisses > 0 && numSplittings > 0) {
-		
-			double distance;
-			ObjectTree3D obj1 = null;
-			ObjectTree3D obj2 = null;
-			Event event;
-			MissedObject missed;
-			CostMatrix matrix;
-			List<Event> eventsRemove = new ArrayList<Event>();
-			List<MissedObject> missedRemove = new ArrayList<MissedObject>();
-			if(numMisses > numSplittings) {
-				matrix = new CostMatrix(numSplittings, numMisses);
-				for (int i = 0; i < splittings.size(); i++) {
-					event = splittings.get(i);
-					obj1 = event.getObjectTarget();
-					matrix.addObjectSource(obj1, i);
-					for (int j = 0; j < misses.size(); j++) {
-						missed = misses.get(j);
-						obj2 = missed.getObject();
-						matrix.addObjectTarget(obj2, j);
-						distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-						matrix.setCost(i, j, distance);
-					}
-				}
-				HungarianAlgorithm lapSolver = new HungarianAlgorithm(matrix.getCosts());
-				int []result = lapSolver.execute();
-				for (int i = 0; i < result.length; i++) {
-					// Source in the matrix is the object in the frame t+1
-					obj1 = matrix.getSource(i);
-					obj2 = matrix.getTarget(result[i]);
-					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame()) && context.numberMissedObjects() > 0) {
-						context.reconnectMissedObject(obj2.getId());
-						context.addNewObjectId(obj2.getId(), obj1);
-						obj1.setParent(obj2);
-						obj2.addChild(obj1);
-						missedRemove.add(misses.get(result[i]));
-						eventsRemove.add(splittings.get(i));
-					}
-				}
-			} else {
-				matrix = new CostMatrix(misses.size(), splittings.size());
-				for (int i = 0; i < misses.size(); i++) {
-					missed = misses.get(i);
-					obj1 = missed.getObject();
-					matrix.addObjectSource(obj1, i);
-					for (int j = 0; j < splittings.size(); j++) {
-						event = splittings.get(j);
-						obj2 = event.getObjectTarget();
-						matrix.addObjectTarget(obj2, j);
-						distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					}
-				}
-				HungarianAlgorithm lapSolver = new HungarianAlgorithm(matrix.getCosts());
-				int []result = lapSolver.execute();
-				for (int i = 0; i < result.length; i++) {
-					// Source in the matrix was the object in the frame t+1
-					obj1 = matrix.getSource(i);
-					obj2 = matrix.getTarget(result[i]);
-					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
-					if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
-						context.reconnectMissedObject(obj1.getId());
-						context.addNewObjectId(obj1.getId(), obj2);
-						obj1.addChild(obj2);
-						obj2.setParent(obj1);
-						eventsRemove.add(splittings.get(result[i]));
-						missedRemove.add(misses.get(i));
-					}
-				}
-			}
-			splittings.removeAll(eventsRemove);
-			misses.removeAll(missedRemove);
-		}
-	}
+//	private void reconnect(List<MissedObject> misses, List<Event> splittings) {
+//		int numSplittings = splittings.size();
+//		int numMisses = misses.size();
+//		
+//		if(numMisses > 0 && numSplittings > 0) {
+//		
+//			double distance;
+//			ObjectTree3D obj1 = null;
+//			ObjectTree3D obj2 = null;
+//			Event event;
+//			MissedObject missed;
+//			CostMatrix matrix;
+//			List<Event> eventsRemove = new ArrayList<Event>();
+//			List<MissedObject> missedRemove = new ArrayList<MissedObject>();
+//			if(numMisses > numSplittings) {
+//				matrix = new CostMatrix(numSplittings, numMisses);
+//				for (int i = 0; i < splittings.size(); i++) {
+//					event = splittings.get(i);
+//					obj1 = event.getObjectTarget();
+//					matrix.addObjectSource(obj1, i);
+//					for (int j = 0; j < misses.size(); j++) {
+//						missed = misses.get(j);
+//						obj2 = missed.getObject();
+//						matrix.addObjectTarget(obj2, j);
+//						distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+//						matrix.setCost(i, j, distance);
+//					}
+//				}
+//				HungarianAlgorithm lapSolver = new HungarianAlgorithm(matrix.getCosts());
+//				int []result = lapSolver.execute();
+//				for (int i = 0; i < result.length; i++) {
+//					// Source in the matrix is the object in the frame t+1
+//					obj1 = matrix.getSource(i);
+//					obj2 = matrix.getTarget(result[i]);
+//					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+//					if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame()) && context.numberMissedObjects() > 0) {
+//						context.reconnectMissedObject(obj2.getId());
+//						context.addNewObjectId(obj2.getId(), obj1);
+//						obj1.setParent(obj2);
+//						obj2.addChild(obj1);
+//						missedRemove.add(misses.get(result[i]));
+//						eventsRemove.add(splittings.get(i));
+//					}
+//				}
+//			} else {
+//				matrix = new CostMatrix(misses.size(), splittings.size());
+//				for (int i = 0; i < misses.size(); i++) {
+//					missed = misses.get(i);
+//					obj1 = missed.getObject();
+//					matrix.addObjectSource(obj1, i);
+//					for (int j = 0; j < splittings.size(); j++) {
+//						event = splittings.get(j);
+//						obj2 = event.getObjectTarget();
+//						matrix.addObjectTarget(obj2, j);
+//						distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+//					}
+//				}
+//				HungarianAlgorithm lapSolver = new HungarianAlgorithm(matrix.getCosts());
+//				int []result = lapSolver.execute();
+//				for (int i = 0; i < result.length; i++) {
+//					// Source in the matrix was the object in the frame t+1
+//					obj1 = matrix.getSource(i);
+//					obj2 = matrix.getTarget(result[i]);
+//					distance = obj1.getObject().getCenterAsPoint().distance(obj2.getObject().getCenterAsPoint());
+//					if(distance < (getMaxAxisBoundBox(obj1.getObject())*context.getMeanDistanceFrame())) {
+//						context.reconnectMissedObject(obj1.getId());
+//						context.addNewObjectId(obj1.getId(), obj2);
+//						obj1.addChild(obj2);
+//						obj2.setParent(obj1);
+//						eventsRemove.add(splittings.get(result[i]));
+//						missedRemove.add(misses.get(i));
+//					}
+//				}
+//			}
+//			splittings.removeAll(eventsRemove);
+//			misses.removeAll(missedRemove);
+//		}
+//	}
 
 }
