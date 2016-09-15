@@ -1,9 +1,12 @@
 package trackingPlugin;
+import ij.plugin.PlugIn;
+
 import java.io.File;
 
-import ij.plugin.PlugIn;
 import trackingInterface.TrackingStrategy;
 import trackingSPT.TrackingSPT;
+import trackingSPT.objects3D.TrackingResult3DSPT;
+import cell3DRenderer.Particles4DJOGLRenderer;
 
 public class PluginTracking implements PlugIn {
 	
@@ -46,16 +49,16 @@ public class PluginTracking implements PlugIn {
 		
 		Log.println("Generating segmentation errors file");
 		tracking.generateSegmentationErrors();
-//		Log.println("Generating Challenge Format");
-//		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirTrack.getParentFile(), numMaxFrames);
-//		gen.computeColorChallenge(1);
-//		gen.challengeFormat(0);
-//		gen.computeColorChallenge(0);
-//		gen.saveColoredChallenge(2, 0, 0);
-//		gen.saveColored(2, 0);
-//		Log.println("Rendering");
-//		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
-//		renderer.run();
+		Log.println("Generating Challenge Format");
+		GenerateChallengeFormat gen = new GenerateChallengeFormat((TrackingResult3DSPT) tracking.getResult(), dirSeg, dirTrack.getParentFile(), numMaxFrames);
+		gen.computeColorChallenge(1);
+		gen.challengeFormat(0);
+		gen.computeColorChallenge(0);
+		gen.saveColoredChallenge(2, 0, 0);
+		gen.saveColored(2, 0);
+		Log.println("Rendering");
+		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
+		renderer.run();
 		
 	}
 }

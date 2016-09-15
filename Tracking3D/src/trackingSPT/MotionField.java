@@ -290,24 +290,6 @@ public class MotionField {
 		this.objectsRemovedFrame.clear();
 	}
 
-	public void updateObjectsAttributes() {
-		Set<Integer> keySet = mapObjects.keySet();
-		ObjectTree3D parent = null;
-		for (Integer id : keySet) {
-			List<ObjectTree3D> temp = mapObjects.get(id);
-			for (ObjectTree3D objectTree3D : temp) {
-				parent = objectTree3D.getParent();
-				if(objectTree3D.getFrame() >= 1 && parent != null && parent.getChildren().size() == 1) {
-					updateAttributes(objectTree3D, parent);
-				}
-			}
-		}
-	}
-
-	private void updateAttributes(ObjectTree3D objectTree3D, ObjectTree3D parent) {
-		
-	}
-
 	public int numberMissedObjects() {
 		return this.numberMissedObjects();
 	}

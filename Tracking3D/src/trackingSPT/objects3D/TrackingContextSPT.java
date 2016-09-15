@@ -324,7 +324,10 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 	}
 
 	public void updateObjectsAttributes() {
-		result.updateMotionObjects();
+		List<ObjectTree3D> last = result.getListLastObjects();
+		for (ObjectTree3D objectTree3D : last) {
+			objectTree3D.updateAtributes();
+		}
 	}
 
 	public int numberMissedObjects() {
