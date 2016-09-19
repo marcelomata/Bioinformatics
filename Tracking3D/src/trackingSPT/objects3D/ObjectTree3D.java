@@ -100,13 +100,20 @@ public class ObjectTree3D {
 	}
 
 	private void updateOrientation() {
-		Vector3D lastOrientation = this.parent.getOrientation();
+		Vector3D lastOrientation = new Vector3D(0f, 0f, 0f);
+		if(parent != null) {
+			lastOrientation = this.parent.getOrientation();
+		}
 		this.orientation = new Vector3D(lastOrientation, this.object.getCenterAsPoint());
 		this.orientation.normalize();
 	}
 
 	private void updateAreaDifference() {
-		this.areaDifference = this.areaDifference - parent.getArea();
+		double previousArea = 0;
+		if(parent != null) {
+			previousArea = parent.getArea(); 
+		}
+		this.areaDifference = this.getAreaDifference() - previousArea;
 	}
 
 	private void updateArea() {
@@ -115,11 +122,19 @@ public class ObjectTree3D {
 
 	private void updateAcceleration() {
 		updateVelocity();
-		this.acceleration = parent.getVelocity() - this.velocity;
+		double lastVelocity = 0;
+		if(parent != null) {
+			lastVelocity = parent.getVelocity();
+		}
+		this.acceleration = this.velocity - lastVelocity;
 	}
 
 	private void updateVelocity() {
-		Point3D lastPosition = parent.getObject().getCenterAsPoint();
+		Point3D lastPosition = new Point3D(0, 0, 0);
+		if(parent != null) {
+			lastPosition = parent.getObject().getCenterAsPoint();
+		}
+		
 		Point3D thisPosition = this.object.getCenterAsPoint();
 		this.velocity = thisPosition.distance(lastPosition);
 	}
@@ -152,4 +167,5 @@ public class ObjectTree3D {
 	public String toString() {
 		return String.valueOf(id)+" - P -> "+object.getCenterAsPoint();
 	}
+
 }

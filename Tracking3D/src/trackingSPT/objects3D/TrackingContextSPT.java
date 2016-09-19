@@ -14,6 +14,7 @@ import java.util.Set;
 import ij.ImagePlus;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
+import mcib3d.geom.Vector3D;
 import trackingInterface.Frame;
 import trackingInterface.TrackingContext;
 import trackingSPT.events.Event;
@@ -413,6 +414,75 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 				segmentationErrors = mapFrameErrors.get(segError.getFrameError());
 			}
 			segmentationErrors.add(segError);
+		}
+	}
+	
+	public void generateTrackingAnalysisFiles() {
+		StringBuilder attributesText = new StringBuilder();
+		
+		Map<Integer, List<ObjectTree3D>> tracks = result.getMotionField().getFinalResultByTrack();
+		Set<Integer> trackKeys = tracks.keySet();
+		
+		List<ObjectTree3D> objectsTrack;
+		Vector3D vector;
+		long time = System.currentTimeMillis();
+		String trackingTest = segmentedDataDir.getParentFile().getParentFile().getName();
+		String dirName = "tracking"+trackingTest+time;
+		File fileDirTracks = new File("./"+dirName+"/");
+		if(!fileDirTracks.exists()) {
+			fileDirTracks.mkdirs();
+		}
+		for (Integer key : trackKeys) {
+			objectsTrack = tracks.get(key);
+			attributesText = new StringBuilder();
+			for (ObjectTree3D objTree3D : objectsTrack) {
+				attributesText.append("Frame - ");
+				attributesText.append(objTree3D.getFrame());
+				attributesText.append(";");
+				attributesText.append("Velocity - ");
+				attributesText.append(objTree3D.getVelocity());
+				attributesText.append(";");
+				attributesText.append("Acceleration - ");
+				attributesText.append(objTree3D.getAcceleration());
+				attributesText.append(";");
+				attributesText.append("Area - ");
+				attributesText.append(objTree3D.getArea());
+				attributesText.append(";");
+				attributesText.append("AreaDifference - ");
+				attributesText.append(objTree3D.getAreaDifference());
+				attributesText.append(";");
+				attributesText.append("Acceleration - ");
+				attributesText.append(objTree3D.getAcceleration());
+				attributesText.append(";");
+				attributesText.append("Orietation - ");
+				vector = objTree3D.getOrientation();
+				attributesText.append(vector.getX());
+				attributesText.append(" ");
+				attributesText.append(vector.getY());
+				attributesText.append(" ");
+				attributesText.append(vector.getZ());
+				attributesText.append("\n");
+			}
+			File fileTrackAttributes = new File("./"+dirName+"/track_"+key+".txt");
+			FileWriter fw = null;
+			if(!fileTrackAttributes.exists()) {
+				try {
+					fileTrackAttributes.createNewFile();
+					fw = new FileWriter(fileTrackAttributes);
+					fw.write(attributesText.toString());
+					fw.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if(fw != null) {
+						try {
+							fw.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
 		}
 	}
 	

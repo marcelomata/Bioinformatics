@@ -55,4 +55,7 @@ public abstract class TrackingStrategy extends Strategy {
 		this.context.generateSegmentationErrorsFile();
 	}
 	
+	public void generateTrackingAnalysis() {
+		this.context.generateTrackingAnalysisFiles();
+	}
 }

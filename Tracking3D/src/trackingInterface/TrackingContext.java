@@ -6,6 +6,8 @@ public interface TrackingContext {
 
 	void generateSegmentationErrorsFile();
 	
+	void generateTrackingAnalysisFiles();
+	
 	int getFrameTime();
 
 	void clear();
