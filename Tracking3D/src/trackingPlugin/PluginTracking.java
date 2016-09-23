@@ -27,14 +27,16 @@ public class PluginTracking implements PlugIn {
 	public void run(String test) {
 		TrackingStrategy tracking;
 		String segDir = "/"+test+"_GT/";
+		String correctedSegDir = segDir+"SEG_IMP/";
 		String resDir = "/"+test+"_RES/";
 		String rawDir = "/"+test+"/";
 		File dirSeg = new File(parentDir+segDir+"SEG/");
 		File dirTrack = new File(parentDir+resDir+"TRACK/");
 		File dirRaw = new File(parentDir+rawDir);
+		File dirSegImp = new File(parentDir+correctedSegDir);
 		File image = new File(parentDir);	
 		if(image.isFile()) {
-			tracking = new TrackingSPT(dirSeg, dirTrack, numMaxFrames);
+			tracking = new TrackingSPT(dirSeg, dirTrack, dirSegImp, numMaxFrames);
 		} else {
 			if(!dirSeg.exists()) {
 				dirSeg.mkdirs();
@@ -42,7 +44,10 @@ public class PluginTracking implements PlugIn {
 			if(!dirRaw.exists()) {
 				dirRaw.mkdirs();
 			}
-			tracking = new TrackingSPT(dirSeg, dirRaw, numMaxFrames);
+			if(!dirSegImp.exists()) {
+				dirSegImp.mkdirs();
+			}
+			tracking = new TrackingSPT(dirSeg, dirRaw, dirSegImp, numMaxFrames);
 		}
 		
 		tracking.run();
@@ -58,9 +63,9 @@ public class PluginTracking implements PlugIn {
 //		gen.computeColorChallenge(0);
 //		gen.saveColoredChallenge(2, 0, 0);
 //		gen.saveColored(2, 0);
-//		Log.println("Rendering");
-//		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
-//		renderer.run();
+		Log.println("Rendering");
+		Particles4DJOGLRenderer renderer = new Particles4DJOGLRenderer(new ParticlesTrackingResult((TrackingResult3DSPT) tracking.getResult()));
+		renderer.run();
 		
 	}
 }

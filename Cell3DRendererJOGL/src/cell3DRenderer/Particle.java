@@ -4,12 +4,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL2;
-
-import com.jogamp.opengl.util.gl2.GLUT;
-
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Point3D;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Particle {
 	

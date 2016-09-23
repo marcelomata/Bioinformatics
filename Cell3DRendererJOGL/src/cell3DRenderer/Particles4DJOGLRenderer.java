@@ -1,29 +1,14 @@
 
 package cell3DRenderer;
 
-import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_DEPTH_TEST;
-import static javax.media.opengl.GL.GL_LEQUAL;
-import static javax.media.opengl.GL.GL_NICEST;
-import static javax.media.opengl.GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
-import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
-import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLU;
+import mcib3d.geom.Object3D;
+import mcib3d.geom.Point3D;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
@@ -32,11 +17,16 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.gl2.GLUgl2;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
-
-import mcib3d.geom.Object3D;
-import mcib3d.geom.Point3D;
 
 public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener, KeyListener, MouseListener {
 	
@@ -51,7 +41,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private static final float ZERO_F = 0.0f;
 	private static final float ONE_F  = 1.0f;
 	
-	private GLU glu;
+	private GLUgl2 glu;
 	private GLUT glut;
 	
 	private int mouseX = CANVAS_WIDTH/2;
@@ -94,14 +84,14 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		glu = new GLU();
+		glu = new GLUgl2();
 		glut = new GLUT();
 		gl.glClearColor(ZERO_F, ZERO_F, ZERO_F, ZERO_F);
 		gl.glClearDepth(ONE_F); 
-		gl.glEnable(GL_DEPTH_TEST);
-		gl.glDepthFunc(GL_LEQUAL);
-		gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		gl.glShadeModel(GL_SMOOTH);
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL.GL_LEQUAL);
+		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+		gl.glShadeModel(GL2.GL_SMOOTH);
 	}
 	
 	@Override
@@ -112,11 +102,11 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		float aspect = (float) (camera.getFieldOfViewH()/camera.getFieldOfViewV());
 		
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		glu.gluPerspective(camera.getFieldOfViewV(), aspect, 0.1, 1500.0);
 			 
-		gl.glMatrixMode(GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
 
@@ -126,7 +116,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	}
 	
 	private void drawScene(GL2 gl) {
-		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
 		camera.draw(gl);

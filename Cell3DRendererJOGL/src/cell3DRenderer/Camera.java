@@ -1,8 +1,8 @@
 package cell3DRenderer;
 
-import javax.media.opengl.GL2;
-
 import mcib3d.geom.Point3D;
+
+import com.jogamp.opengl.GL2;
 
 public class Camera {
 	

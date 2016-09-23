@@ -17,7 +17,7 @@ public class ObjectTree3D {
 	private double acceleration;
 	private double area;
 	private double areaDifference;
-	private int region;
+	private int zones;
 	private Vector3D orientation;
 	private int frame;
 	
@@ -96,7 +96,7 @@ public class ObjectTree3D {
 	}
 	
 	private void updateRegion() {
-		region = 0;
+		zones = 0;
 	}
 
 	private void updateOrientation() {
@@ -140,7 +140,7 @@ public class ObjectTree3D {
 	}
 	
 	public int getRegion() {
-		return region;
+		return zones;
 	}
 	
 	public Vector3D getOrientation() {

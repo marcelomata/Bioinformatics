@@ -22,8 +22,11 @@ import trackingSPT.segmentation.SegmentationTrackingAction;
  */
 public class TrackingSPT extends TrackingStrategy {
 	
-	public TrackingSPT(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
+	private File segDataDirImp;
+	
+	public TrackingSPT(File segmentedDataDir, File rawDataDir, File segDataDirImp, int numMaxFrames) {
 		super(segmentedDataDir, rawDataDir, numMaxFrames, TrackingStrategyType.SPT);
+		this.segDataDirImp = segDataDirImp;
 	}
 	
 	@Override
@@ -36,6 +39,7 @@ public class TrackingSPT extends TrackingStrategy {
 		addTrackingAction(new SegmentationTrackingAction(contextSTP));
 		addTrackingAction(new EventSeekerTrackingAction(contextSTP));
 		addTrackingAction(new EventHandlerTrackingAction(contextSTP));
+		addTrackingAction(new FeedbackSegmentation(contextSTP));
 	}
 
 	@Override
@@ -59,6 +63,7 @@ public class TrackingSPT extends TrackingStrategy {
 	@Override
 	public void init(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
 		this.context = new TrackingContextSPT(segmentedDataDir, rawDataDir, numMaxFrames);
+		this.context.setSegmentedCorrectedDataDir(segDataDirImp);
 	}
 
 }

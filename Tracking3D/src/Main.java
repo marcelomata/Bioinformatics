@@ -14,8 +14,10 @@ public class Main {
 		
 		//Any software can use the tool developed here. This is a example of Plugin to ImageJ that uses our framework.
 		PluginTracking tracking = new PluginTracking("C:/workspaces/Singapore/datasets/dataset01", 20);
+//		PluginTracking tracking = new PluginTracking("C:/workspaces/Singapore/datasets/N2DH-SIM", 96);
 		
 		tracking.run("20");
+//		tracking.run("05");
 	}
 
 }
