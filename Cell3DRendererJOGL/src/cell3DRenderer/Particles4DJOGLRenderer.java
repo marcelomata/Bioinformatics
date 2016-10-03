@@ -127,6 +127,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		drawBoundBoxLines(gl);
 		
 		drawTime(gl);
+//		drawAllTime(gl);
 		
 //		System.out.println(camera.toString());
 //		System.out.println(maxPoint.toString()+" - "+minPoint.toString());
@@ -296,14 +297,55 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		}
 	}
 	
+	private void drawAllTime(GL2 gl) {
+		count = 0;
+		division = 0;
+		parents.clear();
+		
+		for (int i = 0; i < maxTime; i++) {
+			List<Particle> particles = objects4DPerFrame.get(i);
+//			Object3D parentObj;
+//			Particle parent;
+			for (Particle particle : particles) {
+				if(!particle.isHidden()) {
+//					particle.draw(gl, glut);
+					
+					if(drawTrack) {
+						drawTrack(gl, particle.getTrack());
+					} else {
+						drawTrack(gl, currentTrack);
+					}
+					
+//					parent = particle.getParent();
+//					if (parent != null) {
+//						parentObj = parent.getObject();
+//						if(parents.contains(parentObj)) {
+//							division++;
+//						} else {
+//							parents.add(parentObj);
+//						}
+//					}
+					count++;
+				}
+			}
+			
+			if(canprint) {
+				System.out.println("Frame "+currentTime+" - Particles "+count+" - Divisions "+division+" - Parents "+parents.size());
+				canprint = false;
+			}
+		}
+	}
+	
 	private void drawTrack(GL2 gl, int track) {
 		Particle particle2;
 		List<Particle> particles = objects4DPerTrack.get(track);
 		if(particles != null) {
 			for (int i = 1; i < particles.size(); i++) {
 				particle2 = particles.get(i);
-				if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
-					drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particle2.getColor());
+				if(particle2 != null && particle2.getParent() != null) {
+					if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+						drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particle2.getColor());
+					}
 				}
 			}
 		}
@@ -316,7 +358,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		float x2 = (float) p2.getX();
 		float y2 = (float) p2.getY();
 		float z2 = (float) p2.getZ();
-		gl.glPointSize(2f);
+		gl.glPointSize(10f);
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f((float)c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255);
 	      	gl.glVertex3f(x1, y1, z1);

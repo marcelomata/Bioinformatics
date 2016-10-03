@@ -52,12 +52,14 @@ public class FeedbackSegmentation extends TrackingAction {
 	private void handleMissingSegErrors(List<SegmentationError> missings) {
 		ObjectTree3D obj;
 		
-		for (SegmentationError segError : missings) {
-			obj = ((MissedObject)segError).getObject();
-			setMarkersZones(markersMissing, zonesMissing, segError);
-			markersMissing.draw(obj.getObject(), obj.getObject().getValue());
+		if(missings.size() > 0) {
+			for (SegmentationError segError : missings) {
+				obj = ((MissedObject)segError).getObject();
+				setMarkersZones(segError, EventType.MISSING);
+				markersMissing.draw(obj.getObject(), obj.getObject().getValue());
+			}
+			applySegmentationParameters(markersMissing, zonesMissing);
 		}
-		applySegmentationParameters(markersMissing, zonesMissing);
 		
 	}
 	
@@ -80,21 +82,32 @@ public class FeedbackSegmentation extends TrackingAction {
 //		}
 //		applySegmentationParameters(markersSplitting, zonesSplitting);
 //	}
-	
-	private void drawObjectList(ImageInt markers, List<ObjectTree3D> objs) {
-		for (ObjectTree3D obj : objs) {
-			markers.draw(obj.getObject(), obj.getObject().getValue());
-		}
-	}
+//	
+//	private void drawObjectList(ImageInt markers, List<ObjectTree3D> objs) {
+//		for (ObjectTree3D obj : objs) {
+//			markers.draw(obj.getObject(), obj.getObject().getValue());
+//		}
+//	}
 
-	private void setMarkersZones(ImageInt markers, ImageInt zones, SegmentationError segError) {
+	private void setMarkersZones(SegmentationError segError, EventType type) {
+		ImageInt markers = null; 
+		ImageInt zones = null;
+ 
 		markers = new ImageShort(this.context.getImagePlus(segError.getFrameError()));
-//		markers.erase();
+		markers.erase();
 		zones = this.context.getZones(segError.getFrameError());
+		
+		if(type == EventType.MISSING) {
+			markersMissing = markers;
+			zonesMissing = zones;
+		}
 	}
 	
 	public void applySegmentationParameters(ImageInt markers, ImageInt zones) {
 		ImagePlus myPlus = context.getImagePlus(context.getFrameTime());
+		
+		saveImage(markers.getImagePlus(), context.getSegmentedCorrectedDataDir(), "markers");
+		saveImage(zones.getImagePlus(), context.getSegmentedCorrectedDataDir(), "zones");
 		
 		int step = 1;
 
@@ -109,13 +122,17 @@ public class FeedbackSegmentation extends TrackingAction {
         int cri = TrackThreshold.CRITERIA_METHOD_MSER;
         TT.setCriteriaMethod(cri);
         TT.setImageMarkers(markers);
-        TT.setImageZones(null);
+        TT.setImageZones(zones);
         ImagePlus res = TT.segment(myPlus, true);
         saveImage(res, context.getSegmentedCorrectedDataDir());
 	}
 	
 	private void saveImage(ImagePlus imagePlus, File segmentedDataDir) {
-		IJ.saveAsTiff(imagePlus, segmentedDataDir + "/" + context.getSegFileName() + IJ.pad(context.getCurrentFrame() + 0, 2) + ".tif");
+		IJ.saveAsTiff(imagePlus, segmentedDataDir.getAbsolutePath() + "/" + context.getSegFileName() + IJ.pad(context.getCurrentFrame() + 0, 2) + ".tif");
+	}
+	
+	private void saveImage(ImagePlus imagePlus, File segmentedDataDir, String n) {
+		IJ.saveAsTiff(imagePlus, segmentedDataDir.getAbsolutePath() + "/" + context.getSegFileName() + IJ.pad(context.getCurrentFrame() + 0, 2) + "_"+n+".tif");
 	}
 
 }

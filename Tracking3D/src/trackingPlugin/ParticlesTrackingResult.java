@@ -35,9 +35,9 @@ public class ParticlesTrackingResult implements ParticlesObjects {
 		float b;
 		
 		for (Integer integer : keys) {
-			r = random.nextFloat();
-			g = random.nextFloat();
-			b = random.nextFloat();
+			r = Math.min(random.nextFloat()+0.15f, 1.0f);
+			g = Math.min(random.nextFloat()+0.15f, 1.0f);
+			b = Math.min(random.nextFloat()+0.15f, 1.0f);
 			color = new Color(r, g, b);
 			colorUsed.add(color.getRGB());
 			particleColor.put(integer, color);
