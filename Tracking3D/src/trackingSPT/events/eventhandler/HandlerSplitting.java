@@ -43,7 +43,6 @@ public class HandlerSplitting extends EventHandlerAction {
 				newObject = splittedObj.getTargetObjects().get(0);
 			} else {
 				splittedObj = new SplittedObject(source, context.getFrameTime());
-				splittedObjs.put(source.getId(), splittedObj);
 				newObject = event.getObjectTarget();
 				//insert only one target object and add the voxels of the others
 				//to the inserted object
@@ -57,6 +56,7 @@ public class HandlerSplitting extends EventHandlerAction {
 				newObject.getObject().getVoxels().addAll(target1.getObject().getVoxels());
 			}
 			splittedObj.addTarget(target1);
+			splittedObjs.put(source.getId(), splittedObj);
 		}
 		
 		context.addSplittedObjects(splittedObjs);

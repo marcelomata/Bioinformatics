@@ -2,7 +2,7 @@ package trackingPlugin;
 
 public class Log {
 	
-	private static boolean DEBUG = true;
+	private static boolean DEBUG = false;
 	
 	public static void println(String string) {
 		if(DEBUG) {

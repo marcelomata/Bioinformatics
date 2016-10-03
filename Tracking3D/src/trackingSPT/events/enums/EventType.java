@@ -2,8 +2,23 @@ package trackingSPT.events.enums;
 
 public enum EventType {
 	
-	MISSING, MITOSIS, DISAPPEARED, ASSOCIATION, COLOCALIZATION, GOING_OUT, GOING_IN, SPLITTING, MERGING
+	MISSING("event - missing"), 
+	MITOSIS("event - mitosis"), 
+	ASSOCIATION("event - association"), 
+	COLOCALIZATION("event - colocalization"), 
+	GOING_OUT("event - goingout"), 
+	GOING_IN("event - goingin"), 
+	SPLITTING("event - splitting"), 
+	MERGING("event - merging");
 	
-//	public void toString()
+	private final String type;
+	
+	private EventType(String type) {
+		this.type = type;
+	}
+	
+	public String toString() {
+		return type;
+	}
 
 }

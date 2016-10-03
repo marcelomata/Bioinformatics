@@ -5,6 +5,7 @@ import java.io.File;
 
 import trackingInterface.TrackingStrategy;
 import trackingPlugin.Log;
+import trackingSPT.events.enums.TrackingStrategyType;
 import trackingSPT.events.eventfinder.EventSeekerTrackingAction;
 import trackingSPT.events.eventhandler.EventHandlerTrackingAction;
 import trackingSPT.objects3D.TrackingContextSPT;
@@ -21,21 +22,20 @@ import trackingSPT.segmentation.SegmentationTrackingAction;
  */
 public class TrackingSPT extends TrackingStrategy {
 	
-	private TrackingContextSPT context;
-	
 	public TrackingSPT(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
-		super(segmentedDataDir, rawDataDir, numMaxFrames);
+		super(segmentedDataDir, rawDataDir, numMaxFrames, TrackingStrategyType.SPT);
 	}
 	
-//	public TrackingSPT(File imageFile) {
-//		super(imageFile);
-//	}
-
 	@Override
 	public void build() {
-		addTrackingAction(new SegmentationTrackingAction(context));
-		addTrackingAction(new EventSeekerTrackingAction(context));
-		addTrackingAction(new EventHandlerTrackingAction(context));
+		buildSTP();
+	}
+
+	private void buildSTP() {
+		TrackingContextSPT contextSTP = (TrackingContextSPT)context;
+		addTrackingAction(new SegmentationTrackingAction(contextSTP));
+		addTrackingAction(new EventSeekerTrackingAction(contextSTP));
+		addTrackingAction(new EventHandlerTrackingAction(contextSTP));
 	}
 
 	@Override

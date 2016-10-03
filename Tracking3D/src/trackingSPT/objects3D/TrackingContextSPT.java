@@ -1,6 +1,8 @@
 package trackingSPT.objects3D;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import ij.ImagePlus;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
 import trackingInterface.Frame;
+import trackingInterface.TrackingContext;
 import trackingSPT.events.Event;
 import trackingSPT.events.EventMapItem;
 import trackingSPT.events.enums.EventType;
@@ -20,12 +23,12 @@ import trackingSPT.events.eventfinder.EventSeekerObjInterface;
 import trackingSPT.events.eventhandler.HandlerObject;
 import trackingSPT.segmentation.SegmentationObject;
 
-public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInterface, HandlerObject {
+public class TrackingContextSPT implements TrackingContext, SegmentationObject, EventSeekerObjInterface, HandlerObject {
 	
 	private TemporalPopulation3D temporalPopulation;
-	private List<MissedObject> misses;
-	private List<SplittedObject> splittings;
-	private List<MergedObject> mergings;
+	private List<SegmentationError> missings;
+	private List<SegmentationError> splittings;
+	private List<SegmentationError> mergings;
 	private File rawDataDir;
 	private File segmentedDataDir;
 	private File[] framesRawFile;
@@ -38,8 +41,6 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	private double depth;
 	private boolean setBoundbox;
 	
-	private StringBuilder segmentationText;
-
 	/////////////////
 	//ObjectActionSPT
 	private TrackingResultObjectAction result;
@@ -57,12 +58,13 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 	public TrackingContextSPT(File segmentedDataDir, File rawDataDir, int numMaxFrames) {
 		this.inObject = new ObjectActionSPT4D(segmentedDataDir.getAbsolutePath(), "man_seg", rawDataDir.getAbsolutePath(), "t", numMaxFrames);
 		this.result = new TrackingResult3DSPT(inObject);
-		this.misses = new ArrayList<MissedObject>();
 		this.segmentedDataDir = segmentedDataDir;
 		this.rawDataDir = rawDataDir;
 		this.meanDistFrame = new double[inObject.getSize()+1];
 		this.numberOfDist = new double[inObject.getSize()+1];
-		this.segmentationText = new StringBuilder();
+		this.splittings = new ArrayList<SegmentationError>();
+		this.mergings = new ArrayList<SegmentationError>();
+		this.missings = new ArrayList<SegmentationError>();
 		loadRawFiles();
 		
 		clear();
@@ -187,22 +189,22 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		this.leftSourceObjects.addAll(leftSourceObjects);
 	}
 
-	@Override
-	public void addMissed(ObjectTree3D objMissed) {
-		System.out.println("Adding object track "+objMissed.getId()+" - Frame "+objMissed.getFrame()+" to missed list");
-		this.misses.add(new MissedObject(objMissed, result.getCurrentFrame()));
-		this.result.setObjectMissed(objMissed);
-	}
+//	@Override
+//	public void addMissed(ObjectTree3D objMissed) {
+//		System.out.println("Adding object track "+objMissed.getId()+" - Frame "+objMissed.getFrame()+" to missed list");
+//		this.misses.add(new MissedObject(objMissed, result.getCurrentFrame()));
+//		this.result.setObjectMissed(objMissed);
+//	}
 	
 	@Override
 	public void addNewObjectId(Integer id, ObjectTree3D treeObj) {
 		result.addNewObjectId(id, treeObj);
 	}
 
-	@Override
-	public List<MissedObject> getMisses() {
-		return this.misses;
-	}
+//	@Override
+//	public List<MissedObject> getMisses() {
+//		return this.misses;
+//	}
 	
 	public void setTemporalPopulation(TemporalPopulation3D temporalPopulation) {
 		this.temporalPopulation = temporalPopulation;
@@ -336,6 +338,13 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		}
 	}
 	
+	public void addMissedObjects(Map<Integer, MissedObject> missedObjects) {
+		Set<Integer> keys = missedObjects.keySet();
+		for (Integer integer : keys) {
+			missings.add(missedObjects.get(integer));
+		}
+	}
+	
 	public void addMergedObjects(Map<Integer, MergedObject> mergedObjects) {
 		Set<Integer> keys = mergedObjects.keySet();
 		for (Integer integer : keys) {
@@ -343,5 +352,65 @@ public class TrackingContextSPT implements SegmentationObject, EventSeekerObjInt
 		}
 	}
 	
+	public void generateSegmentationErrorsFile() {
+		StringBuilder errorsText = new StringBuilder();
+		errorsText.append("Segmented data dir-");
+		errorsText.append(segmentedDataDir.getAbsolutePath());
+		errorsText.append("\n");
+		Map<Integer, List<SegmentationError>> mapFrameErrors = new HashMap<Integer, List<SegmentationError>>();
+		loadSegmentationError(missings, mapFrameErrors);
+		loadSegmentationError(mergings, mapFrameErrors);
+		loadSegmentationError(splittings, mapFrameErrors);
+		
+		Set<Integer> frames = mapFrameErrors.keySet();
+		List<SegmentationError> segErrors;
+		for (Integer frame : frames) {
+			segErrors = mapFrameErrors.get(frame);
+			for (SegmentationError segError : segErrors) {
+				errorsText.append(segError.toString());
+				errorsText.append("\n");
+			}
+		}
+		errorsText.replace(errorsText.length()-1, errorsText.length()-1, "");
+		
+		String dataSetName = segmentedDataDir.getParentFile().getParentFile().getName();
+		File fileDirErrors = new File("./errors");
+		File fileErrors = new File("./errors/errorsExc_"+dataSetName+System.currentTimeMillis()+".txt");
+		if(!fileDirErrors.exists()) {
+			fileDirErrors.mkdirs();
+		}
+		FileWriter fw = null;
+		if(!fileErrors.exists()) {
+			try {
+				fileErrors.createNewFile();
+				fw = new FileWriter(fileErrors);
+				fw.write(errorsText.toString());
+				fw.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				if(fw != null) {
+					try {
+						fw.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+
+	private void loadSegmentationError(List<SegmentationError> segErrors, Map<Integer, List<SegmentationError>> mapFrameErrors) {
+		List<SegmentationError> segmentationErrors;
+		for (SegmentationError segError : segErrors) {
+			if(!mapFrameErrors.containsKey(segError.getFrameError())) {
+				segmentationErrors = new ArrayList<SegmentationError>();
+				mapFrameErrors.put(segError.getFrameError(), segmentationErrors);
+			} else {
+				segmentationErrors = mapFrameErrors.get(segError.getFrameError());
+			}
+			segmentationErrors.add(segError);
+		}
+	}
 	
 }

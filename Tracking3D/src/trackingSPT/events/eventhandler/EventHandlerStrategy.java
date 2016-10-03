@@ -21,6 +21,7 @@ public class EventHandlerStrategy extends Strategy {
 	
 	public void build() {
 		addEventHandlerAction(new HandlerColocalization(context));
+		addEventHandlerAction(new HandlerSplitting(context));
 		addEventHandlerAction(new HandlerMerging(context));
 		addEventHandlerAction(new HandlerMissing(context));
 		addEventHandlerAction(new HandlerGoingIn(context));

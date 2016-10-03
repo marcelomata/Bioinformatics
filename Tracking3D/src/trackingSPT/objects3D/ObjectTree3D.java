@@ -15,6 +15,7 @@ public class ObjectTree3D {
 	private double velocity;
 	private double acceleration;
 	private Vector3D orientation;
+	private double area;
 	private int frame;
 	
 	public ObjectTree3D(Object3D object, int frame) {
@@ -25,6 +26,7 @@ public class ObjectTree3D {
 		this.orientation = new Vector3D(0, 0, 0);
 		this.velocity = 0;
 		this.acceleration = 0;
+		this.area = object.getAreaPixels();
 		this.frame = frame;
 	}
 	
@@ -78,6 +80,10 @@ public class ObjectTree3D {
 
 	public void removeChildren() {
 		this.children.clear();
+	}
+	
+	public void updateAtributes() {
+		
 	}
 	
 	@Override

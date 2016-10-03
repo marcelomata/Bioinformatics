@@ -42,29 +42,12 @@ public class HandlerMerging extends EventHandlerAction {
 				mergedObj = mergedObjs.remove(target.getId());
 			} else {
 				mergedObj = new MergedObject(target, context.getFrameTime());
-				mergedObjs.put(target.getId(), mergedObj);
 			}
+			mergedObjs.put(target.getId(), mergedObj);
 			
 			source1 = event.getObjectSource();
 			newObject = new ObjectTree3D(source1.getObject(), context.getFrameTime());
-//			Vector3D v = new Vector3D(newObject.getObject().getCenterAsPoint(), target.getObject().getCenterAsPoint());
-//			double x = v.getX();
-//			double y = v.getY();
-//			double z = v.getZ();
-//			if(x < y) {
-//				if(x < z) {
-//					v.setX(0);
-//				} else {
-//					v.setZ(0);
-//				}
-//			} else {
-//				if(y < z) {
-//					v.setY(0);
-//				} else {
-//					v.setZ(0);
-//				}
-//			}
-//			newObject.getObject().translate(v);
+
 			context.addNewObjectId(source1.getId(), newObject);
 			newObject.setParent(source1);
 			source1.addChild(newObject);
