@@ -4,12 +4,11 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GL2;
-
-import com.jogamp.opengl.util.gl2.GLUT;
-
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Point3D;
+
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Particle {
 	
@@ -68,7 +67,8 @@ public class Particle {
 	private void draw2(GL2 gl, GLUT glut, float x, float y, float z) {
 		gl.glTranslatef(x, y, z);
 		gl.glColor3f((float)color.getRed()/255, (float)color.getGreen()/255, (float)color.getBlue()/255);
-		glut.glutSolidSphere(diameter, 10, 10);
+//		glut.glutSolidSphere(diameter, 10, 10);
+		glut.glutSolidSphere(17, 10, 10);
 	}
 	
 	private void drawLine(GL2 gl, Point3D p1, Point3D p2, Color c) {

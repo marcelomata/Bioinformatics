@@ -4,7 +4,6 @@ import java.io.File;
 
 import trackingSPT.TrackingAction;
 import trackingSPT.events.enums.TrackingStrategyType;
-import trackingSPT.objects3D.TrackingContextSPT;
 import trackingSPT.objects3D.TrackingResultObjectAction;
 
 /**
@@ -19,25 +18,12 @@ public abstract class TrackingStrategy extends Strategy {
 	protected TrackingStrategyType type;
 	
 	public TrackingStrategy(File segmentedDataDir, File rawDataDir, int numMaxFrames, TrackingStrategyType type) {
-		super();
-		if(type == TrackingStrategyType.SPT) {
-			context = new TrackingContextSPT(segmentedDataDir, rawDataDir, numMaxFrames);
-		} else {
-			
-		}
+		super();		
 		init(segmentedDataDir, rawDataDir, numMaxFrames);
 		build();
 	}
 	
-//	public TrackingStrategy(File imageFile) {
-//		super();
-//		init(imageFile);
-//		build();
-//	}
-	
 	public abstract void init(File segmentedDataDir, File rawDataDir, int numMaxFrames);
-	
-//	public abstract void init(File imageFile);
 	
 	public abstract void build();
 	
@@ -55,4 +41,7 @@ public abstract class TrackingStrategy extends Strategy {
 		this.context.generateSegmentationErrorsFile();
 	}
 	
+	public void generateTrackingAnalysis() {
+		this.context.generateTrackingAnalysisFiles();
+	}
 }

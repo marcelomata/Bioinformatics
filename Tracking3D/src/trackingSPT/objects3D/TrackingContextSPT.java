@@ -1,5 +1,7 @@
 package trackingSPT.objects3D;
 
+import ij.ImagePlus;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,9 +13,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import ij.ImagePlus;
 import mcib3d.geom.Object3D;
 import mcib3d.geom.Objects3DPopulation;
+import mcib3d.geom.Vector3D;
+import mcib3d.image3d.ImageInt;
 import trackingInterface.Frame;
 import trackingInterface.TrackingContext;
 import trackingSPT.events.Event;
@@ -31,6 +34,7 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 	private List<SegmentationError> mergings;
 	private File rawDataDir;
 	private File segmentedDataDir;
+	private File segmentedCorrectedDataDir;
 	private File[] framesRawFile;
 	
 	private double[] meanDistFrame;
@@ -59,6 +63,7 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 		this.inObject = new ObjectActionSPT4D(segmentedDataDir.getAbsolutePath(), "man_seg", rawDataDir.getAbsolutePath(), "t", numMaxFrames);
 		this.result = new TrackingResult3DSPT(inObject);
 		this.segmentedDataDir = segmentedDataDir;
+		this.segmentedCorrectedDataDir = segmentedDataDir;
 		this.rawDataDir = rawDataDir;
 		this.meanDistFrame = new double[inObject.getSize()+1];
 		this.numberOfDist = new double[inObject.getSize()+1];
@@ -252,6 +257,16 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 	public File getSegmentedDataDir() {
 		return this.segmentedDataDir;
 	}
+	
+	@Override
+	public File getSegmentedCorrectedDataDir() {
+		return this.segmentedCorrectedDataDir;
+	}
+	
+	@Override
+	public void setSegmentedCorrectedDataDir(File segCorrDir) {
+		this.segmentedCorrectedDataDir = segCorrDir;
+	}
 
 	public int getFrameTime() {
 		return inObject.getFrameTime();
@@ -324,7 +339,10 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 	}
 
 	public void updateObjectsAttributes() {
-		result.updateMotionObjects();
+		List<ObjectTree3D> last = result.getListLastObjects();
+		for (ObjectTree3D objectTree3D : last) {
+			objectTree3D.updateAtributes();
+		}
 	}
 
 	public int numberMissedObjects() {
@@ -349,6 +367,16 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 		Set<Integer> keys = mergedObjects.keySet();
 		for (Integer integer : keys) {
 			mergings.add(mergedObjects.get(integer));
+		}
+	}
+	
+	public List<SegmentationError> getSegmentationError(EventType type) {
+		if(type == EventType.MERGING) {
+			return mergings;
+		} else if(type == EventType.MISSING) {
+			return missings;
+		} else {
+			return splittings;
 		}
 	}
 	
@@ -399,6 +427,10 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 			}
 		}
 	}
+	
+	public ImagePlus getImagePlus(int frame) {
+		return inObject.getImagePlus(frame);
+	}
 
 	private void loadSegmentationError(List<SegmentationError> segErrors, Map<Integer, List<SegmentationError>> mapFrameErrors) {
 		List<SegmentationError> segmentationErrors;
@@ -411,6 +443,79 @@ public class TrackingContextSPT implements TrackingContext, SegmentationObject, 
 			}
 			segmentationErrors.add(segError);
 		}
+	}
+	
+	public void generateTrackingAnalysisFiles() {
+		StringBuilder attributesText = new StringBuilder();
+		
+		Map<Integer, List<ObjectTree3D>> tracks = result.getMotionField().getFinalResultByTrack();
+		Set<Integer> trackKeys = tracks.keySet();
+		
+		List<ObjectTree3D> objectsTrack;
+		Vector3D vector;
+		long time = System.currentTimeMillis();
+		String trackingTest = segmentedDataDir.getParentFile().getParentFile().getName();
+		String dirName = "tracking"+trackingTest+time;
+		File fileDirTracks = new File("./"+dirName+"/");
+		if(!fileDirTracks.exists()) {
+			fileDirTracks.mkdirs();
+		}
+		for (Integer key : trackKeys) {
+			objectsTrack = tracks.get(key);
+			attributesText = new StringBuilder();
+			for (ObjectTree3D objTree3D : objectsTrack) {
+				attributesText.append("Frame - ");
+				attributesText.append(objTree3D.getFrame());
+				attributesText.append(";");
+				attributesText.append("Velocity - ");
+				attributesText.append(objTree3D.getVelocity());
+				attributesText.append(";");
+				attributesText.append("Acceleration - ");
+				attributesText.append(objTree3D.getAcceleration());
+				attributesText.append(";");
+				attributesText.append("Area - ");
+				attributesText.append(objTree3D.getArea());
+				attributesText.append(";");
+				attributesText.append("AreaDifference - ");
+				attributesText.append(objTree3D.getAreaDifference());
+				attributesText.append(";");
+				attributesText.append("Acceleration - ");
+				attributesText.append(objTree3D.getAcceleration());
+				attributesText.append(";");
+				attributesText.append("Orietation - ");
+				vector = objTree3D.getOrientation();
+				attributesText.append(vector.getX());
+				attributesText.append(" ");
+				attributesText.append(vector.getY());
+				attributesText.append(" ");
+				attributesText.append(vector.getZ());
+				attributesText.append("\n");
+			}
+			File fileTrackAttributes = new File("./"+dirName+"/track_"+key+".txt");
+			FileWriter fw = null;
+			if(!fileTrackAttributes.exists()) {
+				try {
+					fileTrackAttributes.createNewFile();
+					fw = new FileWriter(fileTrackAttributes);
+					fw.write(attributesText.toString());
+					fw.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if(fw != null) {
+						try {
+							fw.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+	}
+
+	public ImageInt getZones(int frame) {
+		return this.inObject.getFrame(frame).getZones();
 	}
 	
 }

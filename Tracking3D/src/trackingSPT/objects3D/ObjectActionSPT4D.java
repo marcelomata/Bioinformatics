@@ -1,15 +1,18 @@
 package trackingSPT.objects3D;
 
+import ij.IJ;
+import ij.ImagePlus;
+import ij.plugin.Duplicator;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import ij.IJ;
-import ij.ImagePlus;
-import ij.plugin.Duplicator;
 import mcib3d.geom.Objects3DPopulation;
+import mcib3d.image3d.ImageInt;
+import mcib3d.image3d.regionGrowing.Watershed3DVoronoi;
 import trackingInterface.Frame;
 import trackingPlugin.ImageJStatic;
 import trackingSPT.mcib3DObjects.Objects3DPopulationSPT;
@@ -22,23 +25,12 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	private File directorySeg;
 	private File directoryRaw;
 	private String fileSegName;
-//	private String fileRawName;
 	private ImagePlus file;
 	private int numberOfFrames; 
 	private int currentFrame;
-//	private File []framesFile;
 	private File []rawFramesFile;
-//	private FileInfo[] fileInfo;
-	
-//	/**
-//	 * 
-//	 * @param imp It has to be a 4D image (3D+t)
-//	 */
-//	public ObjectActionSPT4D(ImagePlus imp) {
-//		init();
-//		this.file = imp;
-//		loadFrames3D(imp);
-//	}
+	private ImagePlus[] imagePlus;
+	private Frame[] frames;
 	
 	/**
 	 * 
@@ -47,7 +39,6 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	public ObjectActionSPT4D(String folderSeg, String fileSegName, String folderRaw, String fileRawName, int numMaxFrames) {
 		init();
 		this.fileSegName = fileSegName;
-//		this.fileRawName = fileRawName;
 		this.directorySeg = new File(folderSeg);
 		this.directoryRaw = new File(folderRaw);
 		loadRawFrames3D(folderRaw, numMaxFrames);
@@ -60,27 +51,6 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 		this.readFromDirectory = false;
 	}
 
-//	private void loadFrames3D(ImagePlus imp) {
-//		// extract each time 
-//		this.readFromDirectory = false;
-//        Duplicator dup = new Duplicator();
-//        int[] dim = imp.getDimensions();
-//        ImagePlus timedup;
-//        Objects3DPopulationSPT populationT;
-//        numberOfSlices = imp.getNFrames();
-//        try {
-//	        for (int t = 0; t < imp.getNFrames(); t++) {
-//	        	timedup = dup.run(imp, 1, 1, 1, dim[3], t, t);
-//	//        	FileSaver fileSave = new FileSaver(imp);
-//	//        	fileSave.saveAsTiff("/home/marcelodmo/Documents/data/simulated_15f/simulated_15f-"+(t+1)+".tif");
-//	        	populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
-//	        	population3DPlusT.add(populationT);
-//			}
-//        } catch(OutOfMemoryError e) {
-//        	frameByFrame = true;
-//        }
-//	}
-	
 	private void loadRawFrames3D(String folder, int numMaxFrames) {
 		this.readFromDirectory = true;
         File fileFolder = new File(folder);
@@ -89,25 +59,9 @@ public class ObjectActionSPT4D implements MovieObjectAction {
         Collections.sort(framesList);
         rawFramesFile = framesList.toArray(new File[framesList.size()]);
         countFrames(numMaxFrames);
+        this.imagePlus = new ImagePlus[numberOfFrames]; 
+        this.frames = new Frame[numberOfFrames]; 
         frameByFrame = true;
-//        ImagePlus timedup;
-//        Objects3DPopulationSPT populationT;
-//        try {
-//	        for (int t = 0, i = 0; i < frames.length; i++) {
-//	        	if(frames[i].getAbsolutePath().contains(".tif")) {
-//	        		fileName = frames[i].getName();
-//	        		timedup =  ImageJStatic.getImageSeg(directory, fileName, t).getImagePlus();
-//		            populationT = new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
-//		        	population3DPlusT.add(populationT);
-//		        	System.out.println("Number objects frame "+t+" -> "+populationT.getObject3D().getNbObjects());
-//		        	t++;
-//		        	numberOfFrames++;
-//	        	}
-//			}
-//        } catch(OutOfMemoryError e) {
-//        	frameByFrame = true;
-//        	population3DPlusT.clear();
-//        }
 	}
 
 	private void countFrames(int numMaxFrames) {
@@ -158,9 +112,28 @@ public class ObjectActionSPT4D implements MovieObjectAction {
 	        timedup = dup.run(file, 1, 1, 1, dim[3], t, t);
 			populationT =  new Objects3DPopulationSPT(new Objects3DPopulation(timedup));
 		}
+		calculateVoronoiRegions(timedup, populationT);
+		this.imagePlus[t] = timedup;
+		this.frames[t] = populationT;
 		return populationT;
 	}
 	
+	public ImagePlus getImagePlus(int frame) {
+		return imagePlus[frame];
+	}
+	
+	@Override
+	public Frame getFrame(int frame) {
+		return this.frames[frame];
+	}
+	
+	private void calculateVoronoiRegions(ImagePlus timedup, Objects3DPopulationSPT populationT) {
+		float radMax = 1000000f; //0 for no max
+		Watershed3DVoronoi watershed3DVoronoi = new Watershed3DVoronoi(ImageInt.wrap(timedup), radMax);
+		ImageInt voronoiZones = watershed3DVoronoi.getVoronoiZones(false);
+		populationT.setZones(voronoiZones);
+	}
+
 	private ImagePlus getTRawFrame(int t) {
 		 ImagePlus timedup;
  		 timedup = ImageJStatic.getImage(directoryRaw, rawFramesFile[t].getName()).getImagePlus();

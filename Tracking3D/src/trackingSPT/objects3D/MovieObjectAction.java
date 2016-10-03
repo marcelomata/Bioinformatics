@@ -20,5 +20,9 @@ public interface MovieObjectAction {
 	TemporalPopulation3D getTemporalPopulation3D();
 
 	String getSegFileName();
+	
+	ImagePlus getImagePlus(int frame);
+	
+	Frame getFrame(int frame);
 
 }

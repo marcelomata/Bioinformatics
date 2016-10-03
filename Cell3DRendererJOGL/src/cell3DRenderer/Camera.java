@@ -1,8 +1,8 @@
 package cell3DRenderer;
 
-import javax.media.opengl.GL2;
-
 import mcib3d.geom.Point3D;
+
+import com.jogamp.opengl.GL2;
 
 public class Camera {
 	
@@ -33,8 +33,8 @@ public class Camera {
 //		this.initialPosition = new Point3D(-20, -30, zoom);
 		this.initialPosition = new Point3D(-10, -20, zoom);
 		this.cameraPosition = new Point3D(initialPosition.getX(), initialPosition.getY(), initialPosition.getZ());
-		this.fieldOfViewH = 60;
-		this.fieldOfViewV = 45;
+		this.fieldOfViewH = 90;
+		this.fieldOfViewV = 60;
 	}
 	
 	public void  draw(GL2 gl) {

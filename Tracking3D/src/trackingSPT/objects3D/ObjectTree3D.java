@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mcib3d.geom.Object3D;
+import mcib3d.geom.Point3D;
 import mcib3d.geom.Vector3D;
 
 public class ObjectTree3D {
@@ -14,8 +15,10 @@ public class ObjectTree3D {
 	private Integer id;
 	private double velocity;
 	private double acceleration;
-	private Vector3D orientation;
 	private double area;
+	private double areaDifference;
+	private int zones;
+	private Vector3D orientation;
 	private int frame;
 	
 	public ObjectTree3D(Object3D object, int frame) {
@@ -27,6 +30,8 @@ public class ObjectTree3D {
 		this.velocity = 0;
 		this.acceleration = 0;
 		this.area = object.getAreaPixels();
+		this.areaDifference = 0;
+		this.velocity = 0;
 		this.frame = frame;
 	}
 	
@@ -83,11 +88,84 @@ public class ObjectTree3D {
 	}
 	
 	public void updateAtributes() {
-		
+		updateAcceleration();
+		updateArea();
+		updateAreaDifference();
+		updateOrientation();
+		updateRegion();
 	}
 	
+	private void updateRegion() {
+		zones = 0;
+	}
+
+	private void updateOrientation() {
+		Vector3D lastOrientation = new Vector3D(0f, 0f, 0f);
+		if(parent != null) {
+			lastOrientation = this.parent.getOrientation();
+		}
+		this.orientation = new Vector3D(lastOrientation, this.object.getCenterAsPoint());
+		this.orientation.normalize();
+	}
+
+	private void updateAreaDifference() {
+		double previousArea = 0;
+		if(parent != null) {
+			previousArea = parent.getArea(); 
+		}
+		this.areaDifference = this.getAreaDifference() - previousArea;
+	}
+
+	private void updateArea() {
+		this.area = this.object.getAreaPixels();
+	}
+
+	private void updateAcceleration() {
+		updateVelocity();
+		double lastVelocity = 0;
+		if(parent != null) {
+			lastVelocity = parent.getVelocity();
+		}
+		this.acceleration = this.velocity - lastVelocity;
+	}
+
+	private void updateVelocity() {
+		Point3D lastPosition = new Point3D(0, 0, 0);
+		if(parent != null) {
+			lastPosition = parent.getObject().getCenterAsPoint();
+		}
+		
+		Point3D thisPosition = this.object.getCenterAsPoint();
+		this.velocity = thisPosition.distance(lastPosition);
+	}
+	
+	public int getRegion() {
+		return zones;
+	}
+	
+	public Vector3D getOrientation() {
+		return orientation;
+	}
+	
+	public double getArea() {
+		return area;
+	}
+	
+	public double getAreaDifference() {
+		return areaDifference;
+	}
+	
+	public double getVelocity() {
+		return velocity;
+	}
+	
+	public double getAcceleration() {
+		return acceleration;
+	}
+
 	@Override
 	public String toString() {
 		return String.valueOf(id)+" - P -> "+object.getCenterAsPoint();
 	}
+
 }

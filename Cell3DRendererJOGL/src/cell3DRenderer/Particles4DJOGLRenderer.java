@@ -1,29 +1,14 @@
 
 package cell3DRenderer;
 
-import static javax.media.opengl.GL.GL_COLOR_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_DEPTH_BUFFER_BIT;
-import static javax.media.opengl.GL.GL_DEPTH_TEST;
-import static javax.media.opengl.GL.GL_LEQUAL;
-import static javax.media.opengl.GL.GL_NICEST;
-import static javax.media.opengl.GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT;
-import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
-import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
-import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
-import javax.media.opengl.glu.GLU;
+import mcib3d.geom.Object3D;
+import mcib3d.geom.Point3D;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.jogamp.newt.event.KeyListener;
@@ -32,11 +17,16 @@ import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.event.WindowAdapter;
 import com.jogamp.newt.event.WindowEvent;
 import com.jogamp.newt.opengl.GLWindow;
+import com.jogamp.opengl.GL;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLCapabilities;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.GLProfile;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.gl2.GLUgl2;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.jogamp.opengl.util.gl2.GLUT;
-
-import mcib3d.geom.Object3D;
-import mcib3d.geom.Point3D;
 
 public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener, KeyListener, MouseListener {
 	
@@ -51,7 +41,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	private static final float ZERO_F = 0.0f;
 	private static final float ONE_F  = 1.0f;
 	
-	private GLU glu;
+	private GLUgl2 glu;
 	private GLUT glut;
 	
 	private int mouseX = CANVAS_WIDTH/2;
@@ -94,14 +84,14 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2();
-		glu = new GLU();
+		glu = new GLUgl2();
 		glut = new GLUT();
 		gl.glClearColor(ZERO_F, ZERO_F, ZERO_F, ZERO_F);
 		gl.glClearDepth(ONE_F); 
-		gl.glEnable(GL_DEPTH_TEST);
-		gl.glDepthFunc(GL_LEQUAL);
-		gl.glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		gl.glShadeModel(GL_SMOOTH);
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glDepthFunc(GL.GL_LEQUAL);
+		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+		gl.glShadeModel(GL2.GL_SMOOTH);
 	}
 	
 	@Override
@@ -112,11 +102,11 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		float aspect = (float) (camera.getFieldOfViewH()/camera.getFieldOfViewV());
 		
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL_PROJECTION);
+		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		glu.gluPerspective(camera.getFieldOfViewV(), aspect, 0.1, 1500.0);
 			 
-		gl.glMatrixMode(GL_MODELVIEW);
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		gl.glLoadIdentity();
 	}
 
@@ -126,7 +116,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 	}
 	
 	private void drawScene(GL2 gl) {
-		gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		
 		camera.draw(gl);
@@ -137,6 +127,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		drawBoundBoxLines(gl);
 		
 		drawTime(gl);
+//		drawAllTime(gl);
 		
 //		System.out.println(camera.toString());
 //		System.out.println(maxPoint.toString()+" - "+minPoint.toString());
@@ -306,14 +297,55 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		}
 	}
 	
+	private void drawAllTime(GL2 gl) {
+		count = 0;
+		division = 0;
+		parents.clear();
+		
+		for (int i = 0; i < maxTime; i++) {
+			List<Particle> particles = objects4DPerFrame.get(i);
+//			Object3D parentObj;
+//			Particle parent;
+			for (Particle particle : particles) {
+				if(!particle.isHidden()) {
+//					particle.draw(gl, glut);
+					
+					if(drawTrack) {
+						drawTrack(gl, particle.getTrack());
+					} else {
+						drawTrack(gl, currentTrack);
+					}
+					
+//					parent = particle.getParent();
+//					if (parent != null) {
+//						parentObj = parent.getObject();
+//						if(parents.contains(parentObj)) {
+//							division++;
+//						} else {
+//							parents.add(parentObj);
+//						}
+//					}
+					count++;
+				}
+			}
+			
+			if(canprint) {
+				System.out.println("Frame "+currentTime+" - Particles "+count+" - Divisions "+division+" - Parents "+parents.size());
+				canprint = false;
+			}
+		}
+	}
+	
 	private void drawTrack(GL2 gl, int track) {
 		Particle particle2;
 		List<Particle> particles = objects4DPerTrack.get(track);
 		if(particles != null) {
 			for (int i = 1; i < particles.size(); i++) {
 				particle2 = particles.get(i);
-				if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
-					drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particle2.getColor());
+				if(particle2 != null && particle2.getParent() != null) {
+					if(!particle2.isHidden() && !particle2.getParent().isHidden()) {
+						drawLine(gl, particle2.getPosition(), particle2.getParent().getPosition(), particle2.getColor());
+					}
 				}
 			}
 		}
@@ -326,7 +358,7 @@ public class Particles4DJOGLRenderer extends GLCanvas implements GLEventListener
 		float x2 = (float) p2.getX();
 		float y2 = (float) p2.getY();
 		float z2 = (float) p2.getZ();
-		gl.glPointSize(2f);
+		gl.glPointSize(10f);
 		gl.glBegin(GL2.GL_LINES);
 			gl.glColor3f((float)c.getRed()/255, (float)c.getGreen()/255, (float)c.getBlue()/255);
 	      	gl.glVertex3f(x1, y1, z1);

@@ -38,8 +38,6 @@ public abstract class TrackingResultObjectAction {
 	
 	public abstract ObjectTree3D getLastObjId(int id);
 
-	public abstract void updateMotionObjects();
-	
 	public abstract int numberMissedObjects();
-	
+
 }

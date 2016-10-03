@@ -16,11 +16,6 @@ public class Segmentation3D extends SegmentationAction {
 		ImagePlus myPlus = context.getCurrentSegFrame();
 		
 		int step = 1;
-//        if (myPlus.getBitDepth() == 8) {
-//            step = 1;
-//        } else {
-//            step = 100;
-//        }
 
         // extract current time 
         Duplicator dup = new Duplicator();

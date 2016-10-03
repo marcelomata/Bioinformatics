@@ -1,10 +1,14 @@
 package trackingInterface;
 
+import java.io.File;
+
 import trackingSPT.objects3D.TrackingResultObjectAction;
 
 public interface TrackingContext {
 
 	void generateSegmentationErrorsFile();
+	
+	void generateTrackingAnalysisFiles();
 	
 	int getFrameTime();
 
@@ -17,5 +21,9 @@ public interface TrackingContext {
 	TrackingResultObjectAction getResult();
 
 	void updateObjectsAttributes();
+	
+	File getSegmentedCorrectedDataDir();
+	
+	void setSegmentedCorrectedDataDir(File segCorrDir);
 	
 }
