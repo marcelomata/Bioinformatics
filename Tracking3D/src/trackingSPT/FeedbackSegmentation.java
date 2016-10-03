@@ -121,6 +121,7 @@ public class FeedbackSegmentation extends TrackingAction {
         TT.setMethodThreshold(tmethod);
         int cri = TrackThreshold.CRITERIA_METHOD_MSER;
         TT.setCriteriaMethod(cri);
+        TT.setVerbose(true);
         TT.setImageMarkers(markers);
         TT.setImageZones(zones);
         ImagePlus res = TT.segment(myPlus, true);
